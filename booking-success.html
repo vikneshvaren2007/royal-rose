@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ROYAL — Booking Confirmed</title>
+
+    <link rel="stylesheet" href="success.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .whatsapp-btn {
+            background: #25D366 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.35) !important;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .track-btn {
+            background: linear-gradient(135deg, #d94370, #ff529a) !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 20px rgba(255, 82, 154, 0.4) !important;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .home-btn {
+            background: rgba(255, 255, 255, 0.08) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .home-btn:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-color: #ff529a !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="background-glow glow-one"></div>
+    <div class="background-glow glow-two"></div>
+
+    <div id="petals"></div>
+
+    <div class="sparkles" id="sparkles"></div>
+
+
+    <!-- HEADER -->
+
+    <header class="success-header">
+
+        <a href="index.html" class="logo">
+            <span>ROYAL</span>
+            <small>ROSE MILK</small>
+        </a>
+
+        <div style="display: flex; gap: 15px;">
+            <a href="track.html" class="shop-link">
+                Track Order
+            </a>
+            <a href="shop.html" class="shop-link">
+                Continue Shopping
+            </a>
+        </div>
+
+    </header>
+
+
+    <!-- MAIN -->
+
+    <main>
+
+        <!-- SUCCESS HERO -->
+
+        <section class="success-hero">
+
+            <div class="success-circle">
+
+                <div class="circle-ring"></div>
+
+                <div class="checkmark">
+                    ✓
+                </div>
+
+            </div>
+
+
+            <p class="success-label">
+                ✦ ROYAL ORDER CONFIRMED ✦
+            </p>
+
+            <h1>
+                Booking
+                <span>Confirmed!</span>
+            </h1>
+
+            <p class="success-message">
+                Thank you for choosing ROYAL.
+                Your delicious Rose Milk order has been saved in our system
+                and is being prepared with genuine craftsmanship.
+            </p>
+
+
+            <div class="booking-number">
+
+                <small>
+                    UNIQUE ORDER ID
+                </small>
+
+                <strong id="bookingId">
+                    RR-00000000-000
+                </strong>
+
+                <button id="copyBooking">
+                    Copy
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- DETAILS -->
+
+        <section class="details-grid">
+
+
+            <!-- CUSTOMER -->
+
+            <div class="info-card">
+
+                <div class="info-card-title">
+
+                    <span>👤</span>
+
+                    <div>
+                        <small>CUSTOMER</small>
+                        <h2>Delivery Details</h2>
+                    </div>
+
+                </div>
+
+                <div class="customer-details">
+
+                    <div>
+                        <small>Name</small>
+                        <strong id="customerName">
+                            —
+                        </strong>
+                    </div>
+
+                    <div>
+                        <small>Phone</small>
+                        <strong id="customerPhone">
+                            —
+                        </strong>
+                    </div>
+
+                    <div>
+                        <small>Email</small>
+                        <strong id="customerEmail">
+                            —
+                        </strong>
+                    </div>
+
+                    <div>
+                        <small>Address</small>
+                        <strong id="customerAddress">
+                            —
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ORDER -->
+
+            <div class="info-card">
+
+                <div class="info-card-title">
+
+                    <span>🌹</span>
+
+                    <div>
+                        <small>YOUR SELECTION</small>
+                        <h2>Royal Order</h2>
+                    </div>
+
+                </div>
+
+
+                <div id="successProducts"
+                     class="success-products">
+                </div>
+
+
+                <div class="success-divider"></div>
+
+
+                <div class="total-row">
+
+                    <span>
+                        Total Amount
+                    </span>
+
+                    <strong id="successTotal">
+                        ₹0
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- DELIVERY STATUS -->
+
+        <section class="delivery-card">
+
+            <div class="delivery-icon">
+                🚚
+            </div>
+
+            <div class="delivery-content">
+
+                <p>
+                    CURRENT STATUS
+                </p>
+
+                <h2>
+                    Your Royal Order is Confirmed
+                </h2>
+
+                <span id="deliveryType">
+                    Standard Delivery
+                </span>
+
+            </div>
+
+            <div class="status-badge" style="background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3);">
+                ● CONFIRMED
+            </div>
+
+        </section>
+
+
+        <!-- BUTTONS -->
+
+        <div class="success-actions">
+
+            <a href="track.html" id="trackOrderBtn" class="primary-action track-btn">
+                🔍 Track Order
+            </a>
+
+            <a href="shop.html" class="primary-action">
+                🌹 Order More
+            </a>
+
+            <a href="index.html" class="secondary-action home-btn">
+                ♛ Back to Home
+            </a>
+
+            <a href="#" id="whatsappBtn" class="primary-action whatsapp-btn" style="display: none;" target="_blank" rel="noopener">
+                💬 WhatsApp Order
+            </a>
+
+            <button
+                id="printOrder"
+                class="secondary-action">
+                🖨 Print Confirmation
+            </button>
+
+        </div>
+
+
+        <p class="thank-you">
+            Made with 🌹 for your Royal experience. Confirmation emails have been dispatched.
+        </p>
+
+    </main>
+
+
+    <!-- COPY MESSAGE -->
+
+    <div id="copyMessage" class="copy-message">
+        ✓ Booking ID copied to clipboard
+    </div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderIdFromUrl = urlParams.get("order_id");
+            const waFromUrl = urlParams.get("whatsapp");
+
+            // Retrieve from session storage if available
+            let confirmedOrder = null;
+            try {
+                confirmedOrder = JSON.parse(sessionStorage.getItem("royalConfirmedOrder"));
+            } catch(e){}
+
+            const orderId = orderIdFromUrl || confirmedOrder?.order_id || "RR-" + Date.now();
+            
+            document.getElementById("bookingId").textContent = orderId;
+            document.getElementById("trackOrderBtn").href = `track.html?order_id=${encodeURIComponent(orderId)}`;
+
+            if (waFromUrl) {
+                const waBtn = document.getElementById("whatsappBtn");
+                waBtn.href = waFromUrl;
+                waBtn.style.display = "inline-flex";
+            }
+
+            if (confirmedOrder) {
+                const cust = confirmedOrder.customer || {};
+                document.getElementById("customerName").textContent = cust.name || "Royal Customer";
+                document.getElementById("customerPhone").textContent = cust.phone || "—";
+                document.getElementById("customerEmail").textContent = cust.email || "—";
+                document.getElementById("customerAddress").textContent = `${cust.address || ''}, ${cust.city || ''} ${cust.pincode ? '- ' + cust.pincode : ''}`.trim() || "—";
+                document.getElementById("deliveryType").textContent = confirmedOrder.delivery_preference || "Standard Delivery";
+                document.getElementById("successTotal").textContent = `₹${confirmedOrder.total_amount || 0}`;
+
+                const icons = {
+                    "Classic Rose Milk": "🌹",
+                    "Strawberry Rose": "🍓🌹",
+                    "Royal Rose Milk": "✨🌹",
+                    "Rose Coconut Milk": "🥥🌹",
+                    "Rose Chocolate": "🍫🌹",
+                    "Mango Rose Milk": "🥭🌹"
+                };
+
+                const productsContainer = document.getElementById("successProducts");
+                productsContainer.innerHTML = "";
+
+                (confirmedOrder.items || []).forEach(item => {
+                    const productDiv = document.createElement("div");
+                    productDiv.className = "success-product";
+                    productDiv.innerHTML = `
+                        <div class="success-product-image">
+                            ${icons[item.name] || "🌹"}
+                        </div>
+                        <div class="success-product-info">
+                            <h3>${item.name}</h3>
+                            <p>₹${item.unit_price} × ${item.quantity}</p>
+                        </div>
+                        <strong>₹${item.subtotal}</strong>
+                    `;
+                    productsContainer.appendChild(productDiv);
+                });
+            }
+
+            /*
+             * Copy Booking ID
+             */
+            document.getElementById("copyBooking").addEventListener("click", async () => {
+                try {
+                    await navigator.clipboard.writeText(orderId);
+                    showCopyMessage();
+                } catch (error) {
+                    alert(orderId);
+                }
+            });
+
+            function showCopyMessage() {
+                const message = document.getElementById("copyMessage");
+                message.classList.add("show");
+                setTimeout(() => {
+                    message.classList.remove("show");
+                }, 2000);
+            }
+
+            /*
+             * Print
+             */
+            document.getElementById("printOrder").addEventListener("click", () => {
+                window.print();
+            });
+
+            /*
+             * Rose Petals
+             */
+            function createPetal() {
+                const petal = document.createElement("span");
+                petal.className = "petal";
+                petal.textContent = Math.random() > .5 ? "🌸" : "🌹";
+                petal.style.left = Math.random() * 100 + "%";
+                petal.style.fontSize = 10 + Math.random() * 16 + "px";
+                petal.style.animationDuration = 6 + Math.random() * 7 + "s";
+                petal.style.opacity = .15 + Math.random() * .55;
+
+                document.getElementById("petals").appendChild(petal);
+                setTimeout(() => { petal.remove(); }, 14000);
+            }
+            setInterval(createPetal, 800);
+
+            /*
+             * Sparkles
+             */
+            function createSparkle() {
+                const sparkle = document.createElement("span");
+                sparkle.className = "sparkle";
+                sparkle.textContent = "✦";
+                sparkle.style.left = Math.random() * 100 + "%";
+                sparkle.style.top = Math.random() * 100 + "%";
+                sparkle.style.animationDelay = Math.random() * 2 + "s";
+
+                document.getElementById("sparkles").appendChild(sparkle);
+                setTimeout(() => { sparkle.remove(); }, 3000);
+            }
+            setInterval(createSparkle, 500);
+
+            setTimeout(() => {
+                document.body.classList.add("loaded");
+            }, 150);
+        });
+    </script>
+</body>
+</html>

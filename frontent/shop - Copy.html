@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ROYAL — Rose Milk Collection</title>
+
+    <link rel="stylesheet" href="shop.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+
+    <!-- =====================================================
+         SHOP BACK BUTTON
+    ====================================================== -->
+
+    <a href="#" id="shopBackButton" class="shop-back-button">
+        <span>←</span>
+        <span>Back</span>
+    </a>
+
+
+    <!-- =====================================================
+         BACKGROUND EFFECTS
+    ====================================================== -->
+
+    <div class="bg-glow glow-one"></div>
+    <div class="bg-glow glow-two"></div>
+
+    <div class="petals" id="petals"></div>
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="shop-header">
+
+        <a href="index.html" class="logo">
+            <span>ROYAL</span>
+            <small>ROSE MILK</small>
+        </a>
+
+
+    
+
+        <button
+            class="cart-button"
+            id="cartButton"
+            type="button">
+
+            🛒
+
+            <span>
+                Cart
+            </span>
+
+            <b id="cartCount">
+                0
+            </b>
+
+        </button>
+
+    </header>
+
+
+    <!-- =====================================================
+         SHOP HERO
+    ====================================================== -->
+
+    <section class="shop-hero">
+
+        <div class="hero-content">
+
+            <p class="small-title">
+                ✦ THE ROYAL COLLECTION ✦
+            </p>
+
+
+            <h1>
+                Discover Your
+                <span>Perfect Rose</span>
+            </h1>
+
+
+            <p class="hero-description">
+                A luxurious collection of creamy rose milk,
+                crafted for unforgettable moments.
+            </p>
+
+
+            <a
+                href="#collection"
+                class="explore-btn">
+
+                Explore Collection
+
+                <span>
+                    ↓
+                </span>
+
+            </a>
+
+        </div>
+
+
+        <div class="hero-decoration">
+            🌹
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         COLLECTION
+    ====================================================== -->
+
+    <main id="collection">
+
+
+        <!-- =================================================
+             SECTION HEADING
+        ================================================== -->
+
+        <div class="section-heading">
+
+            <p>
+                OUR SIGNATURE FLAVOURS
+            </p>
+
+
+            <h2>
+                Choose Your
+                <span>Favourite</span>
+            </h2>
+
+
+            <div class="heading-line"></div>
+
+        </div>
+
+
+        <!-- =================================================
+             PRODUCT GRID
+        ================================================== -->
+
+        <section
+            class="product-grid"
+            id="productGrid">
+
+
+            <!-- =================================================
+                 PRODUCT 1
+                 CLASSIC ROSE MILK
+            ================================================== -->
+
+            <article class="product-card">
+
+                <div class="product-image">
+
+                    <span class="badge">
+                        BESTSELLER
+                    </span>
+
+
+                    <img
+                        src="images/Classic Rose Milk.jpg"
+                        alt="Classic Rose Milk">
+
+
+                    <div class="shine"></div>
+
+                </div>
+
+
+                <div class="product-info">
+
+                    <div class="rating">
+                        ★★★★★
+                        <span>(128)</span>
+                    </div>
+
+
+                    <h3>
+                        Classic Rose Milk
+                    </h3>
+
+
+                    <p>
+                        Smooth, creamy and beautifully infused
+                        with authentic rose flavour.
+                    </p>
+
+
+                    <div class="product-bottom">
+
+                        <strong>
+                            ₹149
+                        </strong>
+
+                    </div>
+
+
+                    <div class="product-actions">
+
+                        <button
+                            class="add-cart"
+                            type="button"
+                            data-name="Classic Rose Milk"
+                            data-price="149">
+
+                            Add to Cart
+
+                        </button>
+
+
+                        <button
+                            class="book-now"
+                            type="button"
+                            data-name="Classic Rose Milk"
+                            data-price="149">
+
+                            Book Now
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =================================================
+                 PRODUCT 2
+                 STRAWBERRY ROSE
+            ================================================== -->
+
+            <article class="product-card">
+
+                <div class="product-image">
+
+                    <span class="badge new">
+                        NEW
+                    </span>
+
+
+                    <img
+                        src="images/strawberry-rose.jpg"
+                        alt="Strawberry Rose">
+
+
+                    <div class="shine"></div>
+
+                </div>
+
+
+                <div class="product-info">
+
+                    <div class="rating">
+                        ★★★★★
+                        <span>(96)</span>
+                    </div>
+
+
+                    <h3>
+                        Strawberry Rose
+                    </h3>
+
+
+                    <p>
+                        Sweet strawberry blended with
+                        our signature creamy rose milk.
+                    </p>
+
+
+                    <div class="product-bottom">
+
+                        <strong>
+                            ₹169
+                        </strong>
+
+                    </div>
+
+
+                    <div class="product-actions">
+
+                        <button
+                            class="add-cart"
+                            type="button"
+                            data-name="Strawberry Rose"
+                            data-price="169">
+
+                            Add to Cart
+
+                        </button>
+
+
+                        <button
+                            class="book-now"
+                            type="button"
+                            data-name="Strawberry Rose"
+                            data-price="169">
+
+                            Book Now
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =================================================
+                 PRODUCT 3
+                 ROYAL ROSE MILK
+            ================================================== -->
+
+            <article class="product-card">
+
+                <div class="product-image">
+
+                    <span class="badge premium">
+                        PREMIUM
+                    </span>
+
+
+                    <img
+                        src="images/Royal Rose Milk.jpg"
+                        alt="Royal Rose Milk">
+
+
+                    <div class="shine"></div>
+
+                </div>
+
+
+                <div class="product-info">
+
+                    <div class="rating">
+                        ★★★★★
+                        <span>(87)</span>
+                    </div>
+
+
+                    <h3>
+                        Royal Rose Milk
+                    </h3>
+
+
+                    <p>
+                        Our luxurious signature blend,
+                        created for the ultimate royal experience.
+                    </p>
+
+
+                    <div class="product-bottom">
+
+                        <strong>
+                            ₹199
+                        </strong>
+
+                    </div>
+
+
+                    <div class="product-actions">
+
+                        <button
+                            class="add-cart"
+                            type="button"
+                            data-name="Royal Rose Milk"
+                            data-price="199">
+
+                            Add to Cart
+
+                        </button>
+
+
+                        <button
+                            class="book-now"
+                            type="button"
+                            data-name="Royal Rose Milk"
+                            data-price="199">
+
+                            Book Now
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+          <!-- =================================================
+     PRODUCT 4
+     ROSE COCONUT MILK
+================================================== -->
+
+<article class="product-card">
+
+    <div class="product-image"
+         style="
+            display:block !important;
+            position:relative !important;
+            width:100% !important;
+            height:360px !important;
+            overflow:hidden !important;
+            background:#fff !important;
+         ">
+
+        <img
+            src="images/Rose Coconut Milk.jpg"
+            alt="Rose Coconut Milk"
+            style="
+                display:block !important;
+                width:100% !important;
+                height:100% !important;
+                object-fit:contain !important;
+                object-position:center !important;
+                visibility:visible !important;
+                opacity:1 !important;
+                position:relative !important;
+                z-index:2 !important;
+            "
+        >
+
+        <div class="shine"></div>
+
+    </div>
+
+
+    <div class="product-info">
+
+        <div class="rating">
+            ★★★★★
+            <span>(74)</span>
+        </div>
+
+        <h3>Rose Coconut Milk</h3>
+
+        <p>
+            A refreshing coconut and rose combination
+            with a silky smooth finish.
+        </p>
+
+        <div class="product-bottom">
+            <strong>₹179</strong>
+        </div>
+
+        <div class="product-actions">
+
+            <button
+                class="add-cart"
+                type="button"
+                data-name="Rose Coconut Milk"
+                data-price="179">
+                Add to Cart
+            </button>
+
+            <button
+                class="book-now"
+                type="button"
+                data-name="Rose Coconut Milk"
+                data-price="179">
+                Book Now
+            </button>
+
+        </div>
+
+    </div>
+
+</article>
+
+
+<!-- =================================================
+     PRODUCT 5
+     ROSE CHOCOLATE
+================================================== -->
+
+<article class="product-card">
+
+    <div class="product-image"
+         style="
+            display:block !important;
+            position:relative !important;
+            width:100% !important;
+            height:360px !important;
+            overflow:hidden !important;
+            background:#fff !important;
+         ">
+
+        <img
+            src="images/Rose Chocolate.jpg"
+            alt="Rose Chocolate"
+            style="
+                display:block !important;
+                width:100% !important;
+                height:100% !important;
+                object-fit:contain !important;
+                object-position:center !important;
+                visibility:visible !important;
+                opacity:1 !important;
+                position:relative !important;
+                z-index:2 !important;
+            "
+        >
+
+        <div class="shine"></div>
+
+    </div>
+
+
+    <div class="product-info">
+
+        <div class="rating">
+            ★★★★★
+            <span>(61)</span>
+        </div>
+
+        <h3>Rose Chocolate</h3>
+
+        <p>
+            Rich chocolate paired with delicate
+            floral rose notes.
+        </p>
+
+        <div class="product-bottom">
+            <strong>₹189</strong>
+        </div>
+
+        <div class="product-actions">
+
+            <button
+                class="add-cart"
+                type="button"
+                data-name="Rose Chocolate"
+                data-price="189">
+                Add to Cart
+            </button>
+
+            <button
+                class="book-now"
+                type="button"
+                data-name="Rose Chocolate"
+                data-price="189">
+                Book Now
+            </button>
+
+        </div>
+
+    </div>
+
+</article>
+
+<!-- =================================================
+     PRODUCT 5
+     Mongo rose Milk
+================================================== -->
+
+<article class="product-card">
+
+    <div class="product-image"
+         style="
+            display:block !important;
+            position:relative !important;
+            width:100% !important;
+            height:360px !important;
+            overflow:hidden !important;
+            background:#fff !important;
+         ">
+
+        <img
+            src="images/Mango Rose Milk.jpg"
+            alt="Mango Rose Milk"
+            style="
+                display:block !important;
+                width:100% !important;
+                height:100% !important;
+                object-fit:contain !important;
+                object-position:center !important;
+                visibility:visible !important;
+                opacity:1 !important;
+                position:relative !important;
+                z-index:2 !important;
+            "
+        >
+
+        <div class="shine"></div>
+
+    </div>
+
+
+    <div class="product-info">
+
+        <div class="rating">
+            ★★★★★
+            <span>(61)</span>
+        </div>
+
+        <h3>Mango Rose Milk</h3>
+
+        <p>
+            A tropical mango twist with the floral sweetness of rose
+        </p>
+
+        <div class="product-bottom">
+            <strong>₹189</strong>
+        </div>
+
+        <div class="product-actions">
+
+            <button
+                class="add-cart"
+                type="button"
+                data-name="Mango Rose Milk"
+                data-price="189">
+                Add to Cart
+            </button>
+
+            <button
+                class="book-now"
+                type="button"
+                data-name="Mango Rose Milk"
+                data-price="189">
+                Book Now
+            </button>
+
+        </div>
+
+    </div>
+
+</article>
+
+    <!-- =====================================================
+         CART TOAST
+    ====================================================== -->
+
+    <div
+        class="cart-toast"
+        id="cartToast">
+
+        <span class="toast-icon">
+            ✓
+        </span>
+
+
+        <div>
+
+            <strong>
+                Added to Cart
+            </strong>
+
+
+            <small id="toastProduct">
+                Rose Milk
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SHOP JAVASCRIPT
+    ====================================================== -->
+
+    <script src="shop.js"></script>
+
+
+    <!-- =====================================================
+         BACK BUTTON
+    ====================================================== -->
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                const backButton =
+                    document.getElementById(
+                        "shopBackButton"
+                    );
+
+
+                if (!backButton) {
+                    return;
+                }
+
+
+                backButton.addEventListener(
+                    "click",
+                    function (event) {
+
+                        event.preventDefault();
+
+
+                        /*
+                         * Go back to the previous page.
+                         * This prevents Home from
+                         * unnecessarily starting again.
+                         */
+
+                        if (window.history.length > 1) {
+
+                            window.history.back();
+
+                        } else {
+
+                            window.location.replace(
+                                "index.html"
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+    </script>
+
+<script>
+
+document.querySelectorAll(".book-now").forEach(button => {
+
+    button.addEventListener("click", function () {
+
+        const productName = this.dataset.name;
+        const productPrice = this.dataset.price;
+
+        const customerPage =
+            `/customer?product=${encodeURIComponent(productName)}&price=${encodeURIComponent(productPrice)}`;
+
+        window.location.href = customerPage;
+
+    });
+
+});
+
+</script>
+</body>
+
+</html>

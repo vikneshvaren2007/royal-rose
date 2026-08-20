@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ROYAL — Confirm Your Booking</title>
+
+    <link rel="stylesheet" href="booking.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="bg-glow glow-one"></div>
+    <div class="bg-glow glow-two"></div>
+
+    <div class="petals" id="petals"></div>
+
+
+    <!-- HEADER -->
+
+    <header class="booking-header">
+
+        <a href="shop.html" class="logo">
+            <span>ROYAL</span>
+            <small>ROSE MILK</small>
+        </a>
+
+        <div class="step-indicator">
+            <span class="active">01</span>
+            <i></i>
+            <span>02</span>
+            <i></i>
+            <span>03</span>
+        </div>
+
+        <a href="cart.html" class="back-cart">
+            🛒 Cart
+        </a>
+
+    </header>
+
+
+    <!-- MAIN -->
+
+    <main>
+
+        <section class="page-heading">
+
+            <p>✦ ALMOST THERE ✦</p>
+
+            <h1>
+                Complete Your
+                <span>Booking</span>
+            </h1>
+
+            <div class="heading-line"></div>
+
+            <small>
+                Enter your details and we'll prepare your Royal Rose Milk.
+            </small>
+
+        </section>
+
+
+        <section class="booking-layout">
+
+
+            <!-- CUSTOMER FORM -->
+
+            <div class="customer-card">
+
+                <div class="card-title">
+
+                    <div class="title-icon">
+                        👤
+                    </div>
+
+                    <div>
+                        <h2>Customer Details</h2>
+                        <p>Tell us where to deliver your order.</p>
+                    </div>
+
+                </div>
+
+
+                <form id="bookingForm">
+
+                    <div class="input-row">
+
+                        <div class="input-group">
+
+                            <label>
+                                Full Name
+                            </label>
+
+                            <div class="input-box">
+                                <span>✦</span>
+
+                                <input
+                                    type="text"
+                                    id="customerName"
+                                    placeholder="Enter your name"
+                                    required>
+                            </div>
+
+                        </div>
+
+
+                        <div class="input-group">
+
+                            <label>
+                                Phone Number
+                            </label>
+
+                            <div class="input-box">
+                                <span>☎</span>
+
+                                <input
+                                    type="tel"
+                                    id="customerPhone"
+                                    placeholder="Enter phone number"
+                                    maxlength="10"
+                                    required>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>
+                            Email Address
+                        </label>
+
+                        <div class="input-box">
+                            <span>✉</span>
+
+                            <input
+                                type="email"
+                                id="customerEmail"
+                                placeholder="Enter your email"
+                                required>
+                        </div>
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>
+                            Delivery Address
+                        </label>
+
+                        <div class="input-box textarea-box">
+                            <span>⌂</span>
+
+                            <textarea
+                                id="customerAddress"
+                                placeholder="Enter your complete delivery address"
+                                required></textarea>
+                        </div>
+
+                    </div>
+
+
+                    <div class="input-row">
+
+                        <div class="input-group">
+
+                            <label>
+                                City
+                            </label>
+
+                            <div class="input-box">
+                                <span>⌖</span>
+
+                                <input
+                                    type="text"
+                                    id="customerCity"
+                                    placeholder="City"
+                                    required>
+                            </div>
+
+                        </div>
+
+
+                        <div class="input-group">
+
+                            <label>
+                                Pincode
+                            </label>
+
+                            <div class="input-box">
+                                <span>#</span>
+
+                                <input
+                                    type="text"
+                                    id="customerPincode"
+                                    placeholder="Pincode"
+                                    maxlength="6"
+                                    required>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="delivery-title">
+
+                        <span>🚚</span>
+
+                        <div>
+                            <strong>Delivery Preference</strong>
+                            <small>Choose when you'd like your order.</small>
+                        </div>
+
+                    </div>
+
+
+                    <div class="delivery-options">
+
+                        <label class="delivery-option active">
+
+                            <input
+                                type="radio"
+                                name="delivery"
+                                value="Standard Delivery"
+                                checked>
+
+                            <span class="radio"></span>
+
+                            <div>
+                                <strong>Standard</strong>
+                                <small>Same day delivery</small>
+                            </div>
+
+                            <b>FREE*</b>
+
+                        </label>
+
+
+                        <label class="delivery-option">
+
+                            <input
+                                type="radio"
+                                name="delivery"
+                                value="Express Delivery">
+
+                            <span class="radio"></span>
+
+                            <div>
+                                <strong>Express</strong>
+                                <small>Priority delivery</small>
+                            </div>
+
+                            <b>₹30</b>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="notes">
+
+                        <label>
+                            Special Instructions
+                            <span>Optional</span>
+                        </label>
+
+                        <textarea
+                            id="customerNotes"
+                            placeholder="Any special request?"></textarea>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="confirm-btn">
+
+                        <span>
+                            Confirm Booking
+                        </span>
+
+                        <b>→</b>
+
+                    </button>
+
+                    <div class="secure-note">
+                        🔒 Your information is kept secure.
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <!-- ORDER SUMMARY -->
+
+            <aside class="order-card">
+
+                <div class="order-card-top">
+
+                    <div>
+                        <p>YOUR SELECTION</p>
+                        <h2>Royal Order</h2>
+                    </div>
+
+                    <span class="rose-icon">
+                        🌹
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="bookingProducts"
+                    class="booking-products">
+                </div>
+
+
+                <div class="order-divider"></div>
+
+
+                <div class="price-line">
+
+                    <span>Subtotal</span>
+
+                    <strong id="bookingSubtotal">
+                        ₹0
+                    </strong>
+
+                </div>
+
+
+                <div class="price-line">
+
+                    <span>Delivery</span>
+
+                    <strong id="bookingDelivery">
+                        ₹50
+                    </strong>
+
+                </div>
+
+
+                <div class="price-line offer">
+
+                    <span>Royal Offer</span>
+
+                    <strong>
+                        FREE
+                    </strong>
+
+                </div>
+
+
+                <div class="order-divider"></div>
+
+
+                <div class="grand-total">
+
+                    <span>Total</span>
+
+                    <strong id="bookingTotal">
+                        ₹0
+                    </strong>
+
+                </div>
+
+
+                <div class="royal-note">
+
+                    <span>✦</span>
+
+                    <p>
+                        Every bottle is prepared with
+                        care for your Royal experience.
+                    </p>
+
+                </div>
+
+            </aside>
+
+        </section>
+
+    </main>
+
+
+    <!-- LOADING -->
+
+    <div
+        class="booking-loading"
+        id="bookingLoading">
+
+        <div class="loading-box">
+
+            <div class="loader"></div>
+
+            <h2>Preparing Your Order</h2>
+
+            <p>
+                Creating your Royal booking...
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+
+            /*
+             * Decide whether this is:
+             * 1. Multiple cart booking
+             * 2. Individual Book Now
+             */
+
+            let cart =
+                JSON.parse(
+                    localStorage.getItem("royalBookingCart")
+                );
+
+            const directBooking =
+                JSON.parse(
+                    localStorage.getItem("royalDirectBooking")
+                );
+
+
+            if (!cart && directBooking) {
+
+                cart = [directBooking];
+
+            }
+
+
+            if (!cart || cart.length === 0) {
+
+                window.location.href = "shop.html";
+
+                return;
+
+            }
+
+
+            const products =
+                document.getElementById(
+                    "bookingProducts"
+                );
+
+
+            let subtotal = 0;
+
+
+            const icons = {
+
+                "Classic Rose Milk": "🌹",
+
+                "Strawberry Rose": "🍓🌹",
+
+                "Royal Rose Milk": "✨🌹",
+
+                "Rose Coconut Milk": "🥥🌹",
+
+                "Rose Chocolate": "🍫🌹",
+
+                "Mango Rose Milk": "🥭🌹"
+
+            };
+
+
+            cart.forEach(item => {
+
+                subtotal +=
+                    item.price *
+                    item.quantity;
+
+
+                const product =
+                    document.createElement("div");
+
+                product.className =
+                    "booking-product";
+
+
+                product.innerHTML = `
+
+                    <div class="booking-product-image">
+                        ${icons[item.name] || "🌹"}
+                    </div>
+
+                    <div class="booking-product-info">
+
+                        <h3>
+                            ${item.name}
+                        </h3>
+
+                        <p>
+                            ₹${item.price} × ${item.quantity}
+                        </p>
+
+                    </div>
+
+                    <strong>
+                        ₹${item.price * item.quantity}
+                    </strong>
+
+                `;
+
+
+                products.appendChild(product);
+
+            });
+
+
+            document.getElementById(
+                "bookingSubtotal"
+            ).textContent =
+                `₹${subtotal}`;
+
+
+            document.getElementById(
+                "bookingDelivery"
+            ).textContent =
+                subtotal > 0 ? "₹50" : "₹0";
+
+
+            document.getElementById(
+                "bookingTotal"
+            ).textContent =
+                `₹${subtotal + 50}`;
+
+
+            /*
+             * Delivery option animation
+             */
+
+            document
+                .querySelectorAll(
+                    ".delivery-option"
+                )
+                .forEach(option => {
+
+                    option.addEventListener(
+                        "click",
+                        () => {
+
+                            document
+                                .querySelectorAll(
+                                    ".delivery-option"
+                                )
+                                .forEach(
+                                    item =>
+                                        item.classList.remove(
+                                            "active"
+                                        )
+                                );
+
+                            option.classList.add(
+                                "active"
+                            );
+
+                        }
+                    );
+
+                });
+
+
+           /*
+ * Form submission
+ */
+
+document
+    .getElementById("bookingForm")
+    .addEventListener(
+        "submit",
+        async event => {
+
+            event.preventDefault();
+
+            const name =
+                document
+                    .getElementById("customerName")
+                    .value.trim();
+
+            const phone =
+                document
+                    .getElementById("customerPhone")
+                    .value.trim();
+
+            const email =
+                document
+                    .getElementById("customerEmail")
+                    .value.trim();
+
+            const address =
+                document
+                    .getElementById("customerAddress")
+                    .value.trim();
+
+            const city =
+                document
+                    .getElementById("customerCity")
+                    .value.trim();
+
+            const pincode =
+                document
+                    .getElementById("customerPincode")
+                    .value.trim();
+
+            const notes =
+                document
+                    .getElementById("customerNotes")
+                    .value.trim();
+
+            const deliveryType =
+                document
+                    .querySelector(
+                        'input[name="delivery"]:checked'
+                    )
+                    .value;
+
+
+            /* =========================
+               VALIDATION
+            ========================= */
+
+            if (
+                phone.length !== 10 ||
+                !/^[0-9]+$/.test(phone)
+            ) {
+
+                alert(
+                    "Please enter a valid 10-digit phone number."
+                );
+
+                return;
+            }
+
+
+            if (
+                pincode.length !== 6 ||
+                !/^[0-9]+$/.test(pincode)
+            ) {
+
+                alert(
+                    "Please enter a valid 6-digit pincode."
+                );
+
+                return;
+            }
+
+
+            /* =========================
+               BOOKING DATA
+            ========================= */
+
+            const bookingData = {
+
+                bookingId:
+                    "ROYAL-" + Date.now(),
+
+                customer: {
+
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    address: address,
+                    city: city,
+                    pincode: pincode,
+                    notes: notes
+
+                },
+
+                delivery:
+                    deliveryType,
+
+                products:
+                    cart,
+
+                subtotal:
+                    subtotal,
+
+                deliveryCharge:
+                    50,
+
+                total:
+                    subtotal + 50,
+
+                createdAt:
+                    new Date().toISOString()
+            };
+
+
+            /* =========================
+               SHOW LOADING
+            ========================= */
+
+            document
+                .getElementById("bookingLoading")
+                .classList.add("show");
+
+
+            try {
+
+                /* =========================
+                   SEND TO FLASK
+                ========================= */
+
+                const response =
+                    await fetch(
+                        "http://127.0.0.1:5000/book",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    bookingData
+                                )
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                /* =========================
+                   SUCCESS
+                ========================= */
+
+                if (result.success) {
+
+                    /*
+                     * Do NOT save the complete
+                     * booking in localStorage.
+                     *
+                     * Only send the temporary
+                     * WhatsApp URL to the next page.
+                     */
+
+                    const successURL =
+                        "booking-success.html?whatsapp=" +
+                        encodeURIComponent(
+                            result.whatsapp_url
+                        );
+
+
+                    window.location.href =
+                        successURL;
+
+                } else {
+
+                    document
+                        .getElementById(
+                            "bookingLoading"
+                        )
+                        .classList.remove(
+                            "show"
+                        );
+
+                    alert(
+                        result.message ||
+                        "Booking failed. Please try again."
+                    );
+
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "Booking Error:",
+                    error
+                );
+
+
+                document
+                    .getElementById(
+                        "bookingLoading"
+                    )
+                    .classList.remove(
+                        "show"
+                    );
+
+
+                alert(
+                    "Unable to connect to the booking server. Please make sure Flask is running."
+                );
+
+            }
+
+        }
+    );
+
+            /*
+             * Rose petals
+             */
+
+            function createPetal() {
+
+                const petal =
+                    document.createElement(
+                        "span"
+                    );
+
+                petal.className =
+                    "petal";
+
+                petal.textContent =
+                    Math.random() > .5
+                        ? "🌸"
+                        : "🌹";
+
+                petal.style.left =
+                    Math.random() * 100 + "%";
+
+                petal.style.fontSize =
+                    (10 +
+                    Math.random() * 14)
+                    + "px";
+
+                petal.style.opacity =
+                    .2 +
+                    Math.random() * .45;
+
+                petal.style.animationDuration =
+                    (6 +
+                    Math.random() * 7)
+                    + "s";
+
+                document
+                    .getElementById("petals")
+                    .appendChild(petal);
+
+
+                setTimeout(() => {
+
+                    petal.remove();
+
+                }, 14000);
+
+            }
+
+
+            setInterval(
+                createPetal,
+                1000
+            );
+
+        });
+
+    </script>
+
+</body>
+</html>

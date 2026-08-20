@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order | ROYAL — Rose Flavored Milk</title>
+
+    <link rel="stylesheet" href="track.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="bg-glow glow-one"></div>
+    <div class="bg-glow glow-two"></div>
+    <div class="petals" id="petals"></div>
+
+    <!-- HEADER -->
+    <header class="track-header">
+        <a href="index.html" class="logo">
+            <span>ROYAL</span>
+            <small>ROSE MILK</small>
+        </a>
+
+        <nav class="nav-links">
+            <a href="index.html">EXPERIENCE</a>
+            <a href="shop.html">SHOP</a>
+            <a href="track.html" class="active">TRACK ORDER</a>
+            <a href="contact.html">CONTACT</a>
+            <a href="cart.html">🛒 CART</a>
+        </nav>
+    </header>
+
+    <!-- MAIN -->
+    <main class="track-container">
+
+        <section class="track-heading">
+            <div class="sub">✦ LIVE STATUS ✦</div>
+            <h1>Track Your <span>Royal Order</span></h1>
+            <p>Enter your unique Order ID and verified email or phone to check the live preparation & delivery status.</p>
+        </section>
+
+        <!-- SEARCH CARD -->
+        <section class="track-search-card">
+            <form id="trackForm" class="search-form">
+                <div class="form-group">
+                    <label for="trackOrderId">Order ID</label>
+                    <div class="input-box">
+                        <input type="text" id="trackOrderId" placeholder="e.g. RR-20260820-001" required autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="trackVerify">Email or Phone Number</label>
+                    <div class="input-box">
+                        <input type="text" id="trackVerify" placeholder="e.g. name@email.com or 9876543210" required autocomplete="off">
+                    </div>
+                </div>
+
+                <button type="submit" id="btnTrack" class="btn-track">
+                    🔍 Track Order
+                </button>
+            </form>
+        </section>
+
+        <!-- RESULT SECTION -->
+        <section id="trackResult" class="track-result">
+            <div class="order-top-bar">
+                <div class="order-id-block">
+                    <small>ORDER FOUND</small>
+                    <h2 id="resOrderId">RR-00000000-000</h2>
+                    <span id="resBookingDate" style="color: var(--text-muted); font-size: 13px;"></span>
+                </div>
+                <div id="resStatusTag" class="status-tag CONFIRMED">
+                    ● CONFIRMED
+                </div>
+            </div>
+
+            <!-- STATUS TIMELINE -->
+            <div class="timeline-section">
+                <div class="timeline-title">Order Status Timeline</div>
+                
+                <div class="timeline-track" id="timelineTrack">
+                    <div class="timeline-progress" id="timelineProgressBar"></div>
+                    
+                    <div class="timeline-step" id="step-CONFIRMED">
+                        <div class="step-circle">✓</div>
+                        <div class="step-label">Booking<br>Confirmed</div>
+                    </div>
+
+                    <div class="timeline-step" id="step-PROCESSING">
+                        <div class="step-circle">🍹</div>
+                        <div class="step-label">Blending &<br>Processing</div>
+                    </div>
+
+                    <div class="timeline-step" id="step-READY">
+                        <div class="step-circle">📦</div>
+                        <div class="step-label">Ready for<br>Delivery</div>
+                    </div>
+
+                    <div class="timeline-step" id="step-COMPLETED">
+                        <div class="step-circle">🌹</div>
+                        <div class="step-label">Order<br>Completed</div>
+                    </div>
+                </div>
+
+                <div id="cancelledNotice" class="timeline-cancelled-notice" style="display: none;">
+                    <span style="font-size: 20px;">⚠️</span>
+                    <div>
+                        <strong>This order has been CANCELLED.</strong>
+                        <div id="cancelledTimeText" style="font-size: 12px; margin-top: 2px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DETAILS GRID -->
+            <div class="order-info-grid">
+                <!-- Delivery Info -->
+                <div class="info-box">
+                    <h3>Customer & Delivery</h3>
+                    <div class="info-row">
+                        <span>Recipient:</span>
+                        <strong id="resCustName">—</strong>
+                    </div>
+                    <div class="info-row">
+                        <span>Contact:</span>
+                        <strong id="resCustPhone">—</strong>
+                    </div>
+                    <div class="info-row">
+                        <span>Email:</span>
+                        <strong id="resCustEmail">—</strong>
+                    </div>
+                    <div class="info-row">
+                        <span>Address:</span>
+                        <strong id="resCustAddress">—</strong>
+                    </div>
+                    <div class="info-row">
+                        <span>Delivery Option:</span>
+                        <strong id="resDeliveryPref">—</strong>
+                    </div>
+                    <div id="resNotesRow" class="info-row" style="display: none;">
+                        <span>Special Notes:</span>
+                        <strong id="resNotes" style="color: var(--accent);">—</strong>
+                    </div>
+                </div>
+
+                <!-- Order Pricing Info -->
+                <div class="info-box">
+                    <h3>Order Breakdown</h3>
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th style="text-align: center;">Qty</th>
+                                <th style="text-align: right;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resItemsTable">
+                            <!-- Items dynamically populated -->
+                        </tbody>
+                    </table>
+
+                    <div style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 15px; padding-top: 12px;">
+                        <div class="info-row">
+                            <span>Subtotal:</span>
+                            <strong id="resSubtotal">₹0</strong>
+                        </div>
+                        <div class="info-row">
+                            <span>Delivery Charge:</span>
+                            <strong id="resDeliveryCharge">₹0</strong>
+                        </div>
+                        <div class="info-row" style="font-size: 16px; margin-top: 8px;">
+                            <span style="color: var(--primary-glow); font-weight: 600;">Grand Total:</span>
+                            <strong id="resGrandTotal" style="color: var(--primary-glow); font-size: 18px;">₹0</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ORDER ACTIONS -->
+            <div class="order-actions">
+                <button type="button" id="btnCancelOrder" class="btn-cancel-order">
+                    ✕ Cancel Order
+                </button>
+                <div style="display: flex; gap: 12px;">
+                    <a href="shop.html" class="btn-home">Order More</a>
+                    <a href="index.html" class="btn-home">Back to Home</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- CANCELLATION MODAL DIALOG -->
+    <div id="cancelModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-icon">⚠️</div>
+            <h3>Cancel Order?</h3>
+            <p>Are you sure you want to cancel this order? Once cancelled, our team will stop preparing this order.</p>
+            <div class="modal-buttons">
+                <button type="button" id="btnConfirmCancel" class="btn-modal-cancel">CANCEL ORDER</button>
+                <button type="button" id="btnDismissCancel" class="btn-modal-keep">KEEP ORDER</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="trackToast" class="track-toast"></div>
+
+    <script src="api-config.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const trackForm = document.getElementById("trackForm");
+            const trackOrderIdInput = document.getElementById("trackOrderId");
+            const trackVerifyInput = document.getElementById("trackVerify");
+            const btnTrack = document.getElementById("btnTrack");
+            const trackResult = document.getElementById("trackResult");
+            const trackToast = document.getElementById("trackToast");
+
+            const cancelModal = document.getElementById("cancelModal");
+            const btnCancelOrder = document.getElementById("btnCancelOrder");
+            const btnConfirmCancel = document.getElementById("btnConfirmCancel");
+            const btnDismissCancel = document.getElementById("btnDismissCancel");
+
+            let currentOrder = null;
+
+            function showToast(msg) {
+                trackToast.textContent = msg;
+                trackToast.classList.add("show");
+                setTimeout(() => { trackToast.classList.remove("show"); }, 3500);
+            }
+
+            // Auto-populate from URL query params
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialOrderId = urlParams.get("order_id");
+            if (initialOrderId) {
+                trackOrderIdInput.value = initialOrderId;
+            }
+
+            // Timeline status mapping
+            const statusLevels = {
+                "CONFIRMED": 1,
+                "PROCESSING": 2,
+                "READY": 3,
+                "COMPLETED": 4
+            };
+
+            function renderOrder(order) {
+                currentOrder = order;
+                const status = (order.order_status || "CONFIRMED").toUpperCase();
+
+                document.getElementById("resOrderId").textContent = order.order_id;
+                document.getElementById("resBookingDate").textContent = `Booked on: ${order.booking_date || order.created_at}`;
+
+                // Status Tag
+                const statusTag = document.getElementById("resStatusTag");
+                statusTag.className = `status-tag ${status}`;
+                statusTag.textContent = `● ${status}`;
+
+                // Timeline logic
+                const progressBar = document.getElementById("timelineProgressBar");
+                const steps = ["CONFIRMED", "PROCESSING", "READY", "COMPLETED"];
+                const cancelledNotice = document.getElementById("cancelledNotice");
+
+                steps.forEach(st => {
+                    const el = document.getElementById(`step-${st}`);
+                    if (el) el.className = "timeline-step";
+                });
+
+                if (status === "CANCELLED") {
+                    progressBar.style.width = "0%";
+                    cancelledNotice.style.display = "flex";
+                    document.getElementById("cancelledTimeText").textContent = `Cancelled timestamp: ${order.cancelled_at || 'Recorded'}`;
+                    btnCancelOrder.style.display = "none";
+                } else {
+                    cancelledNotice.style.display = "none";
+                    const currentLevel = statusLevels[status] || 1;
+
+                    steps.forEach((st, idx) => {
+                        const level = idx + 1;
+                        const el = document.getElementById(`step-${st}`);
+                        if (!el) return;
+
+                        if (level < currentLevel) {
+                            el.classList.add("completed");
+                        } else if (level === currentLevel) {
+                            el.classList.add("active");
+                        }
+                    });
+
+                    // Progress line width
+                    if (currentLevel === 1) progressBar.style.width = "0%";
+                    else if (currentLevel === 2) progressBar.style.width = "33%";
+                    else if (currentLevel === 3) progressBar.style.width = "66%";
+                    else if (currentLevel >= 4) progressBar.style.width = "100%";
+
+                    // Show or hide cancel button
+                    if (status === "COMPLETED" || status === "READY") {
+                        btnCancelOrder.style.display = "none";
+                    } else {
+                        btnCancelOrder.style.display = "inline-block";
+                    }
+                }
+
+                // Customer details
+                const cust = order.customer || {};
+                document.getElementById("resCustName").textContent = cust.name || "—";
+                document.getElementById("resCustPhone").textContent = cust.phone || "—";
+                document.getElementById("resCustEmail").textContent = cust.email || "—";
+                document.getElementById("resCustAddress").textContent = `${cust.address || ''}, ${cust.city || ''} ${cust.pincode ? '- ' + cust.pincode : ''}`.trim() || "—";
+                document.getElementById("resDeliveryPref").textContent = order.delivery_preference || "Standard Delivery";
+
+                if (order.notes) {
+                    document.getElementById("resNotesRow").style.display = "flex";
+                    document.getElementById("resNotes").textContent = order.notes;
+                } else {
+                    document.getElementById("resNotesRow").style.display = "none";
+                }
+
+                // Items
+                const itemsTbody = document.getElementById("resItemsTable");
+                itemsTbody.innerHTML = "";
+                (order.items || []).forEach(item => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${item.product_name || item.name}</td>
+                        <td style="text-align: center;">${item.quantity}</td>
+                        <td style="text-align: right;">₹${item.subtotal || (item.unit_price * item.quantity)}</td>
+                    `;
+                    itemsTbody.appendChild(row);
+                });
+
+                document.getElementById("resSubtotal").textContent = `₹${order.subtotal}`;
+                document.getElementById("resDeliveryCharge").textContent = `₹${order.delivery_charge}`;
+                document.getElementById("resGrandTotal").textContent = `₹${order.total_amount}`;
+
+                trackResult.style.display = "block";
+                trackResult.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+
+            // Track form submission
+            trackForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const orderId = trackOrderIdInput.value.trim().toUpperCase();
+                const verification = trackVerifyInput.value.trim();
+
+                if (!orderId || !verification) {
+                    showToast("Please enter both Order ID and Email/Phone.");
+                    return;
+                }
+
+                btnTrack.textContent = "Searching...";
+                btnTrack.disabled = true;
+
+                try {
+                    const res = await window.royalApi.post("/api/track", {
+                        order_id: orderId,
+                        verification: verification
+                    });
+
+                    const data = res.data;
+
+                    if (res.ok && data.success && data.order) {
+                        renderOrder(data.order);
+                    } else {
+                        trackResult.style.display = "none";
+                        showToast(data.message || "No order found matching these details.");
+                    }
+                } catch (err) {
+                    console.error("Track error:", err);
+                    showToast("Unable to connect to server. Please ensure the backend is running.");
+                } finally {
+                    btnTrack.textContent = "🔍 Track Order";
+                    btnTrack.disabled = false;
+                }
+            });
+
+            // Cancellation Modal Triggers
+            btnCancelOrder.addEventListener("click", () => {
+                cancelModal.classList.add("show");
+            });
+
+            btnDismissCancel.addEventListener("click", () => {
+                cancelModal.classList.remove("show");
+            });
+
+            btnConfirmCancel.addEventListener("click", async () => {
+                if (!currentOrder) return;
+
+                btnConfirmCancel.textContent = "Cancelling...";
+                btnConfirmCancel.disabled = true;
+
+                try {
+                    const res = await window.royalApi.post("/api/cancel", {
+                        order_id: currentOrder.order_id,
+                        verification: trackVerifyInput.value.trim(),
+                        reason: "Customer cancelled via tracking portal"
+                    });
+
+                    const data = res.data;
+                    cancelModal.classList.remove("show");
+
+                    if (res.ok && data.success && data.order) {
+                        showToast("Order has been successfully CANCELLED.");
+                        renderOrder(data.order);
+                    } else {
+                        showToast(data.message || "Unable to cancel order.");
+                    }
+                } catch (err) {
+                    console.error("Cancel error:", err);
+                    showToast("Server communication error while cancelling order.");
+                } finally {
+                    btnConfirmCancel.textContent = "CANCEL ORDER";
+                    btnConfirmCancel.disabled = false;
+                }
+            });
+
+            // Rose petals animation
+            function createPetal() {
+                const petal = document.createElement("span");
+                petal.className = "petal";
+                petal.textContent = Math.random() > .5 ? "🌸" : "🌹";
+                petal.style.left = Math.random() * 100 + "%";
+                petal.style.fontSize = (10 + Math.random() * 14) + "px";
+                petal.style.opacity = .15 + Math.random() * .45;
+                petal.style.animationDuration = (6 + Math.random() * 7) + "s";
+
+                document.getElementById("petals").appendChild(petal);
+                setTimeout(() => { petal.remove(); }, 14000);
+            }
+            setInterval(createPetal, 1000);
+        });
+    </script>
+</body>
+</html>

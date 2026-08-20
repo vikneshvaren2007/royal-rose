@@ -1,0 +1,2091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Console | Secure Admin Dashboard — ROYAL ROSE MILK</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #d94370;
+            --primary-glow: #ff529a;
+            --primary-dark: #8e1f44;
+            --accent: #ffb8d6;
+            --bg-dark: #090207;
+            --bg-sidebar: rgba(14, 3, 11, 0.95);
+            --bg-card: rgba(22, 5, 18, 0.85);
+            --bg-card-hover: rgba(32, 8, 26, 0.95);
+            --border: rgba(255, 82, 154, 0.18);
+            --border-glow: rgba(255, 82, 154, 0.45);
+            --text: #f5eff3;
+            --text-muted: #a6919e;
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #ef4444;
+            --info: #38bdf8;
+            --purple: #c084fc;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Glow */
+        .bg-glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(140px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glow-1 { width: 550px; height: 550px; background: radial-gradient(circle, rgba(217, 67, 112, 0.22), transparent 70%); top: -100px; left: -100px; }
+        .glow-2 { width: 650px; height: 650px; background: radial-gradient(circle, rgba(125, 13, 66, 0.28), transparent 70%); bottom: -150px; right: -150px; }
+
+        /* AUTH SCREEN */
+        #loginScreen {
+            position: fixed;
+            inset: 0;
+            background: #090207;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-card {
+            background: rgba(24, 6, 20, 0.95);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--border-glow);
+            border-radius: 26px;
+            padding: 48px 40px;
+            max-width: 440px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 65px rgba(0,0,0,0.85);
+            position: relative;
+            overflow: hidden;
+        }
+        .login-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #ff529a, #d94370, #ffb8d6);
+        }
+
+        /* ADMIN APP LAYOUT */
+        #adminApp {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* SIDEBAR */
+        .admin-sidebar {
+            width: 270px;
+            background: var(--bg-sidebar);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-brand {
+            padding: 24px 22px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border);
+            text-decoration: none;
+        }
+        .brand-crown { font-size: 28px; color: var(--primary-glow); }
+        .sidebar-brand h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            letter-spacing: 2.5px;
+            color: #fff;
+            line-height: 1.1;
+        }
+        .sidebar-brand small {
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: var(--accent);
+            text-transform: uppercase;
+        }
+
+        .sidebar-nav {
+            padding: 20px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+            transition: all 0.25s;
+            width: 100%;
+        }
+        .nav-item:hover {
+            color: #fff;
+            background: rgba(255, 82, 154, 0.08);
+        }
+        .nav-item.active {
+            color: #fff;
+            background: linear-gradient(135deg, rgba(217, 67, 112, 0.35), rgba(255, 82, 154, 0.2));
+            border: 1px solid var(--border-glow);
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(217, 67, 112, 0.2);
+        }
+        .nav-item .badge-count {
+            margin-left: auto;
+            background: rgba(255, 82, 154, 0.2);
+            color: var(--primary-glow);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* MAIN CONTENT */
+        .admin-main {
+            margin-left: 270px;
+            flex-grow: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            width: calc(100% - 270px);
+        }
+
+        /* TOPBAR */
+        .admin-topbar {
+            height: 70px;
+            background: rgba(14, 3, 11, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .btn-toggle-sidebar {
+            display: none;
+            background: none;
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .health-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(34, 197, 94, 0.12);
+            border: 1px solid rgba(34, 197, 94, 0.35);
+            color: #4ade80;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .health-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 8px #22c55e;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.85); } }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .btn-view-store {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            border: 1px solid var(--border);
+            padding: 7px 16px;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        .btn-view-store:hover { background: rgba(255, 82, 154, 0.15); color: #fff; }
+
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+            padding: 7px 16px;
+            border-radius: 10px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-logout:hover { background: #ef4444; color: #fff; }
+
+        /* BODY CONTAINER */
+        .admin-content {
+            padding: 30px;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; animation: fadeIn 0.25s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* KPI STATS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(14px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.25s, border-color 0.25s;
+        }
+        .stat-card:hover { transform: translateY(-3px); border-color: var(--border-glow); }
+        .stat-card small { font-size: 11px; letter-spacing: 1px; color: var(--accent); text-transform: uppercase; }
+        .stat-card .stat-val { font-size: 30px; font-weight: 700; color: #fff; margin: 6px 0 2px; font-family: 'Cormorant Garamond', serif; }
+        .stat-card .stat-sub { font-size: 11px; color: var(--text-muted); }
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--primary-glow), transparent);
+        }
+
+        /* SECTION HEADER */
+        .section-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+        .section-bar h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+        .section-bar p { font-size: 13px; color: var(--text-muted); }
+
+        .action-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            background: rgba(10, 2, 8, 0.85);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 9px 16px;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+            min-width: 220px;
+            transition: border-color 0.3s;
+        }
+        .search-input:focus { border-color: var(--primary-glow); }
+
+        .filter-select {
+            background: rgba(10, 2, 8, 0.85);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 9px 14px;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #d94370, #ff529a);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 82, 154, 0.35); }
+
+        /* DATA TABLES */
+        .table-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            margin-bottom: 25px;
+        }
+        .table-responsive { width: 100%; overflow-x: auto; }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: left;
+        }
+        .data-table th {
+            background: rgba(28, 6, 22, 0.9);
+            color: var(--accent);
+            padding: 14px 18px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 11px;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        .data-table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(255, 82, 154, 0.08);
+            color: var(--text);
+            vertical-align: middle;
+        }
+        .data-table tr:hover td { background: rgba(255, 82, 154, 0.04); }
+
+        /* STATUS BADGES */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 14px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .status-pill.CONFIRMED { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+        .status-pill.PROCESSING { background: rgba(234, 179, 8, 0.15); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.3); }
+        .status-pill.READY, .status-pill.OUT_FOR_DELIVERY, .status-pill.OUT_FOR_DELIVERY { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+        .status-pill.COMPLETED { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .status-pill.CANCELLED { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .status-pill.PENDING { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.3); }
+        .status-pill.PAID { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .status-pill.REFUNDED { background: rgba(234, 179, 8, 0.15); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.3); }
+        .status-pill.FAILED { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        /* BUTTON CONTROLS */
+        .btn-ctrl {
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            text-align: center;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .btn-inspect { background: rgba(255, 82, 154, 0.15); color: var(--primary-glow); border-color: var(--border); }
+        .btn-inspect:hover { background: var(--primary); color: #fff; }
+
+        .btn-cancel-action { background: rgba(239, 68, 68, 0.15); color: #f87171; border-color: rgba(239, 68, 68, 0.3); }
+        .btn-cancel-action:hover { background: #ef4444; color: #fff; }
+
+        /* PRODUCT CARDS (ADMIN) */
+        .admin-product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 22px;
+        }
+        .admin-prod-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(14px);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .admin-prod-card:hover { border-color: var(--border-glow); transform: translateY(-4px); }
+        .admin-prod-card.is-sold-out { border-color: rgba(239, 68, 68, 0.4); }
+        .admin-prod-card.is-hidden { opacity: 0.65; }
+
+        .prod-img-box {
+            height: 180px;
+            background: rgba(10, 2, 8, 0.9);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .prod-img-box img { width: 100%; height: 100%; object-fit: cover; }
+        .prod-badge-tag {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            background: var(--primary);
+            color: #fff;
+            letter-spacing: 1px;
+        }
+        .prod-sold-out-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            background: #dc2626;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(220,38,38,0.5);
+        }
+
+        .prod-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .prod-body h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #fff; margin-bottom: 4px; }
+        .prod-price { font-size: 20px; font-weight: 700; color: var(--primary-glow); margin-bottom: 8px; }
+        .prod-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px; flex-grow: 1; }
+
+        .prod-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 82, 154, 0.1);
+        }
+        .btn-sold-out-toggle { background: rgba(239, 68, 68, 0.15); color: #f87171; border-color: rgba(239, 68, 68, 0.3); }
+        .btn-sold-out-toggle:hover { background: #ef4444; color: #fff; }
+        .btn-sold-out-toggle.active-sold { background: #dc2626; color: #fff; }
+
+        .btn-vis-toggle { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border-color: rgba(148, 163, 184, 0.3); }
+        .btn-vis-toggle:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
+        .btn-vis-toggle.hidden-item { background: rgba(234, 179, 8, 0.2); color: #facc15; border-color: #facc15; }
+
+        .btn-edit-prod { background: rgba(255, 82, 154, 0.15); color: var(--primary-glow); border-color: var(--border); }
+        .btn-edit-prod:hover { background: var(--primary); color: #fff; }
+
+        .btn-delete-prod { background: rgba(255, 255, 255, 0.05); color: #9ca3af; border-color: rgba(255, 255, 255, 0.1); }
+        .btn-delete-prod:hover { background: #ef4444; color: #fff; }
+
+        /* MODALS */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(6, 1, 5, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.show { display: flex; animation: fadeIn 0.2s ease; }
+        .modal-box {
+            background: #170412;
+            border: 1px solid var(--border-glow);
+            border-radius: 22px;
+            max-width: 650px;
+            width: 100%;
+            padding: 32px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.85);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: #fff; margin-bottom: 6px; }
+        .modal-box p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .form-full { margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
+        .form-full label, .form-grid label { font-size: 11px; letter-spacing: 1px; color: var(--accent); text-transform: uppercase; font-weight: 600; }
+        .form-full input, .form-grid input, .form-full textarea, .form-full select, .form-grid select {
+            background: rgba(8, 2, 7, 0.85);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+            font-family: 'Poppins', sans-serif;
+        }
+        .form-full input:focus, .form-grid input:focus, .form-full textarea:focus, .form-full select:focus { border-color: var(--primary-glow); }
+        .form-full textarea { min-height: 80px; resize: vertical; }
+
+        .modal-btns { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
+        .btn-modal-cancel { background: rgba(255,255,255,0.08); color: #cbd5e1; border: none; border-radius: 8px; padding: 10px 18px; font-size: 13px; cursor: pointer; }
+        .btn-modal-save { background: linear-gradient(135deg, #d94370, #ff529a); color: #fff; border: none; border-radius: 8px; padding: 10px 22px; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+        /* ORDER DETAILS VIEW (INSIDE MODAL) */
+        .order-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .detail-block {
+            background: rgba(10, 2, 8, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .detail-block h4 {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 82, 154, 0.1);
+            padding-bottom: 4px;
+        }
+        .detail-block p { font-size: 13px; color: #fff; margin-bottom: 4px; }
+
+        /* TOAST */
+        .admin-toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(24, 6, 20, 0.95);
+            border: 1px solid var(--primary-glow);
+            color: #fff;
+            padding: 14px 22px;
+            border-radius: 12px;
+            font-size: 13px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            z-index: 3000;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .admin-toast.show { display: block; }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+            .admin-sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            .admin-main {
+                margin-left: 0;
+                width: 100%;
+            }
+            .btn-toggle-sidebar {
+                display: block;
+            }
+            .form-grid, .order-detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+
+    <!-- =================================================
+         1. AUTHENTICATION SCREEN (LOGIN)
+    ================================================== -->
+    <div id="loginScreen">
+        <div class="login-card">
+            <div class="brand-crown" style="font-size: 42px; margin-bottom: 8px;">♛</div>
+            <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 32px; color: #fff;">Royal Console</h2>
+            <p style="font-size: 13px; color: var(--accent); margin-bottom: 28px;">Admin Authorization Required</p>
+
+            <form id="adminLoginForm">
+                <div class="form-full" style="text-align: left;">
+                    <label for="loginUser">Username or Email</label>
+                    <input type="text" id="loginUser" value="admin" required autocomplete="username">
+                </div>
+                <div class="form-full" style="text-align: left;">
+                    <label for="loginPass">Password</label>
+                    <input type="password" id="loginPass" placeholder="Enter admin password" required autocomplete="current-password">
+                </div>
+                <button type="submit" id="btnLoginSubmit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 10px; padding: 13px;">
+                    Unlock Royal Console ➔
+                </button>
+            </form>
+            <div id="loginError" style="display:none; color:#f87171; font-size:12px; margin-top:14px; background: rgba(239,68,68,0.1); padding: 10px; border-radius: 8px; border: 1px solid rgba(239,68,68,0.3);"></div>
+        </div>
+    </div>
+
+    <!-- =================================================
+         2. ADMIN CONSOLE APP
+    ================================================== -->
+    <div id="adminApp">
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar" id="sidebar">
+            <a href="#" class="sidebar-brand">
+                <span class="brand-crown">♛</span>
+                <div>
+                    <h1>ROYAL ROSE MILK</h1>
+                    <small>Administration Portal</small>
+                </div>
+            </a>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-tab="tabDashboard">
+                    <span>📊</span> Dashboard
+                </button>
+                <button class="nav-item" data-tab="tabOrders">
+                    <span>📦</span> Orders Management
+                    <span class="badge-count" id="sidebarOrderCount">0</span>
+                </button>
+                <button class="nav-item" data-tab="tabProducts">
+                    <span>🍹</span> Products Catalogue
+                    <span class="badge-count" id="sidebarProdCount">0</span>
+                </button>
+                <button class="nav-item" data-tab="tabCustomers">
+                    <span>👥</span> Customers
+                    <span class="badge-count" id="sidebarCustCount">0</span>
+                </button>
+                <button class="nav-item" data-tab="tabMessages">
+                    <span>✉️</span> Inquiries & Messages
+                    <span class="badge-count" id="sidebarMsgCount">0</span>
+                </button>
+                <button class="nav-item" data-tab="tabSettings">
+                    <span>⚙️</span> Shop Settings
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="shop.html" target="_blank" class="btn-view-store" style="text-align: center; display: block;">🛍 View Storefront</a>
+                <button type="button" id="btnLogout" class="btn-logout" style="width: 100%;">🚪 Logout Console</button>
+            </div>
+        </aside>
+
+        <!-- MAIN VIEW -->
+        <div class="admin-main">
+            <!-- TOPBAR -->
+            <header class="admin-topbar">
+                <div class="topbar-left">
+                    <button class="btn-toggle-sidebar" id="btnToggleSidebar">☰</button>
+                    <div class="health-badge" id="healthBadge">
+                        <span class="health-dot"></span>
+                        <span id="healthText">Database Connected (v2.0)</span>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <button type="button" class="btn-primary" id="btnQuickRefresh" style="padding: 6px 14px; font-size: 12px;">⟳ Refresh Data</button>
+                </div>
+            </header>
+
+            <!-- CONTENT BODY -->
+            <main class="admin-content">
+
+                <!-- =================================================
+                     TAB 1: DASHBOARD
+                ================================================== -->
+                <section id="tabDashboard" class="tab-panel active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <small>Total Products</small>
+                            <div class="stat-val" id="kpiTotalProducts">0</div>
+                            <div class="stat-sub"><span id="kpiSoldOutProducts">0</span> Sold Out • <span id="kpiHiddenProducts">0</span> Hidden</div>
+                        </div>
+                        <div class="stat-card">
+                            <small>Total Orders</small>
+                            <div class="stat-val" id="kpiTotalOrders">0</div>
+                            <div class="stat-sub">Lifetime customer bookings</div>
+                        </div>
+                        <div class="stat-card">
+                            <small>Pending Orders</small>
+                            <div class="stat-val" style="color: var(--warning);" id="kpiPendingOrders">0</div>
+                            <div class="stat-sub">Awaiting confirmation</div>
+                        </div>
+                        <div class="stat-card">
+                            <small>Confirmed Orders</small>
+                            <div class="stat-val" style="color: var(--info);" id="kpiConfirmedOrders">0</div>
+                            <div class="stat-sub">Confirmed bookings</div>
+                        </div>
+                        <div class="stat-card">
+                            <small>Processing & Out</small>
+                            <div class="stat-val" style="color: var(--purple);" id="kpiProcessingOrders">0</div>
+                            <div class="stat-sub">In kitchen & dispatch</div>
+                        </div>
+                        <div class="stat-card">
+                            <small>Completed Orders</small>
+                            <div class="stat-val" style="color: var(--success);" id="kpiCompletedOrders">0</div>
+                            <div class="stat-sub">Successfully fulfilled</div>
+                        </div>
+                        <div class="stat-card">
+                            <small>Cancelled Orders</small>
+                            <div class="stat-val" style="color: var(--danger);" id="kpiCancelledOrders">0</div>
+                            <div class="stat-sub">Admin / Customer cancelled</div>
+                        </div>
+                        <div class="stat-card">
+                            <small>Total Customers</small>
+                            <div class="stat-val" style="color: var(--accent);" id="kpiTotalCustomers">0</div>
+                            <div class="stat-sub">Registered buyers</div>
+                        </div>
+                        <div class="stat-card">
+                            <small>Total Revenue</small>
+                            <div class="stat-val" style="color: var(--primary-glow);" id="kpiTotalRevenue">₹0</div>
+                            <div class="stat-sub">Excluding cancellations</div>
+                        </div>
+                    </div>
+
+                    <div class="section-bar">
+                        <div>
+                            <h2>Recent Orders</h2>
+                            <p>Latest customer bookings requiring fulfillment.</p>
+                        </div>
+                        <div class="action-group">
+                            <button type="button" class="btn-primary" onclick="switchTab('tabOrders')">View All Orders ➔</button>
+                        </div>
+                    </div>
+
+                    <div class="table-card">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Items Breakdown</th>
+                                        <th>Total</th>
+                                        <th>Payment</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentOrdersTable">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- =================================================
+                     TAB 2: ORDERS MANAGEMENT
+                ================================================== -->
+                <section id="tabOrders" class="tab-panel">
+                    <div class="section-bar">
+                        <div>
+                            <h2>Orders Management</h2>
+                            <p>Search, inspect, update status, and manage cancellation flows.</p>
+                        </div>
+
+                        <div class="action-group">
+                            <input type="text" id="orderSearchInput" class="search-input" placeholder="Search ID, name, email, phone...">
+                            <select id="orderStatusFilter" class="filter-select">
+                                <option value="ALL">All Statuses</option>
+                                <option value="PENDING">PENDING</option>
+                                <option value="CONFIRMED">CONFIRMED</option>
+                                <option value="PROCESSING">PROCESSING</option>
+                                <option value="READY">READY / OUT FOR DELIVERY</option>
+                                <option value="COMPLETED">COMPLETED</option>
+                                <option value="CANCELLED">CANCELLED</option>
+                            </select>
+                            <select id="orderPaymentFilter" class="filter-select">
+                                <option value="ALL">All Payments</option>
+                                <option value="PENDING">PENDING</option>
+                                <option value="PAID">PAID</option>
+                                <option value="REFUNDED">REFUNDED</option>
+                                <option value="FAILED">FAILED</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-card">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer Contact</th>
+                                        <th>Delivery Address</th>
+                                        <th>Items Breakdown</th>
+                                        <th>Total</th>
+                                        <th>Date & Time</th>
+                                        <th>Payment</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allOrdersTable">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- =================================================
+                     TAB 3: PRODUCT MANAGEMENT (CRUD)
+                ================================================== -->
+                <section id="tabProducts" class="tab-panel">
+                    <div class="section-bar">
+                        <div>
+                            <h2>Products Catalogue</h2>
+                            <p>Manage pricing, varieties, ingredients, stock toggles, and store visibility.</p>
+                        </div>
+
+                        <div class="action-group">
+                            <input type="text" id="prodSearchInput" class="search-input" placeholder="Search variety name...">
+                            <select id="prodCategoryFilter" class="filter-select">
+                                <option value="ALL">All Categories</option>
+                                <option value="Rose Milk">Rose Milk</option>
+                                <option value="Signature Rose Milk">Signature Rose Milk</option>
+                            </select>
+                            <select id="prodStatusFilter" class="filter-select">
+                                <option value="ALL">All Stock</option>
+                                <option value="INSTOCK">In Stock Only</option>
+                                <option value="SOLDOUT">Sold Out Only</option>
+                                <option value="VISIBLE">Visible Only</option>
+                                <option value="HIDDEN">Hidden Only</option>
+                            </select>
+                            <button type="button" id="btnOpenAddProduct" class="btn-primary">
+                                + Add New Product
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="admin-product-grid" id="adminProductGrid">
+                        <!-- Populated dynamically -->
+                    </div>
+                </section>
+
+
+                <!-- =================================================
+                     TAB 4: CUSTOMERS MANAGEMENT
+                ================================================== -->
+                <section id="tabCustomers" class="tab-panel">
+                    <div class="section-bar">
+                        <div>
+                            <h2>Customer Directory</h2>
+                            <p>Registered customers, lifetime order statistics, and purchase histories.</p>
+                        </div>
+
+                        <div class="action-group">
+                            <input type="text" id="custSearchInput" class="search-input" placeholder="Search customer name, email, phone...">
+                        </div>
+                    </div>
+
+                    <div class="table-card">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Customer</th>
+                                        <th>Contact Email</th>
+                                        <th>Phone</th>
+                                        <th>Location</th>
+                                        <th>Total Orders</th>
+                                        <th>Total Spent</th>
+                                        <th>Latest Order</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customersTable">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- =================================================
+                     TAB 5: INQUIRIES & MESSAGES
+                ================================================== -->
+                <section id="tabMessages" class="tab-panel">
+                    <div class="section-bar">
+                        <div>
+                            <h2>Customer Inquiries</h2>
+                            <p>Messages submitted through the Contact Us portal.</p>
+                        </div>
+                    </div>
+
+                    <div class="table-card">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Sender</th>
+                                        <th>Contact</th>
+                                        <th>Message</th>
+                                        <th>Date</th>
+                                        <th>Direct Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allMessagesTable">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- =================================================
+                     TAB 6: SHOP SETTINGS
+                ================================================== -->
+                <section id="tabSettings" class="tab-panel">
+                    <div class="section-bar">
+                        <div>
+                            <h2>Shop Settings</h2>
+                            <p>Update brand information, operational contacts, and delivery fees.</p>
+                        </div>
+                    </div>
+
+                    <div class="table-card" style="padding: 30px; max-width: 800px;">
+                        <form id="settingsForm">
+                            <div class="form-grid">
+                                <div class="form-full">
+                                    <label>Brand Display Name</label>
+                                    <input type="text" id="setShopName" required>
+                                </div>
+                                <div class="form-full">
+                                    <label>Official Support Phone</label>
+                                    <input type="text" id="setPhone" required>
+                                </div>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-full">
+                                    <label>Official Email</label>
+                                    <input type="email" id="setEmail" required>
+                                </div>
+                                <div class="form-full">
+                                    <label>WhatsApp Business Number</label>
+                                    <input type="text" id="setWhatsapp" required>
+                                </div>
+                            </div>
+
+                            <div class="form-full">
+                                <label>Heritage Location / Address</label>
+                                <input type="text" id="setAddress" required>
+                            </div>
+
+                            <div class="form-full">
+                                <label>Operating Hours</label>
+                                <input type="text" id="setHours" required>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-full">
+                                    <label>Standard Delivery Fee (₹)</label>
+                                    <input type="number" id="setStandardFee" required>
+                                </div>
+                                <div class="form-full">
+                                    <label>Express Delivery Fee (₹)</label>
+                                    <input type="number" id="setExpressFee" required>
+                                </div>
+                            </div>
+
+                            <button type="submit" id="btnSaveSettings" class="btn-primary" style="margin-top: 10px;">
+                                Save Settings ➔
+                            </button>
+                        </form>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+
+    <!-- =================================================
+         MODAL 1: PRODUCT ADD / EDIT MODAL
+    ================================================== -->
+    <div id="productModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3 id="modalTitle">Add New Product</h3>
+            <p>Fill in the product specifications to update the live customer catalogue.</p>
+
+            <form id="productForm">
+                <input type="hidden" id="modalProdId" value="">
+
+                <div class="form-grid">
+                    <div>
+                        <label>Product Name *</label>
+                        <input type="text" id="modalProdName" placeholder="e.g. Cardamom Rose Milk" required>
+                    </div>
+                    <div>
+                        <label>Price in INR (₹) *</label>
+                        <input type="number" step="0.5" id="modalProdPrice" placeholder="189" required>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div>
+                        <label>Badge Tag</label>
+                        <input type="text" id="modalProdBadge" placeholder="e.g. BESTSELLER, SIGNATURE">
+                    </div>
+                    <div>
+                        <label>Category</label>
+                        <input type="text" id="modalProdCategory" value="Rose Milk" required>
+                    </div>
+                </div>
+
+                <div class="form-full">
+                    <label>Image URL / Path</label>
+                    <input type="text" id="modalProdImage" value="images/Royal Rose Milk.jpg" placeholder="e.g. images/Classic Rose Milk.jpg">
+                    <small style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Use existing images in images/ folder (Classic Rose Milk.jpg, Rose Coconut Milk.jpg, etc.) or paste an image URL.</small>
+                </div>
+
+                <div class="form-full">
+                    <label>Description</label>
+                    <textarea id="modalProdDesc" placeholder="Delicate creamy rose infusion..."></textarea>
+                </div>
+
+                <div class="form-full">
+                    <label>Ingredients</label>
+                    <input type="text" id="modalProdIngredients" placeholder="Damask Rose Extract, Whole Milk, Saffron">
+                </div>
+
+                <div class="form-grid" style="margin-top: 10px;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="modalProdSoldOut" style="width: auto;">
+                        Mark as SOLD OUT
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="modalProdVisible" checked style="width: auto;">
+                        Visible to Customers
+                    </label>
+                </div>
+
+                <div class="modal-btns">
+                    <button type="button" id="btnDismissModal" class="btn-modal-cancel">Cancel</button>
+                    <button type="submit" id="btnSaveProd" class="btn-modal-save">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- =================================================
+         MODAL 2: DETAILED ORDER INSPECTION (360 VIEW)
+    ================================================== -->
+    <div id="orderDetailModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 750px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                <div>
+                    <h3 id="odTitle">Order Details</h3>
+                    <p id="odSubtitle" style="margin-bottom: 0;">Complete customer and transaction breakdown</p>
+                </div>
+                <span id="odStatusPill" class="status-pill CONFIRMED">CONFIRMED</span>
+            </div>
+
+            <div class="order-detail-grid">
+                <div class="detail-block">
+                    <h4>Customer Information</h4>
+                    <p><strong>Name:</strong> <span id="odCustName">—</span></p>
+                    <p><strong>Email:</strong> <span id="odCustEmail">—</span></p>
+                    <p><strong>Phone:</strong> <span id="odCustPhone">—</span></p>
+                    <p><strong>Address:</strong> <span id="odCustAddress">—</span></p>
+                </div>
+
+                <div class="detail-block">
+                    <h4>Booking & Delivery</h4>
+                    <p><strong>Order ID:</strong> <span id="odOrderId">—</span></p>
+                    <p><strong>Date & Time:</strong> <span id="odDate">—</span></p>
+                    <p><strong>Delivery Option:</strong> <span id="odDeliveryPref">—</span></p>
+                    <p><strong>Special Notes:</strong> <span id="odNotes">—</span></p>
+                </div>
+            </div>
+
+            <!-- Items Table -->
+            <div class="table-card" style="margin-bottom: 16px;">
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Unit Price</th>
+                                <th>Quantity</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="odItemsTbody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Financials & Payment -->
+            <div class="order-detail-grid">
+                <div class="detail-block">
+                    <h4>Financial Breakdown</h4>
+                    <p><strong>Subtotal:</strong> <span id="odSubtotal">₹0</span></p>
+                    <p><strong>Delivery Charge:</strong> <span id="odDeliveryFee">₹0</span></p>
+                    <p style="font-size: 16px; margin-top: 6px; color: var(--primary-glow);">
+                        <strong>Grand Total:</strong> <span id="odGrandTotal">₹0</span>
+                    </p>
+                </div>
+
+                <div class="detail-block">
+                    <h4>Payment & Status Management</h4>
+                    <p><strong>Payment Method:</strong> <span id="odPaymentMethod">Cash on Delivery</span></p>
+                    <p><strong>Payment Status:</strong> <span id="odPaymentStatus" class="status-pill PAID">PAID</span></p>
+                    <div style="margin-top: 10px; display: flex; gap: 8px;">
+                        <select id="odPaymentSelect" class="filter-select" style="padding: 6px 10px; font-size: 11px;">
+                            <option value="PENDING">PENDING</option>
+                            <option value="PAID">PAID</option>
+                            <option value="REFUNDED">REFUNDED</option>
+                            <option value="FAILED">FAILED</option>
+                        </select>
+                        <button type="button" class="btn-ctrl btn-inspect" id="btnUpdatePayment">Update Pay</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cancellation Details if applicable -->
+            <div id="odCancellationBlock" class="detail-block" style="display: none; border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.05); margin-bottom: 16px;">
+                <h4 style="color: #f87171;">Cancellation Information</h4>
+                <p><strong>Cancelled Date:</strong> <span id="odCancelDate">—</span></p>
+                <p><strong>Cancelled By:</strong> <span id="odCancelBy">—</span></p>
+                <p><strong>Reason:</strong> <span id="odCancelReason">—</span></p>
+            </div>
+
+            <!-- Contextual Status Action Buttons -->
+            <div style="border-top: 1px solid var(--border); padding-top: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <div id="odActionBtns" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <!-- Contextual buttons rendered dynamically -->
+                </div>
+
+                <div class="modal-btns" style="margin-top: 0;">
+                    <button type="button" id="btnDismissOrderDetail" class="btn-modal-cancel">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- =================================================
+         MODAL 3: CANCEL ORDER CONFIRMATION & REASON
+    ================================================== -->
+    <div id="cancelOrderModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 480px;">
+            <h3 style="color: #f87171;">Cancel Order</h3>
+            <p>Are you sure you want to cancel this booking? Dual cancellation emails will be sent to the customer and administrator.</p>
+
+            <div class="form-full">
+                <label>Cancellation Reason</label>
+                <textarea id="modalCancelReason" placeholder="e.g. Customer requested cancellation / Item out of stock"></textarea>
+            </div>
+
+            <div class="modal-btns">
+                <button type="button" id="btnDismissCancelModal" class="btn-modal-cancel">Keep Order</button>
+                <button type="button" id="btnExecuteCancelOrder" class="btn-modal-save" style="background: #ef4444;">Confirm Cancellation</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- =================================================
+         MODAL 4: CUSTOMER ORDER HISTORY
+    ================================================== -->
+    <div id="customerHistoryModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 750px;">
+            <h3 id="chCustName">Customer Order History</h3>
+            <p id="chCustContact">Contact & Order History</p>
+
+            <div class="table-card">
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="chOrdersTbody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-btns">
+                <button type="button" id="btnDismissCustHistory" class="btn-modal-cancel">Close</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- TOAST -->
+    <div id="adminToast" class="admin-toast"></div>
+
+    <script src="api-config.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const loginScreen = document.getElementById("loginScreen");
+            const adminApp = document.getElementById("adminApp");
+            const adminLoginForm = document.getElementById("adminLoginForm");
+            const loginError = document.getElementById("loginError");
+            const btnLogout = document.getElementById("btnLogout");
+            const adminToast = document.getElementById("adminToast");
+            const btnToggleSidebar = document.getElementById("btnToggleSidebar");
+            const sidebar = document.getElementById("sidebar");
+            const btnQuickRefresh = document.getElementById("btnQuickRefresh");
+
+            let currentData = { orders: [], products: [], customers: [], messages: [], stats: {}, settings: {} };
+            let selectedOrderIdToCancel = null;
+            let currentInspectionOrder = null;
+
+            function showToast(msg) {
+                adminToast.textContent = msg;
+                adminToast.classList.add("show");
+                setTimeout(() => { adminToast.classList.remove("show"); }, 3500);
+            }
+
+            // Mobile sidebar toggle
+            if (btnToggleSidebar) {
+                btnToggleSidebar.addEventListener("click", () => {
+                    sidebar.classList.toggle("mobile-open");
+                });
+            }
+
+            // Tab Navigation
+            const navItems = document.querySelectorAll(".nav-item");
+            const tabPanels = document.querySelectorAll(".tab-panel");
+
+            window.switchTab = function(tabId) {
+                navItems.forEach(b => b.classList.toggle("active", b.dataset.tab === tabId));
+                tabPanels.forEach(p => p.classList.toggle("active", p.id === tabId));
+                if (sidebar) sidebar.classList.remove("mobile-open");
+            };
+
+            navItems.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    switchTab(btn.dataset.tab);
+                });
+            });
+
+            // Quick Refresh Button
+            if (btnQuickRefresh) {
+                btnQuickRefresh.addEventListener("click", () => {
+                    loadDashboard();
+                    showToast("Dashboard synchronized with database.");
+                });
+            }
+
+            // ==========================================
+            // AUTHENTICATION CYCLE
+            // ==========================================
+            async function checkAuth() {
+                const token = window.royalApi.getAdminToken();
+                if (!token) {
+                    showLogin();
+                    return;
+                }
+
+                try {
+                    const res = await window.royalApi.get("/api/admin/verify-token");
+                    if (res.ok && res.data.valid) {
+                        showApp();
+                        loadDashboard();
+                    } else {
+                        showLogin();
+                    }
+                } catch (e) {
+                    showLogin();
+                }
+            }
+
+            function showLogin() {
+                loginScreen.style.display = "flex";
+                adminApp.style.display = "none";
+            }
+
+            function showApp() {
+                loginScreen.style.display = "none";
+                adminApp.style.display = "flex";
+            }
+
+            adminLoginForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const u = document.getElementById("loginUser").value.trim();
+                const p = document.getElementById("loginPass").value.trim();
+                loginError.style.display = "none";
+
+                try {
+                    const res = await window.royalApi.post("/api/admin/login", { username: u, password: p });
+                    if (res.ok && res.data.success && res.data.token) {
+                        window.royalApi.setAdminToken(res.data.token);
+                        showApp();
+                        loadDashboard();
+                        showToast("Welcome to Royal Console.");
+                    } else {
+                        loginError.textContent = res.data.message || "Invalid credentials.";
+                        loginError.style.display = "block";
+                    }
+                } catch (err) {
+                    loginError.textContent = "Server communication error.";
+                    loginError.style.display = "block";
+                }
+            });
+
+            btnLogout.addEventListener("click", async () => {
+                await window.royalApi.post("/api/admin/logout");
+                window.royalApi.clearAdminToken();
+                showLogin();
+            });
+
+            // ==========================================
+            // FETCH DASHBOARD DATA
+            // ==========================================
+            async function loadDashboard() {
+                try {
+                    const res = await window.royalApi.get("/api/admin/dashboard");
+                    if (res.ok && res.data.success && res.data.data) {
+                        currentData = res.data.data;
+                        renderStats(currentData.stats);
+                        renderRecentOrders(currentData.orders);
+                        renderAllOrders(currentData.orders);
+                        renderProducts(currentData.products);
+                        renderCustomers(currentData.customers || []);
+                        renderMessages(currentData.messages || []);
+                        renderSettings(currentData.settings || {});
+                    }
+                } catch (err) {
+                    console.error("Dashboard error:", err);
+                }
+            }
+
+            // ==========================================
+            // RENDER STATS & RECENT ORDERS
+            // ==========================================
+            function renderStats(st) {
+                if (!st) return;
+                document.getElementById("kpiTotalProducts").textContent = st.total_products || 0;
+                document.getElementById("kpiSoldOutProducts").textContent = st.sold_out_products || 0;
+                document.getElementById("kpiHiddenProducts").textContent = st.hidden_products || 0;
+
+                document.getElementById("kpiTotalOrders").textContent = st.total_orders || 0;
+                document.getElementById("kpiPendingOrders").textContent = st.pending_orders || 0;
+                document.getElementById("kpiConfirmedOrders").textContent = st.confirmed_orders || 0;
+                document.getElementById("kpiProcessingOrders").textContent = (st.processing_orders || 0) + (st.out_for_delivery_orders || 0);
+                document.getElementById("kpiCompletedOrders").textContent = st.completed_orders || 0;
+                document.getElementById("kpiCancelledOrders").textContent = st.cancelled_orders || 0;
+                document.getElementById("kpiTotalCustomers").textContent = st.total_customers || 0;
+                document.getElementById("kpiTotalRevenue").textContent = `₹${st.total_revenue || 0}`;
+
+                // Sidebar counters
+                document.getElementById("sidebarOrderCount").textContent = st.total_orders || 0;
+                document.getElementById("sidebarProdCount").textContent = st.total_products || 0;
+                document.getElementById("sidebarCustCount").textContent = st.total_customers || (currentData.customers ? currentData.customers.length : 0);
+                document.getElementById("sidebarMsgCount").textContent = currentData.messages ? currentData.messages.length : 0;
+            }
+
+            function renderRecentOrders(orders) {
+                const tbody = document.getElementById("recentOrdersTable");
+                tbody.innerHTML = "";
+                if (!orders || orders.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:30px;">No bookings recorded yet.</td></tr>`;
+                    return;
+                }
+
+                orders.slice(0, 6).forEach(o => {
+                    const row = document.createElement("tr");
+                    const statusClass = (o.order_status || "CONFIRMED").replace(/\s+/g, '_');
+                    const payClass = (o.payment_status || "PENDING").replace(/\s+/g, '_');
+                    row.innerHTML = `
+                        <td><strong style="color:#fff;">${o.order_id}</strong></td>
+                        <td>${o.cust_name || (o.customer ? o.customer.name : '—')}</td>
+                        <td>${(o.items || []).map(i => `${i.product_name} × ${i.quantity}`).join(", ") || '—'}</td>
+                        <td><strong style="color:var(--primary-glow)">₹${o.total_amount}</strong></td>
+                        <td><span class="status-pill ${payClass}">● ${o.payment_status || 'PENDING'}</span></td>
+                        <td><span class="status-pill ${statusClass}">● ${o.order_status}</span></td>
+                        <td><button type="button" class="btn-ctrl btn-inspect" onclick="inspectOrder('${o.order_id}')">Inspect</button></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            // ==========================================
+            // RENDER ALL ORDERS (WITH SEARCH & FILTERS)
+            // ==========================================
+            function renderAllOrders(orders) {
+                const tbody = document.getElementById("allOrdersTable");
+                tbody.innerHTML = "";
+
+                if (!orders || orders.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:var(--text-muted); padding:40px;">No customer orders found in database.</td></tr>`;
+                    return;
+                }
+
+                const statusFilter = document.getElementById("orderStatusFilter").value;
+                const payFilter = document.getElementById("orderPaymentFilter").value;
+                const search = document.getElementById("orderSearchInput").value.trim().toLowerCase();
+
+                let count = 0;
+                orders.forEach(o => {
+                    const status = (o.order_status || "CONFIRMED").toUpperCase();
+                    const payStatus = (o.payment_status || "PENDING").toUpperCase();
+
+                    if (statusFilter !== "ALL" && status !== statusFilter) return;
+                    if (payFilter !== "ALL" && payStatus !== payFilter) return;
+
+                    const custName = (o.cust_name || (o.customer ? o.customer.name : '')).toLowerCase();
+                    const custPhone = (o.cust_phone || (o.customer ? o.customer.phone : '')).toLowerCase();
+                    const custEmail = (o.cust_email || (o.customer ? o.customer.email : '')).toLowerCase();
+                    const orderId = (o.order_id || '').toLowerCase();
+
+                    if (search && !orderId.includes(search) && !custName.includes(search) && !custPhone.includes(search) && !custEmail.includes(search)) return;
+
+                    count++;
+                    const statusClass = status.replace(/\s+/g, '_');
+                    const payClass = payStatus.replace(/\s+/g, '_');
+                    const isCancelled = status === "CANCELLED";
+
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>
+                            <strong style="color:#fff; font-size:14px;">${o.order_id}</strong>
+                            <br><small style="color:var(--text-muted); font-size:11px;">${o.delivery_preference || 'Standard Delivery'}</small>
+                        </td>
+                        <td>
+                            <strong>${o.cust_name || (o.customer ? o.customer.name : '—')}</strong>
+                            <br><a href="tel:${o.cust_phone || (o.customer ? o.customer.phone : '')}" style="color:var(--accent); font-size:11px; text-decoration:none;">${o.cust_phone || (o.customer ? o.customer.phone : '—')}</a>
+                            <br><a href="mailto:${o.cust_email || (o.customer ? o.customer.email : '')}" style="color:var(--text-muted); font-size:11px; text-decoration:none;">${o.cust_email || (o.customer ? o.customer.email : '—')}</a>
+                        </td>
+                        <td>
+                            <span style="font-size:12px;">${o.cust_address || (o.customer ? o.customer.address : '—')}, ${o.cust_city || (o.customer ? o.customer.city : '')}</span>
+                            ${o.notes ? `<br><small style="color:var(--warning)">Note: ${o.notes}</small>` : ''}
+                        </td>
+                        <td>
+                            <ul style="list-style:none; padding:0; font-size:12px;">
+                                ${(o.items || []).map(i => `<li>• ${i.product_name} × <strong>${i.quantity}</strong> (₹${i.subtotal})</li>`).join("")}
+                            </ul>
+                        </td>
+                        <td>
+                            <strong style="color:var(--primary-glow); font-size:15px;">₹${o.total_amount}</strong>
+                            <br><small style="color:var(--text-muted)">Sub: ₹${o.subtotal} | Del: ₹${o.delivery_charge}</small>
+                        </td>
+                        <td><small>${o.booking_date || o.created_at}</small></td>
+                        <td><span class="status-pill ${payClass}">● ${payStatus}</span></td>
+                        <td><span class="status-pill ${statusClass}">● ${status}</span></td>
+                        <td>
+                            <div style="display:flex; flex-direction:column; gap:6px;">
+                                <button type="button" class="btn-ctrl btn-inspect" onclick="inspectOrder('${o.order_id}')">👁 View Details</button>
+                                ${!isCancelled ? `<button type="button" class="btn-ctrl btn-cancel-action" onclick="openCancelModal('${o.order_id}')">✕ Cancel Order</button>` : ''}
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                if (count === 0) {
+                    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:var(--text-muted); padding:30px;">No matching orders found.</td></tr>`;
+                }
+            }
+
+            document.getElementById("orderStatusFilter").addEventListener("change", () => renderAllOrders(currentData.orders));
+            document.getElementById("orderPaymentFilter").addEventListener("change", () => renderAllOrders(currentData.orders));
+            document.getElementById("orderSearchInput").addEventListener("input", () => renderAllOrders(currentData.orders));
+
+            // ==========================================
+            // ORDER INSPECTION MODAL (360 VIEW)
+            // ==========================================
+            const orderDetailModal = document.getElementById("orderDetailModal");
+            const btnDismissOrderDetail = document.getElementById("btnDismissOrderDetail");
+
+            btnDismissOrderDetail.addEventListener("click", () => {
+                orderDetailModal.classList.remove("show");
+            });
+
+            window.inspectOrder = function(orderId) {
+                const order = (currentData.orders || []).find(o => o.order_id === orderId);
+                if (!order) return;
+                currentInspectionOrder = order;
+
+                document.getElementById("odTitle").textContent = `Order Details #${order.order_id}`;
+                document.getElementById("odSubtitle").textContent = `Placed on ${order.booking_date || order.created_at}`;
+
+                const statusClass = (order.order_status || "CONFIRMED").replace(/\s+/g, '_');
+                const odStatusPill = document.getElementById("odStatusPill");
+                odStatusPill.className = `status-pill ${statusClass}`;
+                odStatusPill.textContent = `● ${order.order_status}`;
+
+                // Customer
+                document.getElementById("odCustName").textContent = order.cust_name || (order.customer ? order.customer.name : '—');
+                document.getElementById("odCustEmail").innerHTML = `<a href="mailto:${order.cust_email || ''}" style="color:var(--primary-glow);">${order.cust_email || (order.customer ? order.customer.email : '—')}</a>`;
+                document.getElementById("odCustPhone").innerHTML = `<a href="tel:${order.cust_phone || ''}" style="color:var(--accent);">${order.cust_phone || (order.customer ? order.customer.phone : '—')}</a>`;
+                document.getElementById("odCustAddress").textContent = `${order.cust_address || ''}, ${order.cust_city || ''} ${order.cust_pincode ? `(${order.cust_pincode})` : ''}`;
+
+                // Booking
+                document.getElementById("odOrderId").textContent = order.order_id;
+                document.getElementById("odDate").textContent = order.booking_date || order.created_at;
+                document.getElementById("odDeliveryPref").textContent = order.delivery_preference || 'Standard Delivery';
+                document.getElementById("odNotes").textContent = order.notes || 'None';
+
+                // Items Table
+                const itemsTbody = document.getElementById("odItemsTbody");
+                itemsTbody.innerHTML = "";
+                (order.items || []).forEach(item => {
+                    const r = document.createElement("tr");
+                    r.innerHTML = `
+                        <td><strong>${item.product_name}</strong></td>
+                        <td>₹${item.unit_price}</td>
+                        <td>${item.quantity}</td>
+                        <td><strong>₹${item.subtotal}</strong></td>
+                    `;
+                    itemsTbody.appendChild(r);
+                });
+
+                // Financials
+                document.getElementById("odSubtotal").textContent = `₹${order.subtotal}`;
+                document.getElementById("odDeliveryFee").textContent = `₹${order.delivery_charge}`;
+                document.getElementById("odGrandTotal").textContent = `₹${order.total_amount}`;
+
+                // Payment
+                document.getElementById("odPaymentMethod").textContent = order.payment_method || 'Cash on Delivery';
+                const odPaymentStatus = document.getElementById("odPaymentStatus");
+                odPaymentStatus.className = `status-pill ${(order.payment_status || 'PENDING').replace(/\s+/g, '_')}`;
+                odPaymentStatus.textContent = `● ${order.payment_status || 'PENDING'}`;
+                document.getElementById("odPaymentSelect").value = order.payment_status || 'PENDING';
+
+                // Cancellation block
+                const cancelBlock = document.getElementById("odCancellationBlock");
+                if (order.order_status === "CANCELLED") {
+                    cancelBlock.style.display = "block";
+                    document.getElementById("odCancelDate").textContent = order.cancelled_at || '—';
+                    document.getElementById("odCancelBy").textContent = order.cancelled_by || '—';
+                    document.getElementById("odCancelReason").textContent = order.cancellation_reason || '—';
+                } else {
+                    cancelBlock.style.display = "none";
+                }
+
+                // Contextual Action Buttons
+                const actionBtnsContainer = document.getElementById("odActionBtns");
+                actionBtnsContainer.innerHTML = "";
+
+                if (order.order_status !== "CANCELLED") {
+                    if (order.order_status === "PENDING") {
+                        actionBtnsContainer.innerHTML += `<button type="button" class="btn-ctrl btn-inspect" onclick="quickUpdateStatus('${order.order_id}', 'CONFIRMED')">✓ Confirm Order</button>`;
+                    }
+                    if (order.order_status === "CONFIRMED" || order.order_status === "PENDING") {
+                        actionBtnsContainer.innerHTML += `<button type="button" class="btn-ctrl btn-inspect" onclick="quickUpdateStatus('${order.order_id}', 'PROCESSING')">👨‍🍳 Start Processing</button>`;
+                    }
+                    if (order.order_status === "PROCESSING") {
+                        actionBtnsContainer.innerHTML += `<button type="button" class="btn-ctrl btn-inspect" onclick="quickUpdateStatus('${order.order_id}', 'READY')">🛵 Out for Delivery / Ready</button>`;
+                    }
+                    if (order.order_status !== "COMPLETED") {
+                        actionBtnsContainer.innerHTML += `<button type="button" class="btn-ctrl" style="background:#22c55e; color:#fff;" onclick="quickUpdateStatus('${order.order_id}', 'COMPLETED')">✓ Mark Completed</button>`;
+                    }
+                    actionBtnsContainer.innerHTML += `<button type="button" class="btn-ctrl btn-cancel-action" onclick="openCancelModal('${order.order_id}')">✕ Cancel Order</button>`;
+                }
+
+                orderDetailModal.classList.add("show");
+            };
+
+            // Quick status updater from modal
+            window.quickUpdateStatus = async function(orderId, newStatus) {
+                try {
+                    const res = await window.royalApi.post("/api/admin/order-status", { order_id: orderId, status: newStatus });
+                    if (res.ok && res.data.success) {
+                        showToast(`Order #${orderId} marked as ${newStatus}.`);
+                        orderDetailModal.classList.remove("show");
+                        loadDashboard();
+                    } else {
+                        showToast(res.data.message || "Failed to update status.");
+                    }
+                } catch (e) {
+                    showToast("Error updating order status.");
+                }
+            };
+
+            // Payment status updater from modal
+            document.getElementById("btnUpdatePayment").addEventListener("click", async () => {
+                if (!currentInspectionOrder) return;
+                const newPayStatus = document.getElementById("odPaymentSelect").value;
+                try {
+                    const res = await window.royalApi.post("/api/admin/payment-status", {
+                        order_id: currentInspectionOrder.order_id,
+                        payment_status: newPayStatus
+                    });
+                    if (res.ok && res.data.success) {
+                        showToast(`Payment status updated to ${newPayStatus}.`);
+                        orderDetailModal.classList.remove("show");
+                        loadDashboard();
+                    } else {
+                        showToast(res.data.message || "Failed to update payment status.");
+                    }
+                } catch (e) {
+                    showToast("Error updating payment status.");
+                }
+            });
+
+            // ==========================================
+            // CANCELLATION FLOW WITH REASON
+            // ==========================================
+            const cancelOrderModal = document.getElementById("cancelOrderModal");
+            const btnDismissCancelModal = document.getElementById("btnDismissCancelModal");
+            const btnExecuteCancelOrder = document.getElementById("btnExecuteCancelOrder");
+
+            window.openCancelModal = function(orderId) {
+                selectedOrderIdToCancel = orderId;
+                document.getElementById("modalCancelReason").value = "";
+                cancelOrderModal.classList.add("show");
+            };
+
+            btnDismissCancelModal.addEventListener("click", () => {
+                cancelOrderModal.classList.remove("show");
+                selectedOrderIdToCancel = null;
+            });
+
+            btnExecuteCancelOrder.addEventListener("click", async () => {
+                if (!selectedOrderIdToCancel) return;
+                const reason = document.getElementById("modalCancelReason").value.trim() || "Cancelled by store administrator";
+
+                btnExecuteCancelOrder.textContent = "Cancelling...";
+                btnExecuteCancelOrder.disabled = true;
+
+                try {
+                    const res = await window.royalApi.post("/api/admin/order-status", {
+                        order_id: selectedOrderIdToCancel,
+                        status: "CANCELLED",
+                        reason: reason
+                    });
+
+                    if (res.ok && res.data.success) {
+                        showToast(`Order #${selectedOrderIdToCancel} cancelled. Dual emails sent.`);
+                        cancelOrderModal.classList.remove("show");
+                        orderDetailModal.classList.remove("show");
+                        loadDashboard();
+                    } else {
+                        showToast(res.data.message || "Failed to cancel order.");
+                    }
+                } catch (e) {
+                    showToast("Error processing cancellation.");
+                } finally {
+                    btnExecuteCancelOrder.textContent = "Confirm Cancellation";
+                    btnExecuteCancelOrder.disabled = false;
+                    selectedOrderIdToCancel = null;
+                }
+            });
+
+            // ==========================================
+            // PRODUCTS CATALOGUE (CRUD)
+            // ==========================================
+            function renderProducts(products) {
+                const grid = document.getElementById("adminProductGrid");
+                grid.innerHTML = "";
+
+                if (!products || products.length === 0) {
+                    grid.innerHTML = `<p style="color:var(--text-muted); grid-column:1/-1; padding:30px;">No products found in catalogue.</p>`;
+                    return;
+                }
+
+                const catFilter = document.getElementById("prodCategoryFilter").value;
+                const statusFilter = document.getElementById("prodStatusFilter").value;
+                const search = document.getElementById("prodSearchInput").value.trim().toLowerCase();
+
+                let count = 0;
+                products.forEach(p => {
+                    const isSoldOut = p.sold_out === 1 || p.available === 0;
+                    const isHidden = p.visible === 0;
+
+                    if (catFilter !== "ALL" && p.category !== catFilter) return;
+                    if (statusFilter === "INSTOCK" && isSoldOut) return;
+                    if (statusFilter === "SOLDOUT" && !isSoldOut) return;
+                    if (statusFilter === "VISIBLE" && isHidden) return;
+                    if (statusFilter === "HIDDEN" && !isHidden) return;
+
+                    if (search && !p.name.toLowerCase().includes(search)) return;
+
+                    count++;
+                    const card = document.createElement("div");
+                    card.className = `admin-prod-card ${isSoldOut ? 'is-sold-out' : ''} ${isHidden ? 'is-hidden' : ''}`;
+                    card.innerHTML = `
+                        <div class="prod-img-box">
+                            ${p.badge ? `<span class="prod-badge-tag">${p.badge}</span>` : ''}
+                            ${isSoldOut ? `<span class="prod-sold-out-badge">SOLD OUT</span>` : ''}
+                            <img src="${p.image || 'images/Royal Rose Milk.jpg'}" alt="${p.name}" onerror="this.src='images/Royal Rose Milk.jpg'">
+                        </div>
+                        <div class="prod-body">
+                            <h3>${p.name}</h3>
+                            <div class="prod-price">₹${p.price}</div>
+                            <div class="prod-desc">${p.description || 'Smooth, creamy and beautifully infused with authentic rose extract.'}</div>
+                            <small style="color:var(--accent); font-size:11px; margin-bottom:12px;">Category: ${p.category || 'Rose Milk'} • Status: ${isHidden ? 'Hidden' : 'Visible'}</small>
+
+                            <div class="prod-controls">
+                                <button type="button" class="btn-ctrl btn-sold-out-toggle ${isSoldOut ? 'active-sold' : ''}" onclick="toggleSoldOut(${p.id})">
+                                    ${isSoldOut ? '✓ In Stock' : '✕ Sold Out'}
+                                </button>
+                                <button type="button" class="btn-ctrl btn-vis-toggle ${isHidden ? 'hidden-item' : ''}" onclick="toggleVisibility(${p.id})">
+                                    ${isHidden ? '👁 Show' : '👁‍🗨 Hide'}
+                                </button>
+                                <button type="button" class="btn-ctrl btn-edit-prod" onclick='openEditProduct(${JSON.stringify(p)})'>
+                                    ✎ Edit
+                                </button>
+                                <button type="button" class="btn-ctrl btn-delete-prod" onclick="deleteProduct(${p.id}, '${p.name.replace(/'/g, "\\'")}')">
+                                    🗑 Delete
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+
+                if (count === 0) {
+                    grid.innerHTML = `<p style="color:var(--text-muted); grid-column:1/-1; padding:30px;">No matching products found.</p>`;
+                }
+            }
+
+            document.getElementById("prodCategoryFilter").addEventListener("change", () => renderProducts(currentData.products));
+            document.getElementById("prodStatusFilter").addEventListener("change", () => renderProducts(currentData.products));
+            document.getElementById("prodSearchInput").addEventListener("input", () => renderProducts(currentData.products));
+
+            // Product Toggles
+            window.toggleSoldOut = async function(prodId) {
+                try {
+                    const res = await window.royalApi.post(`/api/admin/products/${prodId}/toggle-sold-out`);
+                    if (res.ok && res.data.success) {
+                        showToast(res.data.message);
+                        loadDashboard();
+                    }
+                } catch (e) {
+                    showToast("Error updating availability.");
+                }
+            };
+
+            window.toggleVisibility = async function(prodId) {
+                try {
+                    const res = await window.royalApi.post(`/api/admin/products/${prodId}/toggle-visibility`);
+                    if (res.ok && res.data.success) {
+                        showToast(res.data.message);
+                        loadDashboard();
+                    }
+                } catch (e) {
+                    showToast("Error updating visibility.");
+                }
+            };
+
+            window.deleteProduct = async function(prodId, prodName) {
+                if (!confirm(`Are you sure you want to permanently delete '${prodName}'?`)) return;
+                try {
+                    const res = await window.royalApi.delete(`/api/admin/products/${prodId}`);
+                    if (res.ok && res.data.success) {
+                        showToast(res.data.message);
+                        loadDashboard();
+                    }
+                } catch (e) {
+                    showToast("Error deleting product.");
+                }
+            };
+
+            // Product Add / Edit Modal
+            const productModal = document.getElementById("productModal");
+            const btnOpenAddProduct = document.getElementById("btnOpenAddProduct");
+            const btnDismissModal = document.getElementById("btnDismissModal");
+            const productForm = document.getElementById("productForm");
+
+            btnOpenAddProduct.addEventListener("click", () => {
+                document.getElementById("modalTitle").textContent = "Add New Product Variety";
+                document.getElementById("modalProdId").value = "";
+                productForm.reset();
+                document.getElementById("modalProdVisible").checked = true;
+                document.getElementById("modalProdSoldOut").checked = false;
+                document.getElementById("modalProdImage").value = "images/Royal Rose Milk.jpg";
+                productModal.classList.add("show");
+            });
+
+            btnDismissModal.addEventListener("click", () => {
+                productModal.classList.remove("show");
+            });
+
+            window.openEditProduct = function(p) {
+                document.getElementById("modalTitle").textContent = `Edit '${p.name}'`;
+                document.getElementById("modalProdId").value = p.id;
+                document.getElementById("modalProdName").value = p.name || '';
+                document.getElementById("modalProdPrice").value = p.price || '';
+                document.getElementById("modalProdBadge").value = p.badge || '';
+                document.getElementById("modalProdCategory").value = p.category || 'Rose Milk';
+                document.getElementById("modalProdImage").value = p.image || 'images/Royal Rose Milk.jpg';
+                document.getElementById("modalProdDesc").value = p.description || '';
+                document.getElementById("modalProdIngredients").value = p.ingredients || '';
+                document.getElementById("modalProdSoldOut").checked = p.sold_out === 1;
+                document.getElementById("modalProdVisible").checked = p.visible === 1;
+                productModal.classList.add("show");
+            };
+
+            productForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const prodId = document.getElementById("modalProdId").value;
+                const payload = {
+                    name: document.getElementById("modalProdName").value.trim(),
+                    price: parseFloat(document.getElementById("modalProdPrice").value),
+                    badge: document.getElementById("modalProdBadge").value.trim(),
+                    category: document.getElementById("modalProdCategory").value.trim(),
+                    image: document.getElementById("modalProdImage").value.trim(),
+                    description: document.getElementById("modalProdDesc").value.trim(),
+                    ingredients: document.getElementById("modalProdIngredients").value.trim(),
+                    sold_out: document.getElementById("modalProdSoldOut").checked ? 1 : 0,
+                    visible: document.getElementById("modalProdVisible").checked ? 1 : 0
+                };
+
+                try {
+                    let res;
+                    if (prodId) {
+                        res = await window.royalApi.post(`/api/admin/products/${prodId}`, payload);
+                    } else {
+                        res = await window.royalApi.post("/api/admin/products", payload);
+                    }
+
+                    if (res.ok && res.data.success) {
+                        productModal.classList.remove("show");
+                        showToast(res.data.message);
+                        loadDashboard();
+                    } else {
+                        alert(res.data.message || "Failed to save product.");
+                    }
+                } catch (err) {
+                    alert("Server error saving product.");
+                }
+            });
+
+            // ==========================================
+            // CUSTOMERS MANAGEMENT
+            // ==========================================
+            function renderCustomers(customers) {
+                const tbody = document.getElementById("customersTable");
+                tbody.innerHTML = "";
+
+                if (!customers || customers.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:var(--text-muted); padding:30px;">No registered customers in database.</td></tr>`;
+                    return;
+                }
+
+                const search = document.getElementById("custSearchInput").value.trim().toLowerCase();
+
+                let count = 0;
+                customers.forEach(c => {
+                    const name = (c.name || '').toLowerCase();
+                    const email = (c.email || '').toLowerCase();
+                    const phone = (c.phone || '').toLowerCase();
+
+                    if (search && !name.includes(search) && !email.includes(search) && !phone.includes(search)) return;
+
+                    count++;
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td><strong>${c.name}</strong></td>
+                        <td><a href="mailto:${c.email}" style="color:var(--primary-glow);">${c.email}</a></td>
+                        <td><a href="tel:${c.phone}" style="color:var(--accent); font-size:12px;">${c.phone}</a></td>
+                        <td>${c.city || '—'}, ${c.state || 'Tamil Nadu'}</td>
+                        <td><strong style="color:#fff;">${c.total_orders || 0}</strong></td>
+                        <td><strong style="color:var(--primary-glow);">₹${c.total_spent || 0}</strong></td>
+                        <td>
+                            ${c.latest_order_id ? `<small>${c.latest_order_id}<br><span style="color:var(--text-muted); font-size:10px;">${c.latest_order_date || ''}</span></small>` : '—'}
+                        </td>
+                        <td>
+                            <button type="button" class="btn-ctrl btn-inspect" onclick="viewCustomerHistory(${c.id}, '${c.name.replace(/'/g, "\\'")}', '${c.email}')">History</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                if (count === 0) {
+                    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:var(--text-muted); padding:30px;">No matching customers found.</td></tr>`;
+                }
+            }
+
+            document.getElementById("custSearchInput").addEventListener("input", () => renderCustomers(currentData.customers));
+
+            // Customer History Modal
+            const customerHistoryModal = document.getElementById("customerHistoryModal");
+            const btnDismissCustHistory = document.getElementById("btnDismissCustHistory");
+
+            btnDismissCustHistory.addEventListener("click", () => {
+                customerHistoryModal.classList.remove("show");
+            });
+
+            window.viewCustomerHistory = async function(custId, custName, custEmail) {
+                document.getElementById("chCustName").textContent = `${custName}'s Order History`;
+                document.getElementById("chCustContact").textContent = `Email: ${custEmail}`;
+                const tbody = document.getElementById("chOrdersTbody");
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:20px;">Loading history...</td></tr>`;
+                customerHistoryModal.classList.add("show");
+
+                try {
+                    const res = await window.royalApi.get(`/api/admin/customers/${custId}/orders`);
+                    tbody.innerHTML = "";
+                    if (res.ok && res.data.success && res.data.orders && res.data.orders.length > 0) {
+                        res.data.orders.forEach(o => {
+                            const r = document.createElement("tr");
+                            const statusClass = (o.order_status || "CONFIRMED").replace(/\s+/g, '_');
+                            r.innerHTML = `
+                                <td><strong>${o.order_id}</strong></td>
+                                <td><small>${o.booking_date || o.created_at}</small></td>
+                                <td>${(o.items || []).map(i => `${i.product_name} × ${i.quantity}`).join(", ") || '—'}</td>
+                                <td><strong>₹${o.total_amount}</strong></td>
+                                <td><span class="status-pill ${(o.payment_status || 'PENDING').replace(/\s+/g, '_')}">● ${o.payment_status || 'PENDING'}</span></td>
+                                <td><span class="status-pill ${statusClass}">● ${o.order_status}</span></td>
+                            `;
+                            tbody.appendChild(r);
+                        });
+                    } else {
+                        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:20px;">No past orders found for this customer.</td></tr>`;
+                    }
+                } catch (e) {
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#f87171; padding:20px;">Error loading customer history.</td></tr>`;
+                }
+            };
+
+            // ==========================================
+            // INQUIRIES & MESSAGES
+            // ==========================================
+            function renderMessages(messages) {
+                const tbody = document.getElementById("allMessagesTable");
+                tbody.innerHTML = "";
+
+                if (!messages || messages.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:30px;">No customer inquiries received yet.</td></tr>`;
+                    return;
+                }
+
+                messages.forEach(m => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td><strong>${m.name}</strong></td>
+                        <td>
+                            <a href="mailto:${m.email}" style="color:var(--primary-glow);">${m.email}</a>
+                            ${m.phone ? `<br><a href="tel:${m.phone}" style="color:var(--accent); font-size:11px;">${m.phone}</a>` : ''}
+                        </td>
+                        <td><div style="max-width:350px; font-size:12px; line-height:1.5;">${m.message}</div></td>
+                        <td><small>${m.created_at}</small></td>
+                        <td>
+                            <a href="mailto:${m.email}?subject=Regarding Your Royal Rose Milk Inquiry" class="btn-ctrl btn-inspect" style="text-decoration:none; display:inline-block;">✉ Reply</a>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            // ==========================================
+            // SHOP SETTINGS
+            // ==========================================
+            function renderSettings(set) {
+                if (!set) return;
+                document.getElementById("setShopName").value = set.shop_name || "ROYAL ROSE MILK";
+                document.getElementById("setPhone").value = set.phone || "+91 9445437069";
+                document.getElementById("setEmail").value = set.email || "vikneshvaren2@gmail.com";
+                document.getElementById("setWhatsapp").value = set.whatsapp || "919445437069";
+                document.getElementById("setAddress").value = set.address || "Tamil Nadu, India";
+                document.getElementById("setHours").value = set.opening_hours || "Monday – Sunday: 9:00 AM – 10:00 PM IST";
+                document.getElementById("setStandardFee").value = set.delivery_standard_fee || "0";
+                document.getElementById("setExpressFee").value = set.delivery_express_fee || "30";
+            }
+
+            document.getElementById("settingsForm").addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const payload = {
+                    shop_name: document.getElementById("setShopName").value.trim(),
+                    phone: document.getElementById("setPhone").value.trim(),
+                    email: document.getElementById("setEmail").value.trim(),
+                    whatsapp: document.getElementById("setWhatsapp").value.trim(),
+                    address: document.getElementById("setAddress").value.trim(),
+                    opening_hours: document.getElementById("setHours").value.trim(),
+                    delivery_standard_fee: document.getElementById("setStandardFee").value.trim(),
+                    delivery_express_fee: document.getElementById("setExpressFee").value.trim()
+                };
+
+                try {
+                    const res = await window.royalApi.post("/api/admin/settings", payload);
+                    if (res.ok && res.data.success) {
+                        showToast("Shop settings saved successfully.");
+                        loadDashboard();
+                    } else {
+                        alert(res.data.message || "Failed to save settings.");
+                    }
+                } catch (err) {
+                    alert("Error saving settings.");
+                }
+            });
+
+            // Start authentication cycle
+            checkAuth();
+        });
+    </script>
+</body>
+</html>

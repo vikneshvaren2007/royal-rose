@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ROYAL — Rose Milk</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    width:100%;
+    height:100vh;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 50% 45%,
+        #9e1d55 0%,
+        #4b0b2b 35%,
+        #16030e 75%,
+        #050105 100%);
+    font-family:Arial,sans-serif;
+    color:white;
+}
+
+/* =========================
+   MAIN LOADER
+========================= */
+
+.loader{
+    position:absolute;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    z-index:20;
+}
+
+/* =========================
+   BIG GLOW
+========================= */
+
+.main-glow{
+    position:absolute;
+    width:500px;
+    height:500px;
+    border-radius:50%;
+
+    background:
+        radial-gradient(circle,
+        rgba(255,80,160,.65),
+        rgba(255,20,100,.2),
+        transparent 70%);
+
+    filter:blur(35px);
+
+    animation:glowPulse 4s ease-in-out infinite;
+}
+
+/* =========================
+   ROTATING RINGS
+========================= */
+
+.ring{
+    position:absolute;
+    border:1px solid rgba(255,170,210,.35);
+    border-radius:50%;
+}
+
+.ring.one{
+    width:390px;
+    height:390px;
+    animation:rotate 12s linear infinite;
+}
+
+.ring.two{
+    width:470px;
+    height:470px;
+    border-style:dashed;
+    animation:rotateReverse 18s linear infinite;
+}
+
+.ring.three{
+    width:570px;
+    height:570px;
+    border-color:rgba(255,100,170,.15);
+    animation:rotate 25s linear infinite;
+}
+
+/* =========================
+   ROYAL TEXT
+========================= */
+
+.logo{
+    position:relative;
+    z-index:10;
+
+    font-size:78px;
+    font-weight:1000;
+    letter-spacing:14px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ffffff,
+            #ffb4d4,
+            #ffffff,
+            #ff5c9e,
+            #ffffff
+        );
+
+    background-size:400%;
+
+    -webkit-background-clip:text;
+    color:transparent;
+
+    text-shadow:
+        0 0 15px rgba(255,150,200,.9),
+        0 0 45px rgba(255,50,140,.7),
+        0 0 90px rgba(255,20,110,.35);
+
+    animation:
+        logoEnter 2s ease forwards,
+        shine 4s linear infinite 2s;
+}
+
+/* =========================
+   ROSE MILK
+========================= */
+
+.rose-milk{
+    position:absolute;
+
+    width:330px;
+    height:330px;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            #ffd9e8,
+            #ff8fbd 35%,
+            #e52d76 70%,
+            #7d0d42
+        );
+
+    filter:blur(1px);
+
+    opacity:.55;
+
+    animation:
+        milkPulse 3s ease-in-out infinite;
+}
+
+/* Liquid waves */
+
+.wave{
+    position:absolute;
+    width:650px;
+    height:180px;
+
+    background:rgba(255,150,195,.12);
+
+    border-radius:50%;
+
+    filter:blur(15px);
+
+    animation:waveMove 5s ease-in-out infinite;
+}
+
+.wave.two{
+    width:500px;
+    height:130px;
+    animation-delay:1.5s;
+    opacity:.6;
+}
+
+/* =========================
+   SUBTITLE
+========================= */
+
+.subtitle{
+    position:relative;
+    z-index:10;
+
+    margin-top:20px;
+
+    font-size:15px;
+    letter-spacing:9px;
+
+    opacity:0;
+
+    animation:
+        subtitleIn 1.5s ease forwards 1s;
+}
+
+/* =========================
+   LOADING BAR
+========================= */
+
+.loading-box{
+    position:relative;
+    z-index:10;
+
+    width:260px;
+
+    margin-top:35px;
+
+    text-align:center;
+}
+
+.loading-bar{
+    width:100%;
+    height:4px;
+
+    background:rgba(255,255,255,.15);
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 0 15px rgba(255,100,170,.3);
+}
+
+.loading-progress{
+    width:0%;
+    height:100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff4f98,
+            #fff,
+            #ff5f9f
+        );
+
+    box-shadow:
+        0 0 15px #ff65a5;
+
+    animation:loading 4.5s linear forwards;
+}
+
+.loading-number{
+    margin-top:10px;
+
+    font-size:11px;
+    letter-spacing:4px;
+
+    opacity:.7;
+}
+
+/* =========================
+   PARTICLES
+========================= */
+
+.particle{
+    position:absolute;
+
+    width:4px;
+    height:4px;
+
+    background:white;
+
+    border-radius:50%;
+
+    box-shadow:
+        0 0 8px white,
+        0 0 15px #ff80b5;
+
+    animation:particleFloat linear infinite;
+}
+
+.p1{left:8%;top:80%;animation-duration:5s;}
+.p2{left:17%;top:40%;animation-duration:7s;}
+.p3{left:30%;top:70%;animation-duration:6s;}
+.p4{left:65%;top:75%;animation-duration:8s;}
+.p5{left:78%;top:30%;animation-duration:5s;}
+.p6{left:90%;top:65%;animation-duration:7s;}
+.p7{left:55%;top:20%;animation-duration:6s;}
+.p8{left:40%;top:15%;animation-duration:8s;}
+.p9{left:12%;top:15%;animation-duration:6s;}
+.p10{left:85%;top:15%;animation-duration:7s;}
+
+/* =========================
+   PETALS
+========================= */
+
+.petal{
+    position:absolute;
+
+    width:18px;
+    height:27px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffb0d0,
+            #e52c76,
+            #8e1048
+        );
+
+    border-radius:
+        80% 20% 80% 20%;
+
+    box-shadow:
+        0 0 10px rgba(255,80,150,.5);
+
+    opacity:.75;
+
+    animation:petalFall linear infinite;
+}
+
+.p11{left:5%;animation-duration:8s;}
+.p12{left:20%;animation-duration:10s;animation-delay:2s;}
+.p13{left:35%;animation-duration:7s;animation-delay:1s;}
+.p14{left:60%;animation-duration:9s;animation-delay:3s;}
+.p15{left:75%;animation-duration:8s;animation-delay:1s;}
+.p16{left:92%;animation-duration:11s;animation-delay:2s;}
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes logoEnter{
+
+    0%{
+        opacity:0;
+        transform:scale(.4);
+        filter:blur(15px);
+        letter-spacing:35px;
+    }
+
+    100%{
+        opacity:1;
+        transform:scale(1);
+        filter:blur(0);
+        letter-spacing:14px;
+    }
+}
+
+@keyframes shine{
+
+    0%{
+        background-position:0%;
+    }
+
+    100%{
+        background-position:400%;
+    }
+}
+
+@keyframes subtitleIn{
+
+    to{
+        opacity:.9;
+        transform:translateY(0);
+    }
+}
+
+@keyframes glowPulse{
+
+    0%,100%{
+        transform:scale(.8);
+        opacity:.5;
+    }
+
+    50%{
+        transform:scale(1.15);
+        opacity:.9;
+    }
+}
+
+@keyframes milkPulse{
+
+    0%,100%{
+        transform:scale(.8);
+        opacity:.3;
+    }
+
+    50%{
+        transform:scale(1.15);
+        opacity:.65;
+    }
+}
+
+@keyframes rotate{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+@keyframes rotateReverse{
+
+    from{
+        transform:rotate(360deg);
+    }
+
+    to{
+        transform:rotate(0deg);
+    }
+}
+
+@keyframes waveMove{
+
+    0%,100%{
+        transform:translateX(-80px) scale(.9);
+    }
+
+    50%{
+        transform:translateX(80px) scale(1.15);
+    }
+}
+
+@keyframes loading{
+
+    from{
+        width:0%;
+    }
+
+    to{
+        width:100%;
+    }
+}
+
+@keyframes particleFloat{
+
+    0%{
+        transform:translateY(80px) scale(.3);
+        opacity:0;
+    }
+
+    30%{
+        opacity:1;
+    }
+
+    100%{
+        transform:translateY(-300px) scale(1);
+        opacity:0;
+    }
+}
+
+@keyframes petalFall{
+
+    0%{
+        top:-10%;
+        transform:rotate(0deg) translateX(0);
+    }
+
+    50%{
+        transform:rotate(180deg) translateX(100px);
+    }
+
+    100%{
+        top:110%;
+        transform:rotate(360deg) translateX(-100px);
+    }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:600px){
+
+    .logo{
+        font-size:48px;
+        letter-spacing:8px;
+    }
+
+    .ring.one{
+        width:280px;
+        height:280px;
+    }
+
+    .ring.two{
+        width:350px;
+        height:350px;
+    }
+
+    .ring.three{
+        width:420px;
+        height:420px;
+    }
+
+    .subtitle{
+        font-size:10px;
+        letter-spacing:6px;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="loader">
+
+    <div class="main-glow"></div>
+
+    <div class="ring one"></div>
+    <div class="ring two"></div>
+    <div class="ring three"></div>
+
+    <div class="rose-milk"></div>
+
+    <div class="wave"></div>
+    <div class="wave two"></div>
+
+    <div class="logo">
+        ROYAL
+    </div>
+
+    <div class="subtitle">
+        ROSE MILK
+    </div>
+
+    <div class="loading-box">
+
+        <div class="loading-bar">
+            <div class="loading-progress"></div>
+        </div>
+
+        <div class="loading-number">
+            ENTERING ROYAL
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- PARTICLES -->
+
+<div class="particle p1"></div>
+<div class="particle p2"></div>
+<div class="particle p3"></div>
+<div class="particle p4"></div>
+<div class="particle p5"></div>
+<div class="particle p6"></div>
+<div class="particle p7"></div>
+<div class="particle p8"></div>
+<div class="particle p9"></div>
+<div class="particle p10"></div>
+
+
+<!-- PETALS -->
+
+<div class="petal p11"></div>
+<div class="petal p12"></div>
+<div class="petal p13"></div>
+<div class="petal p14"></div>
+<div class="petal p15"></div>
+<div class="petal p16"></div>
+
+</body>
+</html>
