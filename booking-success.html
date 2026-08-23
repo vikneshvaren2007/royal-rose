@@ -154,11 +154,32 @@
             const orderId = orderIdFromUrl || (order ? order.order_id : "RR-CONFIRMED");
             document.getElementById("receiptOrderId").textContent = orderId;
 
-            if (whatsappFromUrl) {
-                document.getElementById("btnWhatsAppConcierge").href = decodeURIComponent(whatsappFromUrl);
-            } else {
+            let waLink = "";
+            if (order && order.whatsapp_url) {
+                waLink = order.whatsapp_url;
+            } else if (whatsappFromUrl) {
+                if (whatsappFromUrl.startsWith("http")) {
+                    const parts = whatsappFromUrl.split("?text=");
+                    if (parts.length === 2 && parts[1].includes(" ")) {
+                        waLink = parts[0] + "?text=" + encodeURIComponent(parts[1]);
+                    } else {
+                        waLink = whatsappFromUrl;
+                    }
+                } else {
+                    waLink = decodeURIComponent(whatsappFromUrl);
+                }
+            }
+
+            if (!waLink) {
                 const defaultMsg = encodeURIComponent(`Hello Royal Rose Milk Concierge, I would like an update on my booking #${orderId}.`);
-                document.getElementById("btnWhatsAppConcierge").href = `https://wa.me/919445437069?text=${defaultMsg}`;
+                waLink = `https://wa.me/919445437069?text=${defaultMsg}`;
+            }
+
+            const waBtn = document.getElementById("btnWhatsAppConcierge");
+            if (waBtn) {
+                waBtn.href = waLink;
+                waBtn.setAttribute("target", "_blank");
+                waBtn.setAttribute("rel", "noopener noreferrer");
             }
 
             document.getElementById("btnTrackLiveOrder").href = `track.html?order_id=${encodeURIComponent(orderId)}`;

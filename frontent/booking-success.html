@@ -328,10 +328,33 @@
             document.getElementById("bookingId").textContent = orderId;
             document.getElementById("trackOrderBtn").href = `track.html?order_id=${encodeURIComponent(orderId)}`;
 
-            if (waFromUrl) {
-                const waBtn = document.getElementById("whatsappBtn");
-                waBtn.href = waFromUrl;
+            let waLink = "";
+            if (confirmedOrder && confirmedOrder.whatsapp_url) {
+                waLink = confirmedOrder.whatsapp_url;
+            } else if (waFromUrl) {
+                if (waFromUrl.startsWith("http")) {
+                    const parts = waFromUrl.split("?text=");
+                    if (parts.length === 2 && parts[1].includes(" ")) {
+                        waLink = parts[0] + "?text=" + encodeURIComponent(parts[1]);
+                    } else {
+                        waLink = waFromUrl;
+                    }
+                } else {
+                    waLink = decodeURIComponent(waFromUrl);
+                }
+            }
+
+            if (!waLink) {
+                const defaultMsg = encodeURIComponent(`Hello Royal Rose Milk Concierge, I would like an update on my booking #${orderId}.`);
+                waLink = `https://wa.me/919445437069?text=${defaultMsg}`;
+            }
+
+            const waBtn = document.getElementById("whatsappBtn");
+            if (waBtn) {
+                waBtn.href = waLink;
                 waBtn.style.display = "inline-flex";
+                waBtn.setAttribute("target", "_blank");
+                waBtn.setAttribute("rel", "noopener noreferrer");
             }
 
             if (confirmedOrder) {

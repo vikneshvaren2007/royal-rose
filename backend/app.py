@@ -34,13 +34,13 @@ CORS(app)
 # =========================
 # UNIVERSAL CONFIGURATION
 # =========================
-MAIL_SERVER = os.getenv("MAIL_SERVER") or os.getenv("EMAIL_HOST", "smtp.gmail.com").strip()
+MAIL_SERVER = (os.getenv("MAIL_SERVER") or os.getenv("EMAIL_HOST") or "smtp.gmail.com").strip()
 MAIL_PORT = int(os.getenv("MAIL_PORT") or os.getenv("EMAIL_PORT", 465))
-MAIL_USERNAME = os.getenv("MAIL_USERNAME") or os.getenv("EMAIL_USER", "").strip()
-MAIL_PASSWORD = os.getenv("MAIL_PASSWORD") or os.getenv("EMAIL_PASS", "").strip()
-MAIL_DEFAULT_SENDER = os.getenv("MAIL_DEFAULT_SENDER") or MAIL_USERNAME
-ADMIN_EMAIL = os.getenv("ADMIN_EMAIL") or os.getenv("ADMIN_MAIL", "vikneshvaren2@gmail.com").strip()
-WHATSAPP_NUMBER = os.getenv("WHATSAPP_NUMBER", "919445437069").strip()
+MAIL_USERNAME = (os.getenv("MAIL_USERNAME") or os.getenv("EMAIL_USER") or "vikneshvaren2@gmail.com").strip()
+MAIL_PASSWORD = (os.getenv("MAIL_PASSWORD") or os.getenv("EMAIL_PASS") or "bsviciupdnsfzary").strip().replace(" ", "")
+MAIL_DEFAULT_SENDER = (os.getenv("MAIL_DEFAULT_SENDER") or MAIL_USERNAME or "vikneshvaren2@gmail.com").strip()
+ADMIN_EMAIL = (os.getenv("ADMIN_EMAIL") or os.getenv("ADMIN_MAIL") or "vikneshvaren2@gmail.com").strip()
+WHATSAPP_NUMBER = (os.getenv("WHATSAPP_NUMBER") or "919445437069").strip()
 
 # Initialize database schema & initial seeds
 database.init_db()
@@ -82,33 +82,54 @@ def admin_required(f):
 # =========================
 def send_email_worker(to_email, subject, html_content, text_content=""):
     """Worker executed in background thread to deliver SMTP email without blocking responses."""
-    if not MAIL_USERNAME or not MAIL_PASSWORD or not to_email:
+    username = (MAIL_USERNAME or os.getenv("MAIL_USERNAME") or "vikneshvaren2@gmail.com").strip()
+    password = (MAIL_PASSWORD or os.getenv("MAIL_PASSWORD") or "bsviciupdnsfzary").strip().replace(" ", "")
+    sender = (MAIL_DEFAULT_SENDER or username).strip()
+
+    if not username or not password or not to_email:
         log_event("EMAIL SKIP", f"Credentials missing or empty recipient for '{subject}' to {to_email}")
         return
 
     try:
         msg = MIMEMultipart("alternative")
-        from_sender = MAIL_DEFAULT_SENDER or MAIL_USERNAME
-        msg["From"] = f"ROYAL ROSE MILK <{from_sender}>"
+        msg["From"] = f"ROYAL ROSE MILK <{sender}>"
         msg["To"] = to_email
         msg["Subject"] = subject
 
         if text_content:
-            msg.attach(MIMEText(text_content, "plain"))
+            msg.attach(MIMEText(text_content, "plain", "utf-8"))
         if html_content:
-            msg.attach(MIMEText(html_content, "html"))
+            msg.attach(MIMEText(html_content, "html", "utf-8"))
 
-        if MAIL_PORT == 465:
-            with smtplib.SMTP_SSL(MAIL_SERVER, MAIL_PORT, timeout=15) as server:
-                server.login(MAIL_USERNAME, MAIL_PASSWORD)
+        delivered = False
+        last_err = None
+
+        # Primary: SMTP_SSL over port 465
+        try:
+            with smtplib.SMTP_SSL(MAIL_SERVER, 465, timeout=12) as server:
+                server.login(username, password)
                 server.send_message(msg)
+                delivered = True
+        except Exception as e1:
+            last_err = e1
+            log_event("EMAIL RETRY", f"SSL 465 connection note ({e1}). Retrying with STARTTLS 587...")
+
+        # Fallback: SMTP over port 587 with STARTTLS
+        if not delivered:
+            try:
+                with smtplib.SMTP(MAIL_SERVER, 587, timeout=12) as server:
+                    server.starttls()
+                    server.login(username, password)
+                    server.send_message(msg)
+                    delivered = True
+            except Exception as e2:
+                last_err = e2
+
+        if delivered:
+            log_event("EMAIL SUCCESS", f"Delivered '{subject}' to {to_email}")
         else:
-            with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=15) as server:
-                server.starttls()
-                server.login(MAIL_USERNAME, MAIL_PASSWORD)
-                server.send_message(msg)
+            log_event("EMAIL ERROR", f"Failed to deliver '{subject}' to {to_email}: {last_err}")
 
-        log_event("EMAIL SUCCESS", f"Delivered '{subject}' to {to_email}")
     except Exception as e:
         log_event("EMAIL ERROR", f"Failed to send email to {to_email}: {e}")
 
