@@ -30,7 +30,6 @@
             <a href="shop.html">SHOP</a>
             <a href="track.html" class="active">TRACK ORDER</a>
             <a href="contact.html">CONTACT</a>
-            <a href="cart.html">🛒 CART</a>
         </nav>
     </header>
 
@@ -368,7 +367,7 @@
                         renderOrder(data.order);
                     } else {
                         trackResult.style.display = "none";
-                        showToast(data.message || "No order found matching these details.");
+                        showToast(data.message || "Order not found. Please check your Order ID and Email/Phone number.");
                     }
                 } catch (err) {
                     console.error("Track error:", err);

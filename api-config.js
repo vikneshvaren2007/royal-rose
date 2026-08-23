@@ -5,8 +5,9 @@
  */
 
 (function () {
-    // Dynamic Base URL Resolution
-    let baseUrl = "http://127.0.0.1:5000";
+    // Dynamic Base URL Resolution (supports localhost, 127.0.0.1, and local network Wi-Fi IP on mobile)
+    const host = window.location.hostname || "127.0.0.1";
+    let baseUrl = `http://${host}:5000`;
 
     if (window.location.protocol.startsWith("http")) {
         // If served directly from Flask server on port 5000

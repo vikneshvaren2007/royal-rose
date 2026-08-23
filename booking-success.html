@@ -1,435 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ROYAL Rose Flavored Milk — Your booking is confirmed. Check your receipt details.">
+    <title>ROYAL — Booking Confirmed & Royal Receipt</title>
 
-    <title>ROYAL — Booking Confirmed</title>
-
-    <link rel="stylesheet" href="success.css">
-
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        .whatsapp-btn {
-            background: #25D366 !important;
-            color: #ffffff !important;
-            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.35) !important;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .track-btn {
-            background: linear-gradient(135deg, #d94370, #ff529a) !important;
-            color: #ffffff !important;
-            box-shadow: 0 4px 20px rgba(255, 82, 154, 0.4) !important;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .home-btn {
-            background: rgba(255, 255, 255, 0.08) !important;
-            color: #ffffff !important;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .home-btn:hover {
-            background: rgba(255, 255, 255, 0.15) !important;
-            border-color: #ff529a !important;
-        }
-    </style>
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="success.css">
 </head>
 
 <body>
 
-    <div class="background-glow glow-one"></div>
-    <div class="background-glow glow-two"></div>
+    <!-- Ambient Glow -->
+    <div class="success-bg-glow glow-center" aria-hidden="true"></div>
 
-    <div id="petals"></div>
-
-    <div class="sparkles" id="sparkles"></div>
-
-
-    <!-- HEADER -->
-
+    <!-- Header -->
     <header class="success-header">
-
-        <a href="index.html" class="logo">
-            <span>ROYAL</span>
-            <small>ROSE MILK</small>
+        <a href="index.html" class="success-brand">
+            <span class="success-brand-crown">♛</span>
+            <div style="display: flex; flex-direction: column;">
+                <span class="success-brand-name">ROYAL</span>
+                <span style="font-size: 9px; font-weight: 600; letter-spacing: 2px; color: var(--color-rose-light); text-transform: uppercase;">Rose Flavored Milk</span>
+            </div>
         </a>
 
-        <div style="display: flex; gap: 15px;">
-            <a href="track.html" class="shop-link">
+        <div style="display: flex; gap: 20px;">
+            <a href="track.html" style="font-size: 12px; font-weight: 600; letter-spacing: 1.5px; color: var(--color-cream-soft); text-transform: uppercase; text-decoration: none;">
                 Track Order
             </a>
-            <a href="shop.html" class="shop-link">
-                Continue Shopping
+            <a href="shop.html" style="font-size: 12px; font-weight: 600; letter-spacing: 1.5px; color: var(--color-gold-light); text-transform: uppercase; text-decoration: none;">
+                Return To Shop
             </a>
         </div>
-
     </header>
 
-
-    <!-- MAIN -->
-
-    <main>
-
-        <!-- SUCCESS HERO -->
-
-        <section class="success-hero">
-
-            <div class="success-circle">
-
-                <div class="circle-ring"></div>
-
-                <div class="checkmark">
-                    ✓
-                </div>
-
-            </div>
-
-
-            <p class="success-label">
-                ✦ ROYAL ORDER CONFIRMED ✦
-            </p>
-
-            <h1>
-                Booking
-                <span>Confirmed!</span>
-            </h1>
-
-            <p class="success-message">
-                Thank you for choosing ROYAL.
-                Your delicious Rose Milk order has been saved in our system
-                and is being prepared with genuine craftsmanship.
-            </p>
-
-
-            <div class="booking-number">
-
-                <small>
-                    UNIQUE ORDER ID
-                </small>
-
-                <strong id="bookingId">
-                    RR-00000000-000
-                </strong>
-
-                <button id="copyBooking">
-                    Copy
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- DETAILS -->
-
-        <section class="details-grid">
-
-
-            <!-- CUSTOMER -->
-
-            <div class="info-card">
-
-                <div class="info-card-title">
-
-                    <span>👤</span>
-
-                    <div>
-                        <small>CUSTOMER</small>
-                        <h2>Delivery Details</h2>
-                    </div>
-
-                </div>
-
-                <div class="customer-details">
-
-                    <div>
-                        <small>Name</small>
-                        <strong id="customerName">
-                            —
-                        </strong>
-                    </div>
-
-                    <div>
-                        <small>Phone</small>
-                        <strong id="customerPhone">
-                            —
-                        </strong>
-                    </div>
-
-                    <div>
-                        <small>Email</small>
-                        <strong id="customerEmail">
-                            —
-                        </strong>
-                    </div>
-
-                    <div>
-                        <small>Address</small>
-                        <strong id="customerAddress">
-                            —
-                        </strong>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- ORDER -->
-
-            <div class="info-card">
-
-                <div class="info-card-title">
-
-                    <span>🌹</span>
-
-                    <div>
-                        <small>YOUR SELECTION</small>
-                        <h2>Royal Order</h2>
-                    </div>
-
-                </div>
-
-
-                <div id="successProducts"
-                     class="success-products">
-                </div>
-
-
-                <div class="success-divider"></div>
-
-
-                <div class="total-row">
-
-                    <span>
-                        Total Amount
-                    </span>
-
-                    <strong id="successTotal">
-                        ₹0
-                    </strong>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- DELIVERY STATUS -->
-
-        <section class="delivery-card">
-
-            <div class="delivery-icon">
-                🚚
-            </div>
-
-            <div class="delivery-content">
-
-                <p>
-                    CURRENT STATUS
-                </p>
-
-                <h2>
-                    Your Royal Order is Confirmed
-                </h2>
-
-                <span id="deliveryType">
-                    Standard Delivery
-                </span>
-
-            </div>
-
-            <div class="status-badge" style="background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3);">
-                ● CONFIRMED
-            </div>
-
-        </section>
-
-
-        <!-- BUTTONS -->
-
-        <div class="success-actions">
-
-            <a href="track.html" id="trackOrderBtn" class="primary-action track-btn">
-                🔍 Track Order
-            </a>
-
-            <a href="shop.html" class="primary-action">
-                🌹 Order More
-            </a>
-
-            <a href="index.html" class="secondary-action home-btn">
-                ♛ Back to Home
-            </a>
-
-            <a href="#" id="whatsappBtn" class="primary-action whatsapp-btn" style="display: none;" target="_blank" rel="noopener">
-                💬 WhatsApp Order
-            </a>
-
-            <button
-                id="printOrder"
-                class="secondary-action">
-                🖨 Print Confirmation
-            </button>
-
+    <main class="success-container">
+        <!-- Seal & Title -->
+        <div class="success-seal-wrap">
+            <div class="success-seal">✓</div>
+            <h1 class="success-title">Your Royal Booking is Confirmed</h1>
+            <p class="success-subtitle">We have received your reservation. Your artisanal batch is now being prepared.</p>
         </div>
 
+        <!-- Receipt Card -->
+        <section class="receipt-card">
+            <div class="receipt-top-bar">
+                <div class="receipt-order-id-section">
+                    <div class="receipt-order-id-label">Official Order Identifier / Tracking ID</div>
+                    <div class="receipt-id-row">
+                        <div class="receipt-order-id-val" id="receiptOrderId">RR-2026-000</div>
+                        <button type="button" class="btn-copy-id" id="btnCopyOrderId" aria-label="Copy Booking ID" title="Copy Booking ID to clipboard">
+                            <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            <span class="btn-copy-text" id="btnCopyText">Copy Booking ID</span>
+                        </button>
+                    </div>
+                    <div class="copy-feedback-msg" id="copyFeedbackMsg" role="status" aria-live="polite"></div>
+                </div>
+                <div class="receipt-badge">● Confirmed</div>
+            </div>
 
-        <p class="thank-you">
-            Made with 🌹 for your Royal experience. Confirmation emails have been dispatched.
-        </p>
+            <div class="receipt-details-grid">
+                <div class="receipt-field">
+                    <small>Recipient Name</small>
+                    <strong id="receiptCustName">—</strong>
+                </div>
 
+                <div class="receipt-field">
+                    <small>Contact Details</small>
+                    <strong id="receiptCustContact">—</strong>
+                </div>
+
+                <div class="receipt-field">
+                    <small>Delivery Address</small>
+                    <strong id="receiptCustAddress">—</strong>
+                </div>
+
+                <div class="receipt-field">
+                    <small>Delivery Preference</small>
+                    <strong id="receiptDeliveryPref">—</strong>
+                </div>
+            </div>
+
+            <!-- Items Table -->
+            <table class="receipt-items-table">
+                <thead>
+                    <tr>
+                        <th>Artisanal Item</th>
+                        <th style="text-align: center;">Qty</th>
+                        <th style="text-align: right;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="receiptItemsBody">
+                    <!-- Populated dynamically -->
+                </tbody>
+            </table>
+
+            <!-- Financial Breakdown -->
+            <div class="receipt-breakdown">
+                <div class="receipt-breakdown-row">
+                    <span>Product Subtotal</span>
+                    <strong id="receiptSubtotal">₹0</strong>
+                </div>
+                <div class="receipt-breakdown-row">
+                    <span>Delivery / Service Charge</span>
+                    <strong id="receiptDeliveryFee">FREE</strong>
+                </div>
+                <div class="receipt-divider"></div>
+                <div class="receipt-total-bar">
+                    <span>Total Paid</span>
+                    <span id="receiptTotal">₹0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Links -->
+        <div class="success-actions-row">
+            <a id="btnWhatsAppConcierge" href="#" target="_blank" rel="noopener" class="btn-success-action btn-whatsapp">
+                <span>💬 WhatsApp Concierge</span>
+            </a>
+
+            <a id="btnTrackLiveOrder" href="track.html" class="btn-success-action btn-track-action">
+                <span>🔍 Track Order Live</span>
+            </a>
+
+            <a href="shop.html" class="btn-success-action btn-return-home">
+                <span>← Continue Shopping</span>
+            </a>
+        </div>
     </main>
 
-
-    <!-- COPY MESSAGE -->
-
-    <div id="copyMessage" class="copy-message">
-        ✓ Booking ID copied to clipboard
-    </div>
-
-
+    <!-- Script -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const urlParams = new URLSearchParams(window.location.search);
             const orderIdFromUrl = urlParams.get("order_id");
-            const waFromUrl = urlParams.get("whatsapp");
+            const whatsappFromUrl = urlParams.get("whatsapp");
 
-            // Retrieve from session storage if available
-            let confirmedOrder = null;
+            let order = null;
             try {
-                confirmedOrder = JSON.parse(sessionStorage.getItem("royalConfirmedOrder"));
-            } catch(e){}
+                order = JSON.parse(sessionStorage.getItem("royalConfirmedOrder"));
+            } catch (e) {}
 
-            const orderId = orderIdFromUrl || confirmedOrder?.order_id || "RR-" + Date.now();
-            
-            document.getElementById("bookingId").textContent = orderId;
-            document.getElementById("trackOrderBtn").href = `track.html?order_id=${encodeURIComponent(orderId)}`;
+            const orderId = orderIdFromUrl || (order ? order.order_id : "RR-CONFIRMED");
+            document.getElementById("receiptOrderId").textContent = orderId;
 
-            if (waFromUrl) {
-                const waBtn = document.getElementById("whatsappBtn");
-                waBtn.href = waFromUrl;
-                waBtn.style.display = "inline-flex";
+            if (whatsappFromUrl) {
+                document.getElementById("btnWhatsAppConcierge").href = decodeURIComponent(whatsappFromUrl);
+            } else {
+                const defaultMsg = encodeURIComponent(`Hello Royal Rose Milk Concierge, I would like an update on my booking #${orderId}.`);
+                document.getElementById("btnWhatsAppConcierge").href = `https://wa.me/919445437069?text=${defaultMsg}`;
             }
 
-            if (confirmedOrder) {
-                const cust = confirmedOrder.customer || {};
-                document.getElementById("customerName").textContent = cust.name || "Royal Customer";
-                document.getElementById("customerPhone").textContent = cust.phone || "—";
-                document.getElementById("customerEmail").textContent = cust.email || "—";
-                document.getElementById("customerAddress").textContent = `${cust.address || ''}, ${cust.city || ''} ${cust.pincode ? '- ' + cust.pincode : ''}`.trim() || "—";
-                document.getElementById("deliveryType").textContent = confirmedOrder.delivery_preference || "Standard Delivery";
-                document.getElementById("successTotal").textContent = `₹${confirmedOrder.total_amount || 0}`;
+            document.getElementById("btnTrackLiveOrder").href = `track.html?order_id=${encodeURIComponent(orderId)}`;
 
-                const icons = {
-                    "Classic Rose Milk": "🌹",
-                    "Strawberry Rose": "🍓🌹",
-                    "Royal Rose Milk": "✨🌹",
-                    "Rose Coconut Milk": "🥥🌹",
-                    "Rose Chocolate": "🍫🌹",
-                    "Mango Rose Milk": "🥭🌹"
-                };
+            if (order) {
+                const cust = order.customer || {};
+                document.getElementById("receiptCustName").textContent = cust.name || "Royal Patron";
+                document.getElementById("receiptCustContact").textContent = `${cust.phone || ''} • ${cust.email || ''}`.replace(/^ • | • $/g, '') || "—";
+                document.getElementById("receiptCustAddress").textContent = `${cust.address || ''}, ${cust.city || ''} - ${cust.pincode || ''}`.replace(/^, | - $/g, '') || "—";
+                document.getElementById("receiptDeliveryPref").textContent = order.delivery_preference || "Standard Chilled Delivery";
 
-                const productsContainer = document.getElementById("successProducts");
-                productsContainer.innerHTML = "";
+                // Financial Breakdown: Subtotal, Delivery Fee, Final Total Paid
+                const subtotal = Number(order.subtotal || 0);
+                const deliveryCharge = Number(order.delivery_charge || 0);
+                const finalTotal = Number(order.total_amount || (subtotal + deliveryCharge) || 0);
 
-                (confirmedOrder.items || []).forEach(item => {
-                    const productDiv = document.createElement("div");
-                    productDiv.className = "success-product";
-                    productDiv.innerHTML = `
-                        <div class="success-product-image">
-                            ${icons[item.name] || "🌹"}
-                        </div>
-                        <div class="success-product-info">
-                            <h3>${item.name}</h3>
-                            <p>₹${item.unit_price} × ${item.quantity}</p>
-                        </div>
-                        <strong>₹${item.subtotal}</strong>
+                document.getElementById("receiptSubtotal").textContent = `₹${subtotal}`;
+                document.getElementById("receiptDeliveryFee").textContent = deliveryCharge > 0 ? `₹${deliveryCharge}` : "FREE";
+                document.getElementById("receiptTotal").textContent = `₹${finalTotal}`;
+
+                const tbody = document.getElementById("receiptItemsBody");
+                tbody.innerHTML = "";
+                const items = order.items || [];
+                items.forEach(it => {
+                    const tr = document.createElement("tr");
+                    const itSub = it.subtotal != null ? it.subtotal : (Number(it.unit_price || it.price || 0) * Number(it.quantity || 1));
+                    tr.innerHTML = `
+                        <td>${it.product_name || it.name || "Artisanal Selection"}</td>
+                        <td style="text-align: center;">${it.quantity || 1}</td>
+                        <td style="text-align: right; font-weight: 700; color: var(--color-gold-light);">₹${itSub}</td>
                     `;
-                    productsContainer.appendChild(productDiv);
+                    tbody.appendChild(tr);
+                });
+            } else {
+                document.getElementById("receiptCustName").textContent = "Royal Customer";
+                document.getElementById("receiptCustContact").textContent = "Confirmation dispatched via email";
+                document.getElementById("receiptCustAddress").textContent = "Delivery address on file";
+                document.getElementById("receiptDeliveryPref").textContent = "Standard Chilled Delivery";
+            }
+
+            // Copy Booking ID functionality
+            const copyBtn = document.getElementById("btnCopyOrderId");
+            const copyText = document.getElementById("btnCopyText");
+            const feedbackMsg = document.getElementById("copyFeedbackMsg");
+            let copyResetTimer = null;
+
+            if (copyBtn) {
+                copyBtn.addEventListener("click", async () => {
+                    const idElement = document.getElementById("receiptOrderId");
+                    const bookingIdToCopy = idElement ? idElement.textContent.trim() : "";
+                    
+                    if (!bookingIdToCopy || bookingIdToCopy === "—") return;
+
+                    let isCopied = false;
+
+                    // Modern Clipboard API
+                    if (navigator.clipboard && window.isSecureContext) {
+                        try {
+                            await navigator.clipboard.writeText(bookingIdToCopy);
+                            isCopied = true;
+                        } catch (err) {
+                            console.warn("Clipboard API write failed, trying fallback...", err);
+                        }
+                    }
+
+                    // Fallback for non-secure contexts (e.g. http or older mobile browsers)
+                    if (!isCopied) {
+                        try {
+                            const textArea = document.createElement("textarea");
+                            textArea.value = bookingIdToCopy;
+                            textArea.style.position = "fixed";
+                            textArea.style.left = "-999999px";
+                            textArea.style.top = "-999999px";
+                            textArea.style.opacity = "0";
+                            textArea.setAttribute("readonly", "");
+                            document.body.appendChild(textArea);
+                            textArea.focus();
+                            textArea.select();
+                            textArea.setSelectionRange(0, 99999);
+                            isCopied = document.execCommand("copy");
+                            document.body.removeChild(textArea);
+                        } catch (err) {
+                            console.error("execCommand fallback copy failed:", err);
+                            isCopied = false;
+                        }
+                    }
+
+                    clearTimeout(copyResetTimer);
+
+                    if (isCopied) {
+                        copyBtn.classList.remove("error");
+                        copyBtn.classList.add("copied");
+                        if (copyText) copyText.textContent = "Copied ✓";
+                        if (feedbackMsg) {
+                            feedbackMsg.textContent = "Booking ID copied!";
+                            feedbackMsg.classList.remove("error");
+                            feedbackMsg.classList.add("show");
+                        }
+
+                        copyResetTimer = setTimeout(() => {
+                            copyBtn.classList.remove("copied");
+                            if (copyText) copyText.textContent = "Copy Booking ID";
+                            if (feedbackMsg) feedbackMsg.classList.remove("show");
+                        }, 1800);
+                    } else {
+                        copyBtn.classList.remove("copied");
+                        copyBtn.classList.add("error");
+                        if (feedbackMsg) {
+                            feedbackMsg.textContent = "Unable to copy. Please copy it manually.";
+                            feedbackMsg.classList.add("error", "show");
+                        }
+
+                        copyResetTimer = setTimeout(() => {
+                            copyBtn.classList.remove("error");
+                            if (copyText) copyText.textContent = "Copy Booking ID";
+                            if (feedbackMsg) feedbackMsg.classList.remove("show");
+                        }, 3000);
+                    }
                 });
             }
-
-            /*
-             * Copy Booking ID
-             */
-            document.getElementById("copyBooking").addEventListener("click", async () => {
-                try {
-                    await navigator.clipboard.writeText(orderId);
-                    showCopyMessage();
-                } catch (error) {
-                    alert(orderId);
-                }
-            });
-
-            function showCopyMessage() {
-                const message = document.getElementById("copyMessage");
-                message.classList.add("show");
-                setTimeout(() => {
-                    message.classList.remove("show");
-                }, 2000);
-            }
-
-            /*
-             * Print
-             */
-            document.getElementById("printOrder").addEventListener("click", () => {
-                window.print();
-            });
-
-            /*
-             * Rose Petals
-             */
-            function createPetal() {
-                const petal = document.createElement("span");
-                petal.className = "petal";
-                petal.textContent = Math.random() > .5 ? "🌸" : "🌹";
-                petal.style.left = Math.random() * 100 + "%";
-                petal.style.fontSize = 10 + Math.random() * 16 + "px";
-                petal.style.animationDuration = 6 + Math.random() * 7 + "s";
-                petal.style.opacity = .15 + Math.random() * .55;
-
-                document.getElementById("petals").appendChild(petal);
-                setTimeout(() => { petal.remove(); }, 14000);
-            }
-            setInterval(createPetal, 800);
-
-            /*
-             * Sparkles
-             */
-            function createSparkle() {
-                const sparkle = document.createElement("span");
-                sparkle.className = "sparkle";
-                sparkle.textContent = "✦";
-                sparkle.style.left = Math.random() * 100 + "%";
-                sparkle.style.top = Math.random() * 100 + "%";
-                sparkle.style.animationDelay = Math.random() * 2 + "s";
-
-                document.getElementById("sparkles").appendChild(sparkle);
-                setTimeout(() => { sparkle.remove(); }, 3000);
-            }
-            setInterval(createSparkle, 500);
-
-            setTimeout(() => {
-                document.body.classList.add("loaded");
-            }, 150);
         });
     </script>
 </body>
+
 </html>

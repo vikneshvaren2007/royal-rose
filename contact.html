@@ -1,178 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us | ROYAL — Rose Flavored Milk</title>
+    <meta name="description" content="ROYAL Concierge — Inquire about bespoke orders, wedding events, and customer support.">
+    <title>ROYAL — The Royal Concierge & Contact</title>
 
-    <link rel="stylesheet" href="contact.css">
-
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="contact.css">
 </head>
 
 <body>
 
-    <!-- REUSED CINEMATIC BACKGROUND VIDEO -->
-    <video class="contact-bg-video" autoplay muted loop playsinline preload="auto">
-        <source src="videos/cinematic.mp4" type="video/mp4">
-    </video>
-    <div class="contact-overlay"></div>
+    <!-- Background Video & Overlay -->
+    <div class="contact-bg-video-wrap" aria-hidden="true">
+        <video autoplay muted loop playsinline poster="images/hero-background.jpg">
+            <source src="videos/cinematic.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="contact-overlay-mask" aria-hidden="true"></div>
 
-    <div class="bg-glow glow-one"></div>
-    <div class="bg-glow glow-two"></div>
-    <div class="petals" id="petals"></div>
-
-    <!-- HEADER -->
+    <!-- Header -->
     <header class="contact-header">
-        <a href="index.html" class="logo">
-            <span>ROYAL</span>
-            <small>ROSE MILK</small>
+        <a href="index.html" class="contact-brand">
+            <span class="contact-brand-crown">♛</span>
+            <div style="display: flex; flex-direction: column;">
+                <span class="contact-brand-name">ROYAL</span>
+                <span style="font-size: 9px; font-weight: 600; letter-spacing: 2px; color: var(--color-rose-light); text-transform: uppercase;">Rose Flavored Milk</span>
+            </div>
         </a>
 
-        <nav class="nav-links">
-            <a href="index.html">EXPERIENCE</a>
-            <a href="shop.html">SHOP</a>
-            <a href="track.html">TRACK ORDER</a>
-            <a href="contact.html" class="active">CONTACT</a>
-            <a href="cart.html">🛒 CART</a>
+        <nav class="contact-nav-links">
+            <a href="index.html" class="contact-nav-link">Experience</a>
+            <a href="shop.html" class="contact-nav-link">Collection</a>
+            <a href="track.html" class="contact-nav-link">Track Order</a>
+            <a href="contact.html" class="contact-nav-link active">Concierge</a>
         </nav>
     </header>
 
-    <!-- MAIN CONTENT -->
     <main class="contact-wrapper">
-
-        <div class="contact-grid">
-
-            <!-- LEFT SIDE: CONTACT INFORMATION -->
-            <section class="contact-info-card">
-                <div class="brand-badge">
+        <div class="contact-grid-layout">
+            <!-- Left: Concierge Info -->
+            <section class="concierge-info-card">
+                <div class="concierge-badge">
                     <span>♛</span>
-                    <span>ROYAL CONCIERGE</span>
+                    <span>Royal Concierge</span>
                 </div>
 
-                <h1 class="info-title">
-                    Have a Question?
+                <h1 class="concierge-title">
+                    Have an Inquiry?
                     <br>
-                    <span>We'd love to hear from you.</span>
+                    <span>We are at your service.</span>
                 </h1>
 
-                <p class="info-subtitle">
-                    Whether you are inquiring about our heritage recipe, planning a bespoke celebration order, or simply wish to share your experience, our team is at your service.
+                <p class="concierge-desc">
+                    Whether you are planning a bespoke festive order, wedding catering, or have inquiries regarding our heirloom recipes, our team will assist you with utmost care.
                 </p>
 
-                <div class="contact-items">
-                    <!-- Email -->
-                    <div class="contact-item">
-                        <div class="item-icon">✉</div>
-                        <div class="item-details">
+                <div class="contact-methods-list">
+                    <div class="contact-method-item">
+                        <div class="method-icon-box">☎</div>
+                        <div class="method-details">
+                            <small>Telephone & WhatsApp</small>
+                            <a href="https://wa.me/919445437069" target="_blank" rel="noopener">+91 94454 37069</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-method-item">
+                        <div class="method-icon-box">✉</div>
+                        <div class="method-details">
                             <small>Direct Email</small>
                             <a href="mailto:vikneshvaren2@gmail.com">vikneshvaren2@gmail.com</a>
                         </div>
                     </div>
 
-                    <!-- Phone -->
-                    <div class="contact-item">
-                        <div class="item-icon">☎</div>
-                        <div class="item-details">
-                            <small>Phone & WhatsApp</small>
-                            <a href="tel:+919445437069">+91 9445437069</a>
-                        </div>
-                    </div>
-
-                    <!-- Location -->
-                    <div class="contact-item">
-                        <div class="item-icon">⌖</div>
-                        <div class="item-details">
+                    <div class="contact-method-item">
+                        <div class="method-icon-box">⌖</div>
+                        <div class="method-details">
                             <small>Heritage Location</small>
                             <p>Tamil Nadu, India</p>
                         </div>
                     </div>
 
-                    <!-- Business Hours -->
-                    <div class="contact-item">
-                        <div class="item-icon">⏰</div>
-                        <div class="item-details">
+                    <div class="contact-method-item">
+                        <div class="method-icon-box">⏰</div>
+                        <div class="method-details">
                             <small>Operating Hours</small>
                             <p>Monday – Sunday: 9:00 AM – 10:00 PM IST</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="royal-promise-box">
-                    <div class="promise-crown">♛</div>
-                    <div class="promise-text">
-                        <strong>The Royal Commitment</strong><br>
-                        Every batch of rose milk is prepared with timeless dedication. We personally respond to every inquiry within 24 hours.
-                    </div>
+                <div class="commitment-box">
+                    <span>♛</span>
+                    <p>
+                        <strong>The Royal Commitment:</strong> Every inquiry receives personal attention from our senior concierge within 24 hours.
+                    </p>
                 </div>
             </section>
 
-
-            <!-- RIGHT SIDE: CONTACT FORM -->
+            <!-- Right: Contact Form -->
             <section class="contact-form-card">
-                <div class="form-header">
-                    <h2>Send a Message</h2>
-                    <p>Please enter your details below and our team will get back to you promptly.</p>
-                </div>
+                <h2 class="form-title">Send a Message</h2>
+                <p class="form-subtitle">Enter your details below and our team will get back to you promptly.</p>
 
-                <form id="contactForm" class="contact-form">
-                    <div class="form-row">
-                        <div class="form-field">
-                            <label for="contactName">Full Name</label>
-                            <div class="field-box">
-                                <span>👤</span>
-                                <input type="text" id="contactName" placeholder="Your name" required autocomplete="name">
-                            </div>
-                        </div>
-
-                        <div class="form-field">
-                            <label for="contactPhone">Phone Number</label>
-                            <div class="field-box">
-                                <span>☎</span>
-                                <input type="tel" id="contactPhone" placeholder="10-digit number" maxlength="10" autocomplete="tel">
-                            </div>
-                        </div>
+                <form id="contactForm">
+                    <div class="form-field-group">
+                        <label for="contactName">Full Name *</label>
+                        <input type="text" id="contactName" placeholder="Your name" required autocomplete="name">
                     </div>
 
-                    <div class="form-field">
-                        <label for="contactEmail">Email Address</label>
-                        <div class="field-box">
-                            <span>✉</span>
-                            <input type="email" id="contactEmail" placeholder="yourname@domain.com" required autocomplete="email">
-                        </div>
+                    <div class="form-field-group">
+                        <label for="contactPhone">Phone Number</label>
+                        <input type="tel" id="contactPhone" placeholder="10-digit number" maxlength="10" autocomplete="tel">
                     </div>
 
-                    <div class="form-field">
-                        <label for="contactMessage">Your Message</label>
-                        <div class="field-box">
-                            <span style="top: 14px;">✎</span>
-                            <textarea id="contactMessage" placeholder="How can we assist your Royal experience?" required></textarea>
-                        </div>
+                    <div class="form-field-group">
+                        <label for="contactEmail">Email Address *</label>
+                        <input type="email" id="contactEmail" placeholder="yourname@domain.com" required autocomplete="email">
                     </div>
 
-                    <button type="submit" id="btnContactSubmit" class="btn-submit-message">
+                    <div class="form-field-group">
+                        <label for="contactMessage">Your Message *</label>
+                        <textarea id="contactMessage" placeholder="How may we assist your Royal experience?" required></textarea>
+                    </div>
+
+                    <button type="submit" id="btnContactSubmit" class="btn-send-message">
                         <span>Send Message</span>
-                        <b>➔</b>
+                        <span>→</span>
                     </button>
 
-                    <div id="formStatus" class="form-status"></div>
+                    <div id="formStatusMsg" class="form-status-msg"></div>
                 </form>
             </section>
-
         </div>
-
     </main>
 
+    <!-- Scripts -->
     <script src="api-config.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const contactForm = document.getElementById("contactForm");
-            const btnSubmit = document.getElementById("btnContactSubmit");
-            const formStatus = document.getElementById("formStatus");
+            const form = document.getElementById("contactForm");
+            const submitBtn = document.getElementById("btnContactSubmit");
+            const statusMsg = document.getElementById("formStatusMsg");
 
-            contactForm.addEventListener("submit", async (e) => {
+            form.addEventListener("submit", async (e) => {
                 e.preventDefault();
 
                 const name = document.getElementById("contactName").value.trim();
@@ -180,27 +158,14 @@
                 const email = document.getElementById("contactEmail").value.trim();
                 const message = document.getElementById("contactMessage").value.trim();
 
-                // Validation
-                if (!name) {
-                    showStatus("Please enter your name.", "error");
+                if (!name || !email || !message) {
+                    statusMsg.className = "form-status-msg error";
+                    statusMsg.textContent = "Please fill in all required fields.";
                     return;
                 }
 
-                const emailRegex = /^[\w\.-]+@[\w\.-]+\.\w+$/;
-                if (!email || !emailRegex.test(email)) {
-                    showStatus("Please provide a valid email address.", "error");
-                    return;
-                }
-
-                if (!message) {
-                    showStatus("Please enter your message.", "error");
-                    return;
-                }
-
-                btnSubmit.disabled = true;
-                btnSubmit.innerHTML = "<span>Sending...</span>";
-                formStatus.className = "form-status";
-                formStatus.style.display = "none";
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = "<span>Sending Inquiry...</span>";
 
                 try {
                     const res = await window.royalApi.post("/api/contact", {
@@ -210,44 +175,25 @@
                         message: message
                     });
 
-                    const data = res.data;
-
-                    if (res.ok && data.success) {
-                        showStatus(data.message || "Message sent successfully! We will get back to you shortly.", "success");
-                        contactForm.reset();
+                    if (res.ok && res.data.success) {
+                        statusMsg.className = "form-status-msg success";
+                        statusMsg.textContent = "Thank you! Your message has been received by our Royal Concierge. We will reply shortly.";
+                        form.reset();
                     } else {
-                        showStatus(data.message || "Unable to send your message. Please try again.", "error");
+                        statusMsg.className = "form-status-msg error";
+                        statusMsg.textContent = res.data.message || "Failed to submit inquiry. Please try again.";
                     }
-                } catch (error) {
-                    console.error("Contact Error:", error);
-                    showStatus("Unable to connect to server. Please check that the backend is running.", "error");
+                } catch (err) {
+                    console.error("Contact Error:", err);
+                    statusMsg.className = "form-status-msg error";
+                    statusMsg.textContent = "Unable to connect to concierge server. Please try reaching us directly via WhatsApp or phone.";
                 } finally {
-                    btnSubmit.disabled = false;
-                    btnSubmit.innerHTML = "<span>Send Message</span> <b>➔</b>";
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = "<span>Send Message</span> <span>→</span>";
                 }
             });
-
-            function showStatus(text, type) {
-                formStatus.textContent = text;
-                formStatus.className = `form-status ${type}`;
-                formStatus.style.display = "block";
-            }
-
-            // Rose petals
-            function createPetal() {
-                const petal = document.createElement("span");
-                petal.className = "petal";
-                petal.textContent = Math.random() > .5 ? "🌸" : "🌹";
-                petal.style.left = Math.random() * 100 + "%";
-                petal.style.fontSize = 10 + Math.random() * 14 + "px";
-                petal.style.opacity = .15 + Math.random() * .45;
-                petal.style.animationDuration = 6 + Math.random() * 7 + "s";
-
-                document.getElementById("petals").appendChild(petal);
-                setTimeout(() => { petal.remove(); }, 14000);
-            }
-            setInterval(createPetal, 900);
         });
     </script>
 </body>
+
 </html>

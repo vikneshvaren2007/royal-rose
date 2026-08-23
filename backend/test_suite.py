@@ -17,6 +17,7 @@ Tests all features:
 
 import sys
 import os
+import secrets
 
 # Ensure backend directory is in sys.path
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
@@ -76,8 +77,11 @@ print(f"[PASS] TEST 5: Admin Dashboard Aggregation OK (Orders: {stats['total_ord
 
 # 6. Admin Product Management CRUD
 # 6a. Create product
+test_pname = f"Royal Kashmiri Saffron Rose {secrets.token_hex(3)}"
+test_pname_updated = f"{test_pname} (Gold Edition)"
+
 res_add = client.post("/api/admin/products", headers=admin_headers, json={
-    "name": "Royal Kashmiri Saffron Rose",
+    "name": test_pname,
     "price": 249.0,
     "description": "Infused with pure Kashmiri saffron threads and rich condensed damask rose extract.",
     "image": "images/Royal Rose Milk.jpg",
@@ -90,11 +94,11 @@ res_add = client.post("/api/admin/products", headers=admin_headers, json={
 })
 assert res_add.status_code == 201 and res_add.json["success"]
 new_prod_id = res_add.json["id"]
-print(f"[PASS] TEST 6a: Admin Add Product OK (ID: {new_prod_id}, 'Royal Kashmiri Saffron Rose')")
+print(f"[PASS] TEST 6a: Admin Add Product OK (ID: {new_prod_id}, '{test_pname}')")
 
 # 6b. Update product (price, name, category, image)
 res_update = client.post(f"/api/admin/products/{new_prod_id}", headers=admin_headers, json={
-    "name": "Royal Kashmiri Saffron Rose (Gold Edition)",
+    "name": test_pname_updated,
     "price": 279.0,
     "description": "Infused with pure Kashmiri saffron threads, 24K edible gold leaf, and rich damask rose.",
     "image": "images/Royal Rose Milk.jpg",
@@ -123,7 +127,7 @@ res_book_sold = client.post("/api/book", json={
         "city": "Chennai",
         "pincode": "600001"
     },
-    "products": [{"name": "Royal Kashmiri Saffron Rose (Gold Edition)", "price": 279, "quantity": 1}]
+    "products": [{"name": test_pname_updated, "price": 279, "quantity": 1}]
 })
 assert res_book_sold.status_code == 400
 assert "SOLD OUT" in res_book_sold.json["message"]
@@ -158,7 +162,7 @@ res_book = client.post("/api/book", json={
     "delivery": "Express Delivery",
     "products": [
         {"name": "Classic Rose Milk", "price": 149, "quantity": 2},
-        {"name": "Royal Kashmiri Saffron Rose (Gold Edition)", "price": 279, "quantity": 1}
+        {"name": test_pname_updated, "price": 279, "quantity": 1}
     ]
 })
 assert res_book.status_code == 200 and res_book.json["success"]
@@ -171,11 +175,38 @@ assert "whatsapp_url" in res_book.json
 print(f"[PASS] TEST 7: Customer Booking Flow OK (Order ID: {order_id}, Total: Rs.{total_amt}, Async emails dispatched)")
 
 # 8. Order Tracking Flow
+# 8a. Track using Order ID + Email
 res_track = client.post("/api/track", json={"order_id": order_id, "verification": "vikneshvaren2@gmail.com"})
 assert res_track.status_code == 200 and res_track.json["success"]
 tracked_order = res_track.json["order"]
 assert tracked_order["order_status"] == "CONFIRMED"
-print(f"[PASS] TEST 8: Order Tracking OK (Verified Order #{order_id} with status: {tracked_order['order_status']})")
+assert tracked_order["status"] == "CONFIRMED"
+assert tracked_order["total_amount"] == total_amt
+assert tracked_order["total_price"] == total_amt
+assert "subtotal" in tracked_order and "delivery_charge" in tracked_order
+print(f"[PASS] TEST 8a: Order Tracking via Email OK (Verified Order #{order_id}, Total: Rs.{tracked_order['total_amount']})")
+
+# 8b. Track using Order ID + Phone Number
+res_track_phone = client.post("/api/track", json={"order_id": order_id, "verification": "9445437069"})
+assert res_track_phone.status_code == 200 and res_track_phone.json["success"]
+print(f"[PASS] TEST 8b: Order Tracking via Phone Number OK")
+
+# 8c. Track using parameter aliases (orderId, verify)
+res_track_alias = client.post("/api/track", json={"orderId": order_id, "verify": "9445437069"})
+assert res_track_alias.status_code == 200 and res_track_alias.json["success"]
+print(f"[PASS] TEST 8c: Order Tracking via Parameter Aliases (orderId, verify) OK")
+
+# 8d. Track with invalid details (returns 404 and friendly error)
+res_track_invalid = client.post("/api/track", json={"order_id": order_id, "verification": "wrongemail@domain.com"})
+assert res_track_invalid.status_code == 404
+assert "Order not found. Please check your Order ID and Email/Phone number." in res_track_invalid.json["message"]
+print(f"[PASS] TEST 8d: Order Tracking Invalid Verification Guard OK (404 Not Found)")
+
+# 8e. Track with missing details (returns 400)
+res_track_missing = client.post("/api/track", json={"order_id": "", "verification": ""})
+assert res_track_missing.status_code == 400
+assert "Both Order ID and Email/Phone are required." in res_track_missing.json["message"]
+print(f"[PASS] TEST 8e: Order Tracking Missing Fields Guard OK (400 Bad Request)")
 
 # 9. Customer Order Cancellation Flow
 res_cancel = client.post("/api/cancel", json={

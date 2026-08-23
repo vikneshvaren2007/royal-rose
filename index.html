@@ -2,1397 +2,533 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ROYAL Rose Flavored Milk — The taste of royal India. Where rich Damask rose meets velvet creamy indulgence.">
+    <meta name="keywords" content="Royal Rose Milk, Indian Beverage, Damask Rose, Luxury Rose Milk, Artisanal Beverage">
+    <title>ROYAL — The Taste of Royal India | Luxury Rose Flavored Milk</title>
 
-    <meta name="description" content="ROYAL Rose Flavored Milk — The taste of nature.">
-
-    <title>ROYAL — Rose Flavored Milk</title>
-
-
-    <!-- =====================================================
-         GOOGLE FONTS
-    ====================================================== -->
-
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
-
-
-    <!-- =====================================================
-         MAIN CSS
-    ====================================================== -->
-
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
 
+    <!-- Zero-Flash Session Loader Gate -->
+    <script>
+        (function() {
+            try {
+                if (sessionStorage.getItem("royalLoadingShown") === "true") {
+                    document.documentElement.classList.add("loader-already-completed");
+                }
+            } catch (e) {}
+        })();
+    </script>
 </head>
-
 
 <body>
 
+    <!-- Ambient Mouse Light Glow -->
+    <div class="ambient-light-glow" aria-hidden="true"></div>
 
-    <!-- =====================================================
-         ROYAL HEART RAIN
-    ====================================================== -->
+    <!-- Cinematic Canvas Particles Engine -->
+    <canvas id="particlesCanvas" aria-hidden="true"></canvas>
 
-    <div id="royalHeartRain" aria-hidden="true"></div>
-
-
-
-    <!-- =====================================================
-     ROYAL CINEMATIC LOADING SCREEN
-====================================================== -->
-
-    <div id="royalLoader">
-
-        <div class="loader-content">
-
-            <!-- ROYAL EMBLEM -->
-
-            <div class="loader-emblem">
-
-                <div class="loader-emblem-ring"></div>
-
-                <div class="loader-emblem-inner"></div>
-
-                <div class="loader-rose">
-                    🌸
-                </div>
-
+    <!-- ==========================================================================
+         CINEMATIC BRAND INTRO / LOADER
+         ========================================================================== -->
+    <div id="royalLoader" aria-label="Loading Royal Experience">
+        <div class="loader-container">
+            <div class="loader-brand-emblem">
+                <div class="loader-ring"></div>
+                <div class="loader-ring-pulse"></div>
+                <div class="loader-crown">♛</div>
             </div>
-
-
-            <!-- BRAND -->
-
-            <h1 class="loader-title">
-                ROYAL
-            </h1>
-
-
-            <!-- SUBTITLE -->
-
-            <p class="loader-subtitle">
-                PREPARING ROSE MILK SYMPHONY
-            </p>
-
-
-            <!-- PROGRESS -->
-
-            <div class="loader-progress-bar-wrap">
-
+            <h1 class="loader-title">ROYAL</h1>
+            <p class="loader-subtitle">Crafting the Rose Milk Symphony</p>
+            <div class="loader-progress-wrap">
                 <div id="loaderProgress" class="loader-progress-bar"></div>
-
             </div>
-
-
-            <!-- PERCENTAGE -->
-
-            <div id="loaderPercent" class="loader-percent">
-                0%
-            </div>
-
+            <div id="loaderPercent" class="loader-percent">0%</div>
         </div>
-
     </div>
 
-
-
-    <!-- =====================================================
-         NAVBAR
-    ====================================================== -->
-
+    <!-- ==========================================================================
+         PREMIUM NAVBAR
+         ========================================================================== -->
     <header class="site-header">
-
-
-        <!-- BRAND -->
-
-        <a href="#experience" class="brand">
-
-            <div class="brand-crown">
-                ♛
-            </div>
-
-
+        <a href="index.html" class="brand" aria-label="ROYAL Homepage">
+            <div class="brand-crown">♛</div>
             <div class="brand-text">
-
-                <span class="brand-name">
-                    ROYAL
-                </span>
-
-                <span class="brand-subtitle">
-                    ROSE FLAVORED MILK
-                </span>
-
+                <span class="brand-name">ROYAL</span>
+                <span class="brand-subtitle">Rose Flavored Milk</span>
             </div>
-
         </a>
 
-
-
-        <!-- NAVIGATION -->
-
-        <nav class="main-nav">
-
-
-            <a href="#experience" class="cinematic-nav-link">
-                EXPERIENCE
-            </a>
-
-
-            <a href="#story" class="cinematic-nav-link">
-                OUR STORY
-            </a>
-
-
-            <a href="#method" class="cinematic-nav-link">
-                METHOD
-            </a>
-
-
-            <a href="#custodians" class="cinematic-nav-link">
-                ABOUT
-            </a>
-
-
-            <a href="shop.html" class="cinematic-shop">
-                <span>
-                    SHOP
-                </span>
-            </a>
-
-
-            <a href="track.html" class="cinematic-nav-link">
-                TRACK ORDER
-            </a>
-
-
-            <a href="contact.html" class="cinematic-nav-link">
-                CONTACT
-            </a>
-
-
+        <!-- Desktop Navigation -->
+        <nav class="main-nav" aria-label="Main Navigation">
+            <a href="#experience" class="nav-link active">Experience</a>
+            <a href="#legacy" class="nav-link">Legacy</a>
+            <a href="#method" class="nav-link">The Alchemy</a>
+            <a href="#ingredients" class="nav-link">Essence</a>
+            <a href="shop.html" class="nav-link">Collection</a>
+            <a href="track.html" class="nav-link">Track Order</a>
+            <a href="contact.html" class="nav-link">Concierge</a>
         </nav>
 
-
+        <!-- Right Header Actions -->
+        <div class="nav-actions">
+            <button class="mobile-nav-toggle" id="mobileToggle" aria-label="Toggle Mobile Navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
     </header>
 
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav-drawer" id="mobileDrawer">
+        <a href="#experience" class="mobile-nav-link">Experience</a>
+        <a href="#legacy" class="mobile-nav-link">Our Legacy</a>
+        <a href="#method" class="mobile-nav-link">The Alchemy</a>
+        <a href="#ingredients" class="mobile-nav-link">The Essence</a>
+        <a href="shop.html" class="mobile-nav-link">Collection & Shop</a>
+        <a href="track.html" class="mobile-nav-link">Track Your Order</a>
+        <a href="contact.html" class="mobile-nav-link">Royal Concierge</a>
+    </div>
 
+    <main>
+        <!-- ==========================================================================
+             SECTION 1: CINEMATIC HERO
+             ========================================================================== -->
+        <section class="hero-cinematic" id="experience">
+            <div class="hero-video-wrap">
+                <video id="heroVideo" class="hero-background-video" autoplay muted loop playsinline poster="images/hero-background.jpg">
+                    <source src="videos/cinematic.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="hero-overlay"></div>
 
-    <!-- =====================================================
-         HERO SECTION
-    ====================================================== -->
+            <div class="hero-content">
+                <div class="hero-badge">✦ The Royal Heritage ✦</div>
+                <h1 class="hero-title">
+                    The Taste of
+                    <span>Royal India</span>
+                </h1>
+                <p class="hero-description">
+                    Where rich Kannauj Damask rose meets velvet creamy indulgence. An authentic royal secret, patiently perfected across generations.
+                </p>
+                <div class="hero-actions">
+                    <a href="shop.html" class="btn-royal-primary">
+                        <span>Explore Collection</span>
+                        <span>→</span>
+                    </a>
+                    <a href="#legacy" class="btn-royal-secondary">
+                        <span>Discover Our Story</span>
+                        <span>↓</span>
+                    </a>
+                </div>
+            </div>
+        </section>
 
-    <section class="hero hero-cinematic" id="experience">
+        <!-- ==========================================================================
+             SECTION 2: THE ROYAL LEGACY / HERITAGE
+             ========================================================================== -->
+        <section class="section-legacy" id="legacy">
+            <div class="legacy-grid">
+                <div class="legacy-content cinematic-reveal-left">
+                    <span class="section-label">✦ Established Tradition ✦</span>
+                    <h2 class="section-title">Rooted in Heritage, <span>Elevated by Time.</span></h2>
+                    <p class="legacy-text">
+                        The journey of ROYAL began in the historic royal kitchens of Tamil Nadu, where the mystical distillation of fresh morning Damask roses was ceremoniously blended with rich, chilled velvet farm milk.
+                    </p>
+                    <p class="legacy-text">
+                        What was once reserved exclusively for sovereign banquets and royal celebrations is now meticulously bottled with unyielding dedication to purity, taste, and sensory indulgence.
+                    </p>
+                    <div class="legacy-quote">
+                        <p>“We don't simply craft a beverage; we bottle an enduring royal memory with every pour.”</p>
+                        <cite>— The Master Custodians of Royal Rose Milk</cite>
+                    </div>
+                    <div>
+                        <a href="#method" class="btn-royal-secondary">
+                            <span>Explore The Craft</span>
+                            <span>→</span>
+                        </a>
+                    </div>
+                </div>
 
+                <div class="legacy-visuals cinematic-reveal-right">
+                    <div class="legacy-main-card">
+                        <img src="images/heritage.jpg" alt="Royal Heritage and Damask Rose" loading="lazy">
+                        <div class="legacy-card-overlay"></div>
+                    </div>
+                    <div class="legacy-badge-float">
+                        <strong>100%</strong>
+                        <span>Pure Damask Rose</span>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <!-- HERO BACKGROUND VIDEO -->
-
-        <video id="hero-video" class="hero-background-video" muted playsinline preload="auto">
-
-            <source src="videos/cinematic.mp4" type="video/mp4">
-
-            Your browser does not support HTML5 video.
-
-        </video>
-
-
-        <!-- VIDEO DARK OVERLAY -->
-
-        <div class="hero-video-overlay"></div>
-
-
-        <!-- BACKGROUND GLOW -->
-
-        <div class="hero-glow"></div>
-
-
-
-        <!-- HERO CONTENT -->
-
-        <div class="hero-content">
-
-
-            <div class="hero-badge">
-                THE ROYAL LEGACY
+        <!-- ==========================================================================
+             SECTION 3: THE ALCHEMY OF FLAVOR (METHOD)
+             ========================================================================== -->
+        <section class="section-method" id="method">
+            <div class="section-header-center cinematic-reveal">
+                <span class="section-label">✦ Artisanal Craftsmanship ✦</span>
+                <h2 class="section-title">The Alchemy of <span>Flavor</span></h2>
+                <div class="heading-divider"><span>♛</span></div>
+                <p class="section-subtitle">
+                    True luxury cannot be rushed. Our time-honored three-phase alchemy harmonizes botanical essence with farm-fresh velvet cream.
+                </p>
             </div>
 
-
-            <h1 class="royal-title">
-
-                ROYAL
-
-                <span>
-                    ROSE MILK
-                </span>
-
-            </h1>
-
-
-            <p>
-                the taste of nature
-            </p>
-
-
-            <a href="#story" class="hero-btn">
-
-                <span>
-                    ♛
-                </span>
-
-                EXPLORE ROYAL MILK
-
-            </a>
-
-
-        </div>
-
-
-    </section>
-
-
-
-    <!-- =====================================================
-         HERITAGE / OUR STORY
-    ====================================================== -->
-
-    <section class="heritage cinematic-reveal" id="story">
-
-
-        <div class="heritage-content">
-
-
-            <span class="section-label">
-                OUR HERITAGE
-            </span>
-
-
-            <h2>
-
-                Rooted in Tradition,
-
-                <br>
-
-                <strong>
-                    Elevated by Time.
-                </strong>
-
-            </h2>
-
-
-            <p>
-                The story of ROYAL begins with a family tradition,
-                where the delicate essence of roses meets the
-                richness of fresh milk.
-            </p>
-
-
-            <p>
-                We continue to source the finest ingredients,
-                preserving the timeless character of our original
-                recipe for every generation.
-            </p>
-
-
-            <a href="#method" class="heritage-btn">
-                DISCOVER OUR ORIGINS
-            </a>
-
-
-        </div>
-
-
-
-        <div class="heritage-image royal-image-hover">
-
-            <img src="images/heritage.jpg" alt="Royal Rose Milk Heritage" loading="lazy">
-
-        </div>
-
-
-
-        <div class="rose-card royal-image-hover">
-
-            <img src="images/rose.jpg" alt="Rose" loading="lazy">
-
-        </div>
-
-
-    </section>
-
-
-
-    <!-- =====================================================
-         THE METHOD
-    ====================================================== -->
-
-    <section class="method cinematic-reveal" id="method">
-
-
-        <div class="method-heading">
-
-
-            <span class="section-label">
-                THE METHOD
-            </span>
-
-
-            <h2>
-                The Alchemy of Flavor.
-            </h2>
-
-
-            <p>
-                True luxury cannot be rushed. Our process combines
-                carefully selected roses, patient craftsmanship,
-                and the richness of fresh milk.
-            </p>
-
-
-        </div>
-
-
-
-        <div class="method-grid">
-
-
-            <!-- =================================================
-                 CARD 1
-            ================================================== -->
-
-            <article class="method-card">
-
-
-                <div class="method-image royal-image-hover">
-
-
-                    <span class="method-number">
-                        1
-                    </span>
-
-
-                    <img src="images/dawn-harvest.jpg" alt="Dawn Harvest" loading="lazy">
-
-
-                </div>
-
-
-                <h3>
-                    Dawn Harvest
-                </h3>
-
-
-                <p>
-                    Roses are hand-picked at first light,
-                    when their natural fragrance is at its finest.
+            <div class="method-grid">
+                <!-- Method Card 1 -->
+                <article class="method-card cinematic-reveal">
+                    <div class="method-image-wrap">
+                        <img src="images/dawn-harvest.jpg" alt="Dawn Harvest of Damask Roses" loading="lazy">
+                        <div class="method-step-num">01</div>
+                    </div>
+                    <h3 class="method-card-title">Dawn Harvest</h3>
+                    <p class="method-card-desc">
+                        Our heirloom Damask roses are hand-picked at first morning light, precisely when petal oils and aromatic floral nectar reach their peak concentration.
+                    </p>
+                </article>
+
+                <!-- Method Card 2 -->
+                <article class="method-card cinematic-reveal">
+                    <div class="method-image-wrap">
+                        <img src="images/slow-extraction.jpg" alt="Slow Steam Distillation" loading="lazy">
+                        <div class="method-step-num">02</div>
+                    </div>
+                    <h3 class="method-card-title">Slow Distillation</h3>
+                    <p class="method-card-desc">
+                        Using traditional copper Deg-Bhapka hydrothermal distillation, the soul of each petal is gently captured drop-by-drop without chemical solvents.
+                    </p>
+                </article>
+
+                <!-- Method Card 3 -->
+                <article class="method-card cinematic-reveal">
+                    <div class="method-image-wrap">
+                        <img src="images/perfect-blend.jpg" alt="Velvet Milk Blending" loading="lazy">
+                        <div class="method-step-num">03</div>
+                    </div>
+                    <h3 class="method-card-title">The Velvet Symphony</h3>
+                    <p class="method-card-desc">
+                        The pure floral essence is folded into slow-chilled, rich whole milk, creating the signature silky texture and lingering fragrant finish that defines ROYAL.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+             SECTION 4: INGREDIENTS / THE ROSE & MILK EXPERIENCE
+             ========================================================================== -->
+        <section class="section-ingredients" id="ingredients">
+            <div class="section-header-center cinematic-reveal">
+                <span class="section-label">✦ Pure Natural Essence ✦</span>
+                <h2 class="section-title">The Symphony of <span>Elements</span></h2>
+                <div class="heading-divider"><span>♛</span></div>
+                <p class="section-subtitle">
+                    Two supreme ingredients brought together in immaculate equilibrium.
                 </p>
-
-
-            </article>
-
-
-
-            <!-- =================================================
-                 CARD 2
-            ================================================== -->
-
-            <article class="method-card">
-
-
-                <div class="method-image royal-image-hover">
-
-
-                    <span class="method-number">
-                        2
-                    </span>
-
-
-                    <img src="images/slow-extraction.jpg" alt="Slow Extraction" loading="lazy">
-
-
-                </div>
-
-
-                <h3>
-                    Slow Extraction
-                </h3>
-
-
-                <p>
-                    Using traditional methods, we gently draw
-                    the essence from the petals while preserving
-                    their delicate character.
-                </p>
-
-
-            </article>
-
-
-
-            <!-- =================================================
-                 CARD 3
-            ================================================== -->
-
-            <article class="method-card">
-
-
-                <div class="method-image royal-image-hover">
-
-
-                    <span class="method-number">
-                        3
-                    </span>
-
-
-                    <img src="images/perfect-blend.jpg" alt="The Perfect Blend" loading="lazy">
-
-
-                </div>
-
-
-                <h3>
-                    The Perfect Blend
-                </h3>
-
-
-                <p>
-                    The essence is folded into rich, creamy milk,
-                    creating a perfectly balanced rose milk.
-                </p>
-
-
-            </article>
-
-
-        </div>
-
-
-    </section>
-
-
-
-    <!-- =====================================================
-         THE CUSTODIANS
-    ====================================================== -->
-
-    <section class="custodians cinematic-reveal" id="custodians">
-
-
-        <div class="custodian-card">
-
-
-            <div class="custodian-content">
-
-
-                <span class="section-label">
-                    MEET THE CUSTODIANS
-                </span>
-
-
-                <h2>
-                    A Family's Promise.
-                </h2>
-
-
-                <blockquote>
-                    “We don't just make a drink; we bottle a memory.”
-                </blockquote>
-
-
-                <p>
-                    Founded by simple values and a deep love for
-                    tradition, our family has carried the spirit
-                    of authentic rose milk through generations.
-                </p>
-
-
-                <p>
-                    With each generation, we continue to preserve
-                    the original character while creating something
-                    meaningful for today.
-                </p>
-
-
-                <div class="signature">
-                    — The ROYAL Family
-                </div>
-
-
             </div>
 
+            <div class="ingredients-split">
+                <!-- Left: Damask Rose -->
+                <div class="ingredient-box cinematic-reveal-left">
+                    <div class="ingredient-icon-wrap">🌹</div>
+                    <h3 class="ingredient-title">Indian Damask Rose</h3>
+                    <span class="ingredient-tag">Rosa Damascena • Kannauj & Tamil Nadu</span>
+                    <p class="ingredient-desc">
+                        Renowned globally for its intoxicating bouquet and cooling botanical virtues. Each bottle of ROYAL contains the distilled essence of over forty organic petals.
+                    </p>
+                    <ul class="ingredient-specs">
+                        <li><span>✦</span> 100% Steam-Distilled Floral Absolute</li>
+                        <li><span>✦</span> Zero Synthetic Fragrance or Artificial Red Dyes</li>
+                        <li><span>✦</span> Natural Antioxidant & Ayurvedic Cooling Properties</li>
+                    </ul>
+                </div>
 
+                <!-- Right: Velvet Milk -->
+                <div class="ingredient-box cinematic-reveal-right">
+                    <div class="ingredient-icon-wrap">🥛</div>
+                    <h3 class="ingredient-title">Farm-Fresh Velvet Milk</h3>
+                    <span class="ingredient-tag">Pure Cream Whole Milk • Daily Sourced</span>
+                    <p class="ingredient-desc">
+                        Ethically sourced from grass-fed local dairy farms, pasteurized gently at low temperatures to retain its natural sweetness, micro-nutrients, and rich mouthfeel.
+                    </p>
+                    <ul class="ingredient-specs">
+                        <li><span>✦</span> Pure Chilled Cream with Unaltered Protein Richness</li>
+                        <li><span>✦</span> No High-Fructose Corn Syrup or Starch Thickeners</li>
+                        <li><span>✦</span> Silky Viscosity Crafted Specifically for Rose Infusion</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
-            <div class="custodian-image royal-image-hover">
-
-                <img src="images/family.jpg" alt="The Royal Family" loading="lazy">
-
+        <!-- ==========================================================================
+             SECTION 5: WHY ROYAL? (VALUE PILLARS)
+             ========================================================================== -->
+        <section class="section-why-royal">
+            <div class="section-header-center cinematic-reveal">
+                <span class="section-label">✦ Uncompromised Standard ✦</span>
+                <h2 class="section-title">Why <span>ROYAL</span> Stands Alone</h2>
+                <div class="heading-divider"><span>♛</span></div>
             </div>
 
+            <div class="pillars-grid">
+                <div class="pillar-card cinematic-reveal">
+                    <div class="pillar-icon">👑</div>
+                    <h3 class="pillar-title">Authentic Recipe</h3>
+                    <p class="pillar-desc">
+                        Honoring the century-old ancestral formulation with zero artificial flavor enhancers.
+                    </p>
+                </div>
 
-        </div>
+                <div class="pillar-card cinematic-reveal">
+                    <div class="pillar-icon">✨</div>
+                    <h3 class="pillar-title">Pure Botanicals</h3>
+                    <p class="pillar-desc">
+                        Crafted exclusively with real steam-distilled Damask rose extract and natural cane sugar.
+                    </p>
+                </div>
 
+                <div class="pillar-card cinematic-reveal">
+                    <div class="pillar-icon">❄️</div>
+                    <h3 class="pillar-title">Chilled Perfection</h3>
+                    <p class="pillar-desc">
+                        Cold-chain sealed and dispatched in insulated packaging for optimum refreshment.
+                    </p>
+                </div>
 
-    </section>
+                <div class="pillar-card cinematic-reveal">
+                    <div class="pillar-icon">🌿</div>
+                    <h3 class="pillar-title">Generations of Trust</h3>
+                    <p class="pillar-desc">
+                        Cherished by families, connoisseurs, and festive celebrations across generations.
+                    </p>
+                </div>
+            </div>
+        </section>
 
+        <!-- ==========================================================================
+             SECTION 6: SIGNATURE PRODUCT SHOWCASE
+             ========================================================================== -->
+        <section class="section-showcase">
+            <div class="section-header-center cinematic-reveal">
+                <span class="section-label">✦ Masterpiece Creation ✦</span>
+                <h2 class="section-title">The Signature <span>Experience</span></h2>
+                <div class="heading-divider"><span>♛</span></div>
+            </div>
 
+            <div class="showcase-featured-card cinematic-reveal">
+                <div class="showcase-img-wrap">
+                    <img src="images/Royal Rose Milk.jpg" alt="Royal Rose Milk Signature Bottle" loading="lazy">
+                </div>
 
-    <!-- =====================================================
-         FOOTER
-    ====================================================== -->
+                <div class="showcase-info">
+                    <span class="showcase-badge">Flagship Blend</span>
+                    <h3 class="showcase-title">Royal Rose Milk</h3>
+                    <p class="showcase-desc">
+                        Our magnum opus. An opulent union of concentrated Damask rose absolute, whole velvet cream, and subtle hints of fragrant green cardamom.
+                    </p>
 
+                    <div class="showcase-notes">
+                        <div class="note-item">
+                            <small>Floral Profile</small>
+                            <span>Kannauj Damask</span>
+                        </div>
+                        <div class="note-item">
+                            <small>Texture</small>
+                            <span>Ultra-Velvety</span>
+                        </div>
+                        <div class="note-item">
+                            <small>Best Served</small>
+                            <span>Ice-Cold (4°C)</span>
+                        </div>
+                    </div>
+
+                    <div class="showcase-bottom">
+                        <div class="showcase-price">₹199</div>
+                        <a href="shop.html" class="btn-royal-primary">
+                            <span>Order From Collection</span>
+                            <span>→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+             SECTION 7: ROYAL CONNOISSEURS / TESTIMONIALS
+             ========================================================================== -->
+        <section class="section-testimonials">
+            <div class="section-header-center cinematic-reveal">
+                <span class="section-label">✦ Voices of Delight ✦</span>
+                <h2 class="section-title">Cherished by <span>Connoisseurs</span></h2>
+                <div class="heading-divider"><span>♛</span></div>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card cinematic-reveal">
+                    <div>
+                        <div class="test-stars">★★★★★</div>
+                        <p class="test-quote">
+                            “The delicate aroma of real Damask roses hits you the moment you uncap the bottle. Unlike commercial drinks, this feels like pure poetry in a glass.”
+                        </p>
+                    </div>
+                    <div class="test-author">
+                        <div class="test-avatar">AV</div>
+                        <div class="test-meta">
+                            <strong>Ananya Varma</strong>
+                            <span>Verified Royal Patron • Chennai</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card cinematic-reveal">
+                    <div>
+                        <div class="test-stars">★★★★★</div>
+                        <p class="test-quote">
+                            “We ordered 120 bottles for our daughter's wedding reception. Guests are still talking about how creamy and authentic the flavor was. Truly regal.”
+                        </p>
+                    </div>
+                    <div class="test-author">
+                        <div class="test-avatar">RK</div>
+                        <div class="test-meta">
+                            <strong>Rajesh Krishnamurthy</strong>
+                            <span>Event Host • Coimbatore</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card cinematic-reveal">
+                    <div>
+                        <div class="test-stars">★★★★★</div>
+                        <p class="test-quote">
+                            “The balance between rich creaminess and pure floral fragrance is extraordinary. It transports me straight to childhood festivities.”
+                        </p>
+                    </div>
+                    <div class="test-author">
+                        <div class="test-avatar">SM</div>
+                        <div class="test-meta">
+                            <strong>Dr. Shreya Menon</strong>
+                            <span>Culinary Critic • Bangalore</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+             SECTION 8: BRAND FILM / CINEMATIC SHOWCASE
+             ========================================================================== -->
+        <section class="section-brand-film">
+            <div class="brand-film-container cinematic-reveal">
+                <div class="film-video-wrap">
+                    <video autoplay muted loop playsinline poster="images/hero-background.jpg">
+                        <source src="videos/cinematic.mp4" type="video/mp4">
+                    </video>
+                    <div class="film-overlay-controls">
+                        <h3 class="film-title">The Royal Symphony</h3>
+                        <p class="film-desc">Experience the harmony of traditional petal harvesting, steam extraction, and velvet dairy craftsmanship.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+             SECTION 9: FINAL CALL TO ACTION
+             ========================================================================== -->
+        <section class="section-final-cta">
+            <div class="cta-content cinematic-reveal">
+                <div class="cta-crown">♛</div>
+                <h2 class="cta-title">Ready to Taste <span>Royal?</span></h2>
+                <p class="cta-desc">
+                    Elevate your senses with our artisanal rose milk collection. Freshly prepared, cold-sealed, and delivered directly to your doorstep.
+                </p>
+                <a href="shop.html" class="btn-royal-primary">
+                    <span>Explore The Royal Collection</span>
+                    <span>→</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==========================================================================
+         PREMIUM FOOTER
+         ========================================================================== -->
     <footer class="royal-footer" id="contact">
-
-
-        <div class="footer-top">
-
-
-            <!-- =================================================
-                 FOOTER BRAND
-            ================================================== -->
-
-            <div class="footer-brand">
-
-
+        <div class="footer-grid">
+            <!-- Brand Column -->
+            <div class="footer-brand-col">
                 <div class="footer-logo">
-                    ♛ ROYAL
+                    <span>♛</span>
+                    <span>ROYAL</span>
                 </div>
-
-
-                <p>
-                    Rose Flavored Milk
+                <p class="footer-about">
+                    The quintessential taste of natural luxury. Crafted with heirloom Damask rose petals and fresh farm velvet milk since 1984.
                 </p>
-
-
-                <span>
-                    The taste of nature.
+                <span style="font-size: 11px; letter-spacing: 2px; color: var(--color-gold); text-transform: uppercase;">
+                    ✦ Certified Artisanal Heritage
                 </span>
-
-
             </div>
 
-
-
-            <!-- =================================================
-                 EXPLORE
-            ================================================== -->
-
-            <div class="footer-links">
-
-
-                <h3>
-                    EXPLORE
-                </h3>
-
-                <a href="#experience" class="cinematic-nav-link">
-                    EXPERIENCE
-                </a>
-
-                <a href="#story">
-                    Our Story
-                </a>
-
-
-                <a href="#method">
-                    The Method
-                </a>
-
-
-                <a href="shop.html">
-                    Shop Collection
-                </a>
-
-
-                <a href="track.html">
-                    Track Order
-                </a>
-
-
-                <a href="contact.html">
-                    Contact Us
-                </a>
-
-
+            <!-- Quick Links -->
+            <div>
+                <h3 class="footer-col-title">Navigation</h3>
+                <ul class="footer-links-list">
+                    <li><a href="#experience">The Experience</a></li>
+                    <li><a href="#legacy">Our Story</a></li>
+                    <li><a href="#method">The Alchemy</a></li>
+                    <li><a href="shop.html">Shop Collection</a></li>
+                    <li><a href="track.html">Track Order</a></li>
+                    <li><a href="contact.html">Concierge</a></li>
+                </ul>
             </div>
 
-
-
-            <!-- =================================================
-                 CONTACT
-            ================================================== -->
-
-            <div class="footer-links">
-
-
-                <h3>
-                    CONTACT
-                </h3>
-
-
-                <a href="tel:+919445437069">
-                    +91 9445437069
-                </a>
-
-
-                <a href="mailto:vikneshvaren2@gmail.com">
-                    vikneshvaren2@gmail.com
-                </a>
-
-
-                <span>
-                    Tamil Nadu, India
-                </span>
-
-
+            <!-- Contact & Concierge -->
+            <div>
+                <h3 class="footer-col-title">Royal Concierge</h3>
+                <div class="footer-contact-info">
+                    <p>
+                        <strong style="color: var(--color-cream); display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Direct Telephone:</strong>
+                        <a href="tel:+919445437069">+91 94454 37069</a>
+                    </p>
+                    <p>
+                        <strong style="color: var(--color-cream); display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Direct Email:</strong>
+                        <a href="mailto:vikneshvaren2@gmail.com">vikneshvaren2@gmail.com</a>
+                    </p>
+                    <p>
+                        <strong style="color: var(--color-cream); display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Heritage HQ:</strong>
+                        Tamil Nadu, India
+                    </p>
+                </div>
             </div>
 
-
-
-            <!-- =================================================
-                 NEWSLETTER
-            ================================================== -->
-
+            <!-- Newsletter -->
             <div class="footer-newsletter">
-
-
-                <h3>
-                    STAY ROYAL
-                </h3>
-
-
-                <p>
-                    Join our circle for news,
-                    stories and new creations.
-                </p>
-
-
-                <form class="newsletter-form" id="newsletterForm">
-
-
-                    <input type="email" id="newsletterEmail" placeholder="Enter your email" autocomplete="email"
-                        required>
-
-
-                    <button type="submit" aria-label="Subscribe">
-                        →
-                    </button>
-
-
+                <h3 class="footer-col-title">The Royal Circle</h3>
+                <p>Join our private circle to receive seasonal tasting invitations and limited-reserve announcements.</p>
+                <form class="newsletter-box" id="newsletterForm">
+                    <input type="email" id="newsletterEmail" placeholder="Enter your email address" required autocomplete="email">
+                    <button type="submit" aria-label="Subscribe to Royal Circle">→</button>
                 </form>
-
-
             </div>
-
-
         </div>
-
-
-
-        <!-- FOOTER BOTTOM -->
 
         <div class="footer-bottom">
-
-
-            <span>
-                © 2026 ROYAL Rose Milk
-            </span>
-
-
-            <span>
-                Crafted with tradition & care
-            </span>
-
-
+            <span>© 2026 ROYAL Rose Milk. All Rights Reserved.</span>
+            <span>Crafted with timeless devotion & culinary perfection.</span>
         </div>
-
-
     </footer>
 
-
-
-    <!-- =====================================================
-         MAIN JAVASCRIPT
-    ====================================================== -->
-
+    <!-- Main JavaScript Engine -->
     <script src="script.js"></script>
-
-
-
-    <!-- =====================================================
-     ROYAL LOADER + CINEMATIC HERO VIDEO
-====================================================== -->
-
-    <script>
-
-        document.addEventListener("DOMContentLoaded", function () {
-
-            const loader =
-                document.getElementById("royalLoader");
-
-            const progress =
-                document.getElementById("loaderProgress");
-
-            const percent =
-                document.getElementById("loaderPercent");
-
-            const heroVideo =
-                document.getElementById("hero-video");
-
-
-            /* =================================================
-               SAFETY CHECK
-            ================================================= */
-
-            if (!loader || !progress || !percent || !heroVideo) {
-
-                console.error(
-                    "ROYAL: Loader elements missing."
-                );
-
-                return;
-
-            }
-
-
-            /* =================================================
-               LOCK SCROLL
-            ================================================= */
-
-            document.body.style.overflow = "hidden";
-
-
-            /* =================================================
-               PRELOAD VIDEO
-            ================================================= */
-
-            heroVideo.load();
-
-
-            /* =================================================
-               VARIABLES
-            ================================================= */
-
-            let value = 0;
-
-            let loadingFinished = false;
-
-
-            /* =================================================
-               START HERO VIDEO
-            ================================================= */
-
-            function startHeroVideo() {
-
-                console.log(
-                    "ROYAL: Starting cinematic video..."
-                );
-
-
-                try {
-
-                    heroVideo.currentTime = 0;
-
-                }
-
-                catch (error) {
-
-                    console.log(
-                        "ROYAL: Could not reset video."
-                    );
-
-                }
-
-
-                const playPromise =
-                    heroVideo.play();
-
-
-                if (playPromise !== undefined) {
-
-                    playPromise
-
-                        .then(function () {
-
-                            console.log(
-                                "ROYAL: Video playing."
-                            );
-
-                        })
-
-                        .catch(function (error) {
-
-                            console.log(
-                                "ROYAL: Autoplay blocked.",
-                                error
-                            );
-
-                        });
-
-                }
-
-            }
-
-
-            /* =================================================
-               FINISH LOADING
-            ================================================= */
-
-            function finishLoading() {
-
-                if (loadingFinished) {
-                    return;
-                }
-
-
-                loadingFinished = true;
-
-
-                /* FULL PROGRESS */
-
-                progress.style.width = "100%";
-
-                percent.textContent = "100%";
-
-
-                /* =================================================
-                   LET USER SEE 100%
-                ================================================= */
-
-                setTimeout(function () {
-
-
-                    /* START VIDEO FIRST */
-
-                    startHeroVideo();
-
-
-                    /* =================================================
-                       PREMIUM LOADER EXIT
-                    ================================================= */
-
-                    setTimeout(function () {
-
-                        loader.classList.add(
-                            "loader-hide"
-                        );
-
-
-                        /* UNLOCK PAGE */
-
-                        document.body.style.overflow =
-                            "auto";
-
-
-                    }, 350);
-
-
-                }, 450);
-
-            }
-
-
-            /* =================================================
-               CINEMATIC LOADING
-            ================================================= */
-
-            const loadingTimer =
-                setInterval(function () {
-
-
-                    /* Random smooth progress */
-
-                    value +=
-                        Math.floor(
-                            Math.random() * 4
-                        ) + 2;
-
-
-                    if (value >= 100) {
-
-                        value = 100;
-
-                        clearInterval(
-                            loadingTimer
-                        );
-
-                        finishLoading();
-
-                        return;
-
-                    }
-
-
-                    progress.style.width =
-                        value + "%";
-
-
-                    percent.textContent =
-                        value + "%";
-
-
-                }, 70);
-
-
-            /* =================================================
-               VIDEO ERROR
-            ================================================= */
-
-            heroVideo.addEventListener(
-                "error",
-                function () {
-
-                    console.error(
-                        "ROYAL: Cinematic video failed to load."
-                    );
-
-                    console.error(
-                        "Check videos/cinematic.mp4"
-                    );
-
-                }
-            );
-
-
-            /* =================================================
-               VIDEO ENDED
-               KEEP FINAL FRAME
-            ================================================= */
-
-            heroVideo.addEventListener(
-                "ended",
-                function () {
-
-                    console.log(
-                        "ROYAL: Video finished."
-                    );
-
-                    /*
-                     * IMPORTANT:
-                     *
-                     * We do NOT hide the video.
-                     * We do NOT reset currentTime.
-                     *
-                     * The final frame remains visible.
-                     */
-
-                }
-            );
-
-        });
-
-    </script>
-
-
-    <!-- =====================================================
-         CINEMATIC SECTION REVEAL
-    ====================================================== -->
-
-    <script>
-
-        document.addEventListener(
-            "DOMContentLoaded",
-            function () {
-
-
-                const cinematicElements =
-                    document.querySelectorAll(
-                        ".cinematic-reveal"
-                    );
-
-
-                if (
-                    !cinematicElements.length
-                ) {
-                    return;
-                }
-
-
-                const cinematicObserver =
-                    new IntersectionObserver(
-                        function (entries) {
-
-
-                            entries.forEach(
-                                function (entry) {
-
-
-                                    if (
-                                        entry.isIntersecting
-                                    ) {
-
-                                        entry.target.classList.add(
-                                            "visible"
-                                        );
-
-                                    }
-
-
-                                }
-                            );
-
-
-                        },
-                        {
-                            threshold: 0.15
-                        }
-                    );
-
-
-                cinematicElements.forEach(
-                    function (element) {
-
-                        cinematicObserver.observe(
-                            element
-                        );
-
-                    }
-                );
-
-
-            }
-        );
-
-    </script>
-
-
-
-    <!-- =====================================================
-         ROYAL CONTINUOUS HEART RAIN
-    ====================================================== -->
-
-    <script>
-
-        document.addEventListener(
-            "DOMContentLoaded",
-            function () {
-
-
-                const heartContainer =
-                    document.getElementById(
-                        "royalHeartRain"
-                    );
-
-
-                if (!heartContainer) {
-                    return;
-                }
-
-
-                /* =============================================
-                   CREATE HEART
-                ============================================= */
-
-                function createRoyalHeart() {
-
-
-                    const heart =
-                        document.createElement(
-                            "span"
-                        );
-
-
-                    heart.className =
-                        "royal-rain-heart";
-
-
-                    heart.textContent =
-                        "♥";
-
-
-                    /* RANDOM POSITION */
-
-                    heart.style.left =
-                        Math.random() * 100 + "%";
-
-
-                    /* RANDOM SIZE */
-
-                    const size =
-                        Math.random();
-
-
-                    if (size < 0.30) {
-
-                        heart.classList.add(
-                            "small"
-                        );
-
-                    }
-
-                    else if (size < 0.80) {
-
-                        heart.classList.add(
-                            "medium"
-                        );
-
-                    }
-
-                    else {
-
-                        heart.classList.add(
-                            "large"
-                        );
-
-                    }
-
-
-                    /* RANDOM SPEED */
-
-                    const duration =
-                        5 + Math.random() * 4;
-
-
-                    heart.style.animationDuration =
-                        duration + "s";
-
-
-                    /* RANDOM DELAY */
-
-                    heart.style.animationDelay =
-                        Math.random() * 0.5 + "s";
-
-
-                    /* RANDOM OPACITY */
-
-                    heart.style.opacity =
-                        0.35 +
-                        Math.random() * 0.5;
-
-
-                    /* ADD */
-
-                    heartContainer.appendChild(
-                        heart
-                    );
-
-
-                    /* REMOVE */
-
-                    setTimeout(
-                        function () {
-
-                            heart.remove();
-
-                        },
-                        (duration + 1) * 1000
-                    );
-
-                }
-
-
-                /* =============================================
-                   CONTINUOUS RAIN
-                ============================================= */
-
-                setInterval(
-                    createRoyalHeart,
-                    700
-                );
-
-
-                /* =============================================
-                   INITIAL HEARTS
-                ============================================= */
-
-                for (
-                    let i = 0;
-                    i < 8;
-                    i++
-                ) {
-
-                    setTimeout(
-                        createRoyalHeart,
-                        i * 250
-                    );
-
-                }
-
-
-            }
-        );
-
-    </script>
-
-
-
-    <!-- =====================================================
-         NEWSLETTER FORM
-    ====================================================== -->
-
-    <script>
-
-        document.addEventListener(
-            "DOMContentLoaded",
-            function () {
-
-
-                const newsletterForm =
-                    document.getElementById(
-                        "newsletterForm"
-                    );
-
-
-                if (!newsletterForm) {
-                    return;
-                }
-
-
-                newsletterForm.addEventListener(
-                    "submit",
-                    function (event) {
-
-
-                        event.preventDefault();
-
-
-                        const email =
-                            document.getElementById(
-                                "newsletterEmail"
-                            );
-
-
-                        if (!email) {
-                            return;
-                        }
-
-
-                        if (!email.checkValidity()) {
-
-                            email.reportValidity();
-
-                            return;
-
-                        }
-
-
-                        alert(
-                            "Thank you for joining the ROYAL circle."
-                        );
-
-
-                        email.value = "";
-
-
-                    }
-                );
-
-
-            }
-        );
-
-    </script>
-
-    <script>
-        function playVideoReverse() {
-
-            const video = document.getElementById("hero-video");
-
-            if (!video) return;
-
-            video.pause();
-
-            // Start from the current position
-            const reverseSpeed = 0.03;
-
-            const reverseTimer = setInterval(() => {
-
-                if (video.currentTime <= 0) {
-
-                    clearInterval(reverseTimer);
-
-                    video.currentTime = 0;
-
-                    return;
-                }
-
-                video.currentTime -= reverseSpeed;
-
-            }, 30);
-        }
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-
-            const video = document.getElementById("hero-video");
-            const homeButtons = document.querySelectorAll(
-                'a[href="#experience"]'
-            );
-
-            if (!video) return;
-
-            let reverseTimer = null;
-            let reversing = false;
-
-            function reverseVideo() {
-
-                // Stop any previous reverse animation
-                if (reverseTimer) {
-                    clearInterval(reverseTimer);
-                }
-
-                reversing = true;
-
-                video.pause();
-
-                reverseTimer = setInterval(function () {
-
-                    // Move video backward
-                    video.currentTime -= 0.04;
-
-                    // Reached beginning
-                    if (video.currentTime <= 0.05) {
-
-                        clearInterval(reverseTimer);
-                        reverseTimer = null;
-
-                        video.currentTime = 0;
-
-                        reversing = false;
-
-                        console.log(
-                            "ROYAL: Reverse cinematic finished."
-                        );
-                    }
-
-                }, 30);
-            }
-
-
-            homeButtons.forEach(function (button) {
-
-                button.addEventListener("click", function (event) {
-
-                    event.preventDefault();
-
-                    // Scroll back to HERO
-                    const hero =
-                        document.getElementById("experience");
-
-                    if (hero) {
-
-                        hero.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start"
-                        });
-
-                    }
-
-                    // Start reverse effect
-                    reverseVideo();
-
-                });
-
-            });
-
-        });
-    </script>
-
-
-
 </body>
 
 </html>

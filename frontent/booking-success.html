@@ -119,16 +119,22 @@
             <div class="booking-number">
 
                 <small>
-                    UNIQUE ORDER ID
+                    UNIQUE ORDER ID / TRACKING ID
                 </small>
 
-                <strong id="bookingId">
-                    RR-00000000-000
-                </strong>
-
-                <button id="copyBooking">
-                    Copy
-                </button>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 6px;">
+                    <strong id="bookingId">
+                        RR-00000000-000
+                    </strong>
+                    <button type="button" class="btn-copy-id" id="btnCopyOrderId" aria-label="Copy Booking ID" title="Copy Booking ID to clipboard" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 6px 14px; font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #d94370; background: rgba(217, 67, 112, 0.1); border: 1px solid rgba(217, 67, 112, 0.25); border-radius: 20px; cursor: pointer; transition: all 0.2s ease;">
+                        <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        <span id="btnCopyText">Copy Booking ID</span>
+                    </button>
+                </div>
+                <div class="copy-feedback-msg" id="copyFeedbackMsg" role="status" aria-live="polite" style="font-size: 11px; font-weight: 600; min-height: 16px; margin-top: 6px; opacity: 0; color: #16a34a; transition: opacity 0.25s ease;"></div>
 
             </div>
 
@@ -213,17 +219,25 @@
 
                 <div class="success-divider"></div>
 
+                <div class="total-row" style="font-size: 14px; font-weight: normal; color: rgba(255, 255, 255, 0.7); margin-bottom: 6px;">
+                    <span>Product Subtotal</span>
+                    <span id="successSubtotal" style="color: #fff; font-weight: 600;">₹0</span>
+                </div>
+
+                <div class="total-row" style="font-size: 14px; font-weight: normal; color: rgba(255, 255, 255, 0.7); margin-bottom: 8px;">
+                    <span>Delivery / Service Charge</span>
+                    <span id="successDelivery" style="color: #fff; font-weight: 600;">FREE</span>
+                </div>
+
+                <div class="success-divider" style="margin: 8px 0;"></div>
 
                 <div class="total-row">
-
                     <span>
-                        Total Amount
+                        Final Total Paid
                     </span>
-
                     <strong id="successTotal">
                         ₹0
                     </strong>
-
                 </div>
 
             </div>
@@ -297,14 +311,6 @@
 
     </main>
 
-
-    <!-- COPY MESSAGE -->
-
-    <div id="copyMessage" class="copy-message">
-        ✓ Booking ID copied to clipboard
-    </div>
-
-
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -335,7 +341,16 @@
                 document.getElementById("customerEmail").textContent = cust.email || "—";
                 document.getElementById("customerAddress").textContent = `${cust.address || ''}, ${cust.city || ''} ${cust.pincode ? '- ' + cust.pincode : ''}`.trim() || "—";
                 document.getElementById("deliveryType").textContent = confirmedOrder.delivery_preference || "Standard Delivery";
-                document.getElementById("successTotal").textContent = `₹${confirmedOrder.total_amount || 0}`;
+                
+                const subtotal = Number(confirmedOrder.subtotal || 0);
+                const deliveryCharge = Number(confirmedOrder.delivery_charge || 0);
+                const finalTotal = Number(confirmedOrder.total_amount || (subtotal + deliveryCharge) || 0);
+
+                const subtotalElem = document.getElementById("successSubtotal");
+                if (subtotalElem) subtotalElem.textContent = `₹${subtotal}`;
+                const deliveryElem = document.getElementById("successDelivery");
+                if (deliveryElem) deliveryElem.textContent = deliveryCharge > 0 ? `₹${deliveryCharge}` : "FREE";
+                document.getElementById("successTotal").textContent = `₹${finalTotal}`;
 
                 const icons = {
                     "Classic Rose Milk": "🌹",
@@ -352,38 +367,19 @@
                 (confirmedOrder.items || []).forEach(item => {
                     const productDiv = document.createElement("div");
                     productDiv.className = "success-product";
+                    const itemSub = item.subtotal != null ? item.subtotal : (Number(item.unit_price || item.price || 0) * Number(item.quantity || 1));
                     productDiv.innerHTML = `
                         <div class="success-product-image">
-                            ${icons[item.name] || "🌹"}
+                            ${icons[item.name || item.product_name] || "🌹"}
                         </div>
                         <div class="success-product-info">
-                            <h3>${item.name}</h3>
-                            <p>₹${item.unit_price} × ${item.quantity}</p>
+                            <h3>${item.product_name || item.name}</h3>
+                            <p>₹${item.unit_price || item.price} × ${item.quantity || 1}</p>
                         </div>
-                        <strong>₹${item.subtotal}</strong>
+                        <strong>₹${itemSub}</strong>
                     `;
                     productsContainer.appendChild(productDiv);
                 });
-            }
-
-            /*
-             * Copy Booking ID
-             */
-            document.getElementById("copyBooking").addEventListener("click", async () => {
-                try {
-                    await navigator.clipboard.writeText(orderId);
-                    showCopyMessage();
-                } catch (error) {
-                    alert(orderId);
-                }
-            });
-
-            function showCopyMessage() {
-                const message = document.getElementById("copyMessage");
-                message.classList.add("show");
-                setTimeout(() => {
-                    message.classList.remove("show");
-                }, 2000);
             }
 
             /*
@@ -429,6 +425,92 @@
             setTimeout(() => {
                 document.body.classList.add("loaded");
             }, 150);
+
+            // Copy Booking ID functionality
+            const copyBtn = document.getElementById("btnCopyOrderId");
+            const copyText = document.getElementById("btnCopyText");
+            const feedbackMsg = document.getElementById("copyFeedbackMsg");
+            let copyResetTimer = null;
+
+            if (copyBtn) {
+                copyBtn.addEventListener("click", async () => {
+                    const idElement = document.getElementById("bookingId");
+                    const bookingIdToCopy = idElement ? idElement.textContent.trim() : "";
+                    
+                    if (!bookingIdToCopy || bookingIdToCopy === "—") return;
+
+                    let isCopied = false;
+
+                    if (navigator.clipboard && window.isSecureContext) {
+                        try {
+                            await navigator.clipboard.writeText(bookingIdToCopy);
+                            isCopied = true;
+                        } catch (err) {
+                            console.warn("Clipboard API copy failed, trying execCommand fallback...", err);
+                        }
+                    }
+
+                    if (!isCopied) {
+                        try {
+                            const textArea = document.createElement("textarea");
+                            textArea.value = bookingIdToCopy;
+                            textArea.style.position = "fixed";
+                            textArea.style.left = "-999999px";
+                            textArea.style.top = "-999999px";
+                            textArea.style.opacity = "0";
+                            textArea.setAttribute("readonly", "");
+                            document.body.appendChild(textArea);
+                            textArea.focus();
+                            textArea.select();
+                            textArea.setSelectionRange(0, 99999);
+                            isCopied = document.execCommand("copy");
+                            document.body.removeChild(textArea);
+                        } catch (err) {
+                            console.error("execCommand fallback copy failed:", err);
+                            isCopied = false;
+                        }
+                    }
+
+                    clearTimeout(copyResetTimer);
+
+                    if (isCopied) {
+                        copyBtn.style.background = "rgba(34, 197, 94, 0.2)";
+                        copyBtn.style.borderColor = "#22c55e";
+                        copyBtn.style.color = "#16a34a";
+                        if (copyText) copyText.textContent = "Copied ✓";
+                        if (feedbackMsg) {
+                            feedbackMsg.textContent = "Booking ID copied!";
+                            feedbackMsg.style.color = "#16a34a";
+                            feedbackMsg.style.opacity = "1";
+                        }
+
+                        copyResetTimer = setTimeout(() => {
+                            copyBtn.style.background = "rgba(217, 67, 112, 0.1)";
+                            copyBtn.style.borderColor = "rgba(217, 67, 112, 0.25)";
+                            copyBtn.style.color = "#d94370";
+                            if (copyText) copyText.textContent = "Copy Booking ID";
+                            if (feedbackMsg) feedbackMsg.style.opacity = "0";
+                        }, 1800);
+                    } else {
+                        copyBtn.style.background = "rgba(239, 68, 68, 0.2)";
+                        copyBtn.style.borderColor = "#ef4444";
+                        copyBtn.style.color = "#dc2626";
+                        if (feedbackMsg) {
+                            feedbackMsg.textContent = "Unable to copy. Please copy it manually.";
+                            feedbackMsg.style.color = "#dc2626";
+                            feedbackMsg.style.opacity = "1";
+                        }
+
+                        copyResetTimer = setTimeout(() => {
+                            copyBtn.style.background = "rgba(217, 67, 112, 0.1)";
+                            copyBtn.style.borderColor = "rgba(217, 67, 112, 0.25)";
+                            copyBtn.style.color = "#d94370";
+                            if (copyText) copyText.textContent = "Copy Booking ID";
+                            if (feedbackMsg) feedbackMsg.style.opacity = "0";
+                        }, 3000);
+                    }
+                });
+            }
         });
     </script>
 </body>

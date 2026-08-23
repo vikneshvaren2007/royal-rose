@@ -562,15 +562,15 @@ def track_order():
     """Look up order by Order ID + Email or Phone."""
     try:
         data = request.get_json(force=True, silent=True) or {}
-        order_id = data.get("order_id", "").strip()
-        verification = data.get("verification", "").strip()
+        order_id = str(data.get("order_id") or data.get("orderId") or data.get("id") or "").strip()
+        verification = str(data.get("verification") or data.get("verify") or data.get("email") or data.get("phone") or "").strip()
 
         if not order_id or not verification:
             return jsonify({"success": False, "message": "Both Order ID and Email/Phone are required."}), 400
 
         order = database.get_order_by_id_and_verification(order_id, verification)
         if not order:
-            return jsonify({"success": False, "message": "No matching order found with provided Order ID and verification."}), 404
+            return jsonify({"success": False, "message": "Order not found. Please check your Order ID and Email/Phone number."}), 404
 
         return jsonify({"success": True, "order": order}), 200
 
@@ -580,39 +580,42 @@ def track_order():
 
 
 @app.route("/api/cancel", methods=["POST"])
-def cancel_order_endpoint():
+@app.route("/api/orders/<order_id>/cancel", methods=["POST"])
+def cancel_order_endpoint(order_id=None):
     """Cancel order with security verification and dispatch dual cancellation emails."""
     try:
         data = request.get_json(force=True, silent=True) or {}
-        order_id = data.get("order_id", "").strip()
-        verification = data.get("verification", "").strip()
-        reason = data.get("reason", "Customer requested cancellation").strip()
+        oid = str(order_id or data.get("order_id") or data.get("orderId") or "").strip()
+        verification = str(data.get("verification") or data.get("verify") or data.get("email") or data.get("phone") or "").strip()
+        reason = str(data.get("reason", "Customer requested cancellation")).strip()
 
-        if not order_id or not verification:
-            return jsonify({"success": False, "message": "Order ID and verification are required."}), 400
+        cancelled_by = str(data.get("cancelled_by", "CUSTOMER")).strip().upper()
 
-        cancelled_order, msg = database.cancel_order(order_id, verification, reason, cancelled_by="CUSTOMER")
+        if not oid:
+            return jsonify({"success": False, "message": "Order ID is required."}), 400
+
+        cancelled_order, msg = database.cancel_order(oid, verification if verification else None, reason, cancelled_by=cancelled_by)
         if not cancelled_order:
             return jsonify({"success": False, "message": msg}), 400
 
-        log_event("CANCELLATION RECEIVED", f"Order #{order_id} cancelled by customer. Reason: {reason}")
+        log_event("CANCELLATION RECEIVED", f"Order #{oid} cancelled by {cancelled_by}. Reason: {reason}")
 
         # Dispatch async cancellation emails
         cust_email = cancelled_order.get("customer", {}).get("email")
         if cust_email:
             send_email_async(
                 to_email=cust_email,
-                subject=f"⚠️ Order #{order_id} Cancelled — ROYAL ROSE MILK",
+                subject=f"⚠️ Order #{oid} Cancelled — ROYAL ROSE MILK",
                 html_content=build_cancellation_email_html(cancelled_order, is_admin=False),
-                text_content=f"Your order {order_id} has been cancelled."
+                text_content=f"Your order {oid} has been cancelled."
             )
             log_event("CANCELLATION EMAIL (CUSTOMER)", f"Dispatched cancellation email to {cust_email}")
 
         send_email_async(
             to_email=ADMIN_EMAIL,
-            subject=f"⚠️ Order #{order_id} Cancelled by Customer",
+            subject=f"⚠️ Order #{oid} Cancelled by Customer",
             html_content=build_cancellation_email_html(cancelled_order, is_admin=True),
-            text_content=f"Order {order_id} was cancelled by the customer."
+            text_content=f"Order {oid} was cancelled by the customer."
         )
         log_event("CANCELLATION EMAIL (ADMIN)", f"Dispatched cancellation alert to admin {ADMIN_EMAIL}")
 
@@ -985,6 +988,11 @@ def admin_update_settings():
 # =========================
 # STATIC FILE & PAGE SERVING
 # =========================
+@app.route("/")
+@app.route("/index.html")
+def serve_index():
+    return send_from_directory(STATIC_DIR, "index.html")
+
 @app.route("/shop.html")
 def serve_shop():
     return send_from_directory(STATIC_DIR, "shop.html")

@@ -1,564 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ROYAL Rose Flavored Milk — Confirm your booking details and delivery address.">
+    <title>ROYAL — Complete Your Booking</title>
 
-    <title>ROYAL — Confirm Your Booking</title>
-
-    <link rel="stylesheet" href="booking.css">
-
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="booking.css">
 </head>
 
 <body>
 
-    <div class="bg-glow glow-one"></div>
-    <div class="bg-glow glow-two"></div>
+    <!-- Ambient Glows -->
+    <div class="booking-bg-glow glow-left" aria-hidden="true"></div>
+    <div class="booking-bg-glow glow-right" aria-hidden="true"></div>
 
-    <div class="petals" id="petals"></div>
-
-
-    <!-- HEADER -->
-
+    <!-- Header -->
     <header class="booking-header">
-
-        <a href="index.html" class="logo">
-            <span>ROYAL</span>
-            <small>ROSE MILK</small>
+        <a href="index.html" class="booking-brand">
+            <span class="booking-brand-crown">♛</span>
+            <div style="display: flex; flex-direction: column;">
+                <span class="booking-brand-name">ROYAL</span>
+                <span style="font-size: 9px; font-weight: 600; letter-spacing: 2px; color: var(--color-rose-light); text-transform: uppercase;">Rose Flavored Milk</span>
+            </div>
         </a>
 
-        <div class="step-indicator">
-            <span class="active">01</span>
-            <i></i>
-            <span>02</span>
-            <i></i>
-            <span>03</span>
+        <!-- Multi-Step Indicator -->
+        <div class="booking-steps-bar">
+            <div class="step-node">
+                <span class="step-circle">✓</span>
+                <span>Cart</span>
+            </div>
+            <span class="step-line"></span>
+            <div class="step-node active">
+                <span class="step-circle">02</span>
+                <span>Details</span>
+            </div>
+            <span class="step-line"></span>
+            <div class="step-node">
+                <span class="step-circle">03</span>
+                <span>Confirmation</span>
+            </div>
         </div>
 
-        <a href="cart.html" class="back-cart">
-            🛒 Cart
+        <a href="cart.html" style="font-size: 12px; font-weight: 600; letter-spacing: 1px; color: var(--color-gold-light); text-transform: uppercase; text-decoration: none;">
+            ← Edit Selection
         </a>
-
     </header>
 
-
-    <!-- MAIN -->
-
-    <main>
-
-        <section class="page-heading">
-
-            <p>✦ ALMOST THERE ✦</p>
-
-            <h1>
-                Complete Your
-                <span>Booking</span>
-            </h1>
-
-            <div class="heading-line"></div>
-
-            <small>
-                Enter your details and we'll prepare your Royal Rose Milk.
-            </small>
-
+    <main class="booking-container">
+        <!-- Title Banner -->
+        <section class="booking-hero-text">
+            <span class="booking-badge">✦ Final Preparation ✦</span>
+            <h1 class="booking-title">Complete Your <span>Royal Booking</span></h1>
         </section>
 
-
-        <section class="booking-layout">
-
-
-            <!-- CUSTOMER FORM -->
-
-            <div class="customer-card">
-
-                <div class="card-title">
-
-                    <div class="title-icon">
-                        👤
-                    </div>
-
+        <!-- Grid Layout -->
+        <div class="booking-grid-layout">
+            <!-- Left: Customer Form -->
+            <section class="booking-form-card">
+                <div class="card-heading-box">
+                    <span style="font-size: 24px; color: var(--color-gold);">👤</span>
                     <div>
-                        <h2>Customer Details</h2>
-                        <p>Tell us where to deliver your order.</p>
+                        <h2>Recipient & Delivery Details</h2>
+                        <p>Provide your delivery location for temperature-controlled dispatch.</p>
                     </div>
-
                 </div>
-
 
                 <form id="bookingForm">
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label for="customerName">Full Name *</label>
+                            <div class="input-box-wrap">
+                                <span class="input-icon">✦</span>
+                                <input type="text" id="customerName" placeholder="e.g. Your Name" required autocomplete="name">
+                            </div>
+                        </div>
 
-                    <div class="input-row">
+                        <div class="form-group">
+                            <label for="customerPhone">Phone Number (10 Digits) *</label>
+                            <div class="input-box-wrap">
+                                <span class="input-icon">☎</span>
+                                <input type="tel" id="customerPhone" placeholder="e.g. 0000000000" maxlength="10" required autocomplete="tel">
+                            </div>
+                        </div>
+                    </div>
 
-                        <div class="input-group">
+                    <div class="form-group">
+                        <label for="customerEmail">Email Address (For Confirmation & Updates) *</label>
+                        <div class="input-box-wrap">
+                            <span class="input-icon">✉</span>
+                            <input type="email" id="customerEmail" placeholder="e.g. yourname@gmail.com" required autocomplete="email">
+                        </div>
+                    </div>
 
-                            <label>
-                                Full Name
+                    <div class="form-group">
+                        <label for="customerAddress">Delivery Street Address *</label>
+                        <div class="input-box-wrap">
+                            <span class="input-icon">⌖</span>
+                            <textarea id="customerAddress" placeholder="Enter door number, street, landmark, area..." required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label for="customerCity">City *</label>
+                            <div class="input-box-wrap">
+                                <span class="input-icon">🏙</span>
+                                <input type="text" id="customerCity" placeholder="e.g. Chennai / Coimbatore" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customerPincode">Postal Pincode (6 Digits) *</label>
+                            <div class="input-box-wrap">
+                                <span class="input-icon">📮</span>
+                                <input type="text" id="customerPincode" placeholder="e.g. 600001" maxlength="6" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customerNotes">Special Preparation / Delivery Instructions (Optional)</label>
+                        <div class="input-box-wrap">
+                            <span class="input-icon">✎</span>
+                            <input type="text" id="customerNotes" placeholder="e.g. Call upon arrival, Extra chilled packaging">
+                        </div>
+                    </div>
+
+                    <!-- Delivery Mode Selection -->
+                    <div class="form-group" style="margin-top: 25px;">
+                        <label>Select Delivery Tier</label>
+                        <div class="delivery-options-grid">
+                            <label class="delivery-card active">
+                                <input type="radio" name="delivery" value="Standard Delivery" checked>
+                                <div class="delivery-card-info">
+                                    <strong>Standard Chilled Delivery</strong>
+                                    <small>Within 24–48 Hours • FREE</small>
+                                </div>
                             </label>
 
-                            <div class="input-box">
-                                <span>✦</span>
-
-                                <input
-                                    type="text"
-                                    id="customerName"
-                                    placeholder="Enter your name"
-                                    required>
-                            </div>
-
-                        </div>
-
-
-                        <div class="input-group">
-
-                            <label>
-                                Phone Number
+                            <label class="delivery-card">
+                                <input type="radio" name="delivery" value="Express Delivery">
+                                <div class="delivery-card-info">
+                                    <strong>Royal Priority Express</strong>
+                                    <small>Same Day Priority • +₹30</small>
+                                </div>
                             </label>
-
-                            <div class="input-box">
-                                <span>☎</span>
-
-                                <input
-                                    type="tel"
-                                    id="customerPhone"
-                                    placeholder="Enter phone number"
-                                    maxlength="10"
-                                    required>
-                            </div>
-
                         </div>
-
                     </div>
-
-
-                    <div class="input-group">
-
-                        <label>
-                            Email Address
-                        </label>
-
-                        <div class="input-box">
-                            <span>✉</span>
-
-                            <input
-                                type="email"
-                                id="customerEmail"
-                                placeholder="Enter your email"
-                                required>
-                        </div>
-
-                    </div>
-
-
-                    <div class="input-group">
-
-                        <label>
-                            Delivery Address
-                        </label>
-
-                        <div class="input-box textarea-box">
-                            <span>⌂</span>
-
-                            <textarea
-                                id="customerAddress"
-                                placeholder="Enter your complete delivery address"
-                                required></textarea>
-                        </div>
-
-                    </div>
-
-
-                    <div class="input-row">
-
-                        <div class="input-group">
-
-                            <label>
-                                City
-                            </label>
-
-                            <div class="input-box">
-                                <span>⌖</span>
-
-                                <input
-                                    type="text"
-                                    id="customerCity"
-                                    placeholder="City"
-                                    required>
-                            </div>
-
-                        </div>
-
-
-                        <div class="input-group">
-
-                            <label>
-                                Pincode
-                            </label>
-
-                            <div class="input-box">
-                                <span>#</span>
-
-                                <input
-                                    type="text"
-                                    id="customerPincode"
-                                    placeholder="Pincode"
-                                    maxlength="6"
-                                    required>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="delivery-title">
-
-                        <span>🚚</span>
-
-                        <div>
-                            <strong>Delivery Preference</strong>
-                            <small>Choose when you'd like your order.</small>
-                        </div>
-
-                    </div>
-
-
-                    <div class="delivery-options">
-
-                        <label class="delivery-option active">
-
-                            <input
-                                type="radio"
-                                name="delivery"
-                                value="Standard Delivery"
-                                checked>
-
-                            <span class="radio"></span>
-
-                            <div>
-                                <strong>Standard</strong>
-                                <small>Same day delivery</small>
-                            </div>
-
-                            <b>FREE*</b>
-
-                        </label>
-
-
-                        <label class="delivery-option">
-
-                            <input
-                                type="radio"
-                                name="delivery"
-                                value="Express Delivery">
-
-                            <span class="radio"></span>
-
-                            <div>
-                                <strong>Express</strong>
-                                <small>Priority delivery</small>
-                            </div>
-
-                            <b>₹30</b>
-
-                        </label>
-
-                    </div>
-
-
-                    <div class="notes">
-
-                        <label>
-                            Special Instructions
-                            <span>Optional</span>
-                        </label>
-
-                        <textarea
-                            id="customerNotes"
-                            placeholder="Any special request?"></textarea>
-
-                    </div>
-
-
-                    <button
-                        type="submit"
-                        class="confirm-btn">
-
-                        <span>
-                            Confirm Booking
-                        </span>
-
-                        <b>→</b>
-
-                    </button>
-
-                    <div class="secure-note">
-                        🔒 Your information is kept secure.
-                    </div>
-
                 </form>
+            </section>
 
-            </div>
+            <!-- Right: Order Breakdown -->
+            <aside class="booking-summary-card">
+                <h2 class="summary-heading">Order Breakdown</h2>
 
-
-            <!-- ORDER SUMMARY -->
-
-            <aside class="order-card">
-
-                <div class="order-card-top">
-
-                    <div>
-                        <p>YOUR SELECTION</p>
-                        <h2>Royal Order</h2>
-                    </div>
-
-                    <span class="rose-icon">
-                        🌹
-                    </span>
-
+                <div class="booking-items-list" id="bookingItemsList">
+                    <!-- Loaded dynamically -->
                 </div>
 
-
-                <div
-                    id="bookingProducts"
-                    class="booking-products">
-                </div>
-
-
-                <div class="order-divider"></div>
-
-
-                <div class="price-line">
-
+                <div style="display: flex; justify-content: space-between; font-size: 14px; color: var(--color-cream-soft); margin-bottom: 12px;">
                     <span>Subtotal</span>
-
-                    <strong id="bookingSubtotal">
-                        ₹0
-                    </strong>
-
+                    <strong id="bookingSubtotal" style="color: var(--color-cream);">₹0</strong>
                 </div>
 
-
-                <div class="price-line">
-
-                    <span>Delivery</span>
-
-                    <strong id="bookingDelivery">
-                        ₹50
-                    </strong>
-
+                <div style="display: flex; justify-content: space-between; font-size: 14px; color: var(--color-cream-soft); margin-bottom: 12px;">
+                    <span>Delivery Charge</span>
+                    <strong id="bookingDelivery" style="color: var(--color-gold);">FREE</strong>
                 </div>
 
+                <div style="height: 1px; background: var(--glass-border); margin: 18px 0;"></div>
 
-                <div class="price-line offer">
-
-                    <span>Royal Offer</span>
-
-                    <strong>
-                        FREE
-                    </strong>
-
+                <div style="display: flex; justify-content: space-between; align-items: center; font-family: var(--font-heading); font-size: 22px; font-weight: 700; color: var(--color-gold-light); margin-bottom: 24px;">
+                    <span>Total Due</span>
+                    <strong id="bookingTotal">₹0</strong>
                 </div>
 
+                <button type="button" id="btnSubmitBooking" class="btn-confirm-booking">
+                    <span>Confirm & Book Order</span>
+                    <span>→</span>
+                </button>
 
-                <div class="order-divider"></div>
-
-
-                <div class="grand-total">
-
-                    <span>Total</span>
-
-                    <strong id="bookingTotal">
-                        ₹0
-                    </strong>
-
+                <div style="text-align: center; font-size: 11px; color: var(--color-cream-muted); letter-spacing: 1px; margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <span>🔒</span>
+                    <span>Official Royal Rose Milk Concierge Dispatch</span>
                 </div>
-
-
-                <div class="royal-note">
-
-                    <span>✦</span>
-
-                    <p>
-                        Every bottle is prepared with
-                        care for your Royal experience.
-                    </p>
-
-                </div>
-
             </aside>
-
-        </section>
-
+        </div>
     </main>
 
-
-    <!-- LOADING -->
-
-    <div
-        class="booking-loading"
-        id="bookingLoading">
-
-        <div class="loading-box">
-
-            <div class="loader"></div>
-
-            <h2>Preparing Your Order</h2>
-
-            <p>
-                Creating your Royal booking...
-            </p>
-
-        </div>
-
+    <!-- Asynchronous Booking Submission Overlay -->
+    <div class="booking-loading-modal" id="bookingLoadingModal">
+        <div style="font-size: 40px; color: var(--color-gold); animation: loaderFloat 1.5s ease infinite; margin-bottom: 16px;">♛</div>
+        <h3 style="font-family: var(--font-heading); font-size: 20px; color: var(--color-gold-light); letter-spacing: 2px; margin-bottom: 6px;">
+            SECURING YOUR ROYAL BOOKING
+        </h3>
+        <p style="font-size: 13px; color: var(--color-cream-soft);">Preparing fresh batch & dispatching confirmation...</p>
     </div>
 
-
+    <!-- Scripts -->
     <script src="api-config.js"></script>
     <script>
-
         document.addEventListener("DOMContentLoaded", () => {
-
-            /*
-             * Decide whether this is:
-             * 1. Multiple cart booking
-             * 2. Individual Book Now
-             */
-
-            let cart =
-                JSON.parse(
-                    localStorage.getItem("royalBookingCart")
-                );
-
-            const directBooking =
-                JSON.parse(
-                    localStorage.getItem("royalDirectBooking")
-                );
-
-
-            if (!cart && directBooking) {
-
-                cart = [directBooking];
-
+            // Load cart data from booking cart, direct booking, or general cart
+            let cart = JSON.parse(localStorage.getItem("royalBookingCart")) || [];
+            if (cart.length === 0) {
+                const directItem = JSON.parse(localStorage.getItem("royalDirectBooking"));
+                if (directItem) {
+                    cart = [directItem];
+                } else {
+                    cart = JSON.parse(localStorage.getItem("royalCart")) || [];
+                }
             }
 
-
-            if (!cart || cart.length === 0) {
-
+            if (cart.length === 0) {
+                alert("No items found for booking. Redirecting to our collection.");
                 window.location.href = "shop.html";
-
                 return;
-
             }
 
-
-            const products =
-                document.getElementById(
-                    "bookingProducts"
-                );
-
+            const itemsContainer = document.getElementById("bookingItemsList");
+            const subtotalText = document.getElementById("bookingSubtotal");
+            const deliveryText = document.getElementById("bookingDelivery");
+            const totalText = document.getElementById("bookingTotal");
+            const loadingModal = document.getElementById("bookingLoadingModal");
 
             let subtotal = 0;
-
-
-            const icons = {
-
-                "Classic Rose Milk": "🌹",
-
-                "Strawberry Rose": "🍓🌹",
-
-                "Royal Rose Milk": "✨🌹",
-
-                "Rose Coconut Milk": "🥥🌹",
-
-                "Rose Chocolate": "🍫🌹",
-
-                "Mango Rose Milk": "🥭🌹"
-
-            };
-
+            itemsContainer.innerHTML = "";
 
             cart.forEach(item => {
+                const qty = item.quantity || 1;
+                const itemTotal = item.price * qty;
+                subtotal += itemTotal;
 
-                subtotal +=
-                    item.price *
-                    item.quantity;
-
-
-                const product =
-                    document.createElement("div");
-
-                product.className =
-                    "booking-product";
-
-
-                product.innerHTML = `
-
-                    <div class="booking-product-image">
-                        ${icons[item.name] || "🌹"}
+                const row = document.createElement("div");
+                row.className = "booking-item-row";
+                row.innerHTML = `
+                    <div>
+                        <div class="booking-item-name">${item.name}</div>
+                        <div class="booking-item-qty">₹${item.price} × ${qty}</div>
                     </div>
-
-                    <div class="booking-product-info">
-
-                        <h3>
-                            ${item.name}
-                        </h3>
-
-                        <p>
-                            ₹${item.price} × ${item.quantity}
-                        </p>
-
-                    </div>
-
-                    <strong>
-                        ₹${item.price * item.quantity}
-                    </strong>
-
+                    <div class="booking-item-price">₹${itemTotal}</div>
                 `;
-
-
-                products.appendChild(product);
-
+                itemsContainer.appendChild(row);
             });
 
+            let deliveryFee = 0;
 
-            let deliveryCost = 0;
-
-            function updatePricing() {
+            function updateTotals() {
                 const isExpress = document.querySelector('input[name="delivery"]:checked')?.value === "Express Delivery";
-                deliveryCost = isExpress ? 30 : 0;
-                
-                document.getElementById("bookingSubtotal").textContent = `₹${subtotal}`;
-                document.getElementById("bookingDelivery").textContent = deliveryCost > 0 ? `₹${deliveryCost}` : "FREE";
-                document.getElementById("bookingTotal").textContent = `₹${subtotal + deliveryCost}`;
+                deliveryFee = isExpress ? 30 : 0;
+
+                subtotalText.textContent = `₹${subtotal}`;
+                deliveryText.textContent = deliveryFee > 0 ? `₹${deliveryFee}` : "FREE";
+                totalText.textContent = `₹${subtotal + deliveryFee}`;
             }
+            updateTotals();
 
-            updatePricing();
-
-            /*
-             * Delivery option selection
-             */
-            document.querySelectorAll(".delivery-option").forEach(option => {
-                option.addEventListener("click", () => {
-                    document.querySelectorAll(".delivery-option").forEach(item => item.classList.remove("active"));
-                    option.classList.add("active");
-                    const radio = option.querySelector('input[type="radio"]');
-                    if (radio) {
-                        radio.checked = true;
-                    }
-                    updatePricing();
+            // Delivery selection toggles
+            document.querySelectorAll(".delivery-card").forEach(card => {
+                card.addEventListener("click", () => {
+                    document.querySelectorAll(".delivery-card").forEach(c => c.classList.remove("active"));
+                    card.classList.add("active");
+                    const radio = card.querySelector('input[type="radio"]');
+                    if (radio) radio.checked = true;
+                    updateTotals();
                 });
             });
 
-            /*
-             * Form submission
-             */
-            document.getElementById("bookingForm").addEventListener("submit", async event => {
-                event.preventDefault();
-
+            // Form Submit Trigger
+            const submitBtn = document.getElementById("btnSubmitBooking");
+            submitBtn.addEventListener("click", async () => {
                 const name = document.getElementById("customerName").value.trim();
                 const phone = document.getElementById("customerPhone").value.trim();
                 const email = document.getElementById("customerEmail").value.trim();
@@ -568,19 +288,9 @@
                 const notes = document.getElementById("customerNotes").value.trim();
                 const deliveryType = document.querySelector('input[name="delivery"]:checked')?.value || "Standard Delivery";
 
-                /* =========================
-                   VALIDATION
-                ========================= */
                 if (!name) {
                     alert("Please enter your full name.");
                     document.getElementById("customerName").focus();
-                    return;
-                }
-
-                const emailRegex = /^[\w\.-]+@[\w\.-]+\.\w+$/;
-                if (!email || !emailRegex.test(email)) {
-                    alert("Please enter a valid email address.");
-                    document.getElementById("customerEmail").focus();
                     return;
                 }
 
@@ -591,8 +301,15 @@
                     return;
                 }
 
+                const emailRegex = /^[\w\.-]+@[\w\.-]+\.\w+$/;
+                if (!email || !emailRegex.test(email)) {
+                    alert("Please enter a valid email address.");
+                    document.getElementById("customerEmail").focus();
+                    return;
+                }
+
                 if (!address) {
-                    alert("Please enter your complete delivery address.");
+                    alert("Please enter your delivery street address.");
                     document.getElementById("customerAddress").focus();
                     return;
                 }
@@ -605,15 +322,12 @@
 
                 const cleanPin = pincode.replace(/\D/g, "");
                 if (cleanPin.length !== 6) {
-                    alert("Please enter a valid 6-digit pincode.");
+                    alert("Please enter a valid 6-digit postal pincode.");
                     document.getElementById("customerPincode").focus();
                     return;
                 }
 
-                /* =========================
-                   PAYLOAD
-                ========================= */
-                const bookingData = {
+                const payload = {
                     customer: {
                         name: name,
                         phone: cleanPhone,
@@ -626,60 +340,37 @@
                     delivery: deliveryType,
                     products: cart,
                     subtotal: subtotal,
-                    deliveryCharge: deliveryCost,
-                    total: subtotal + deliveryCost
+                    deliveryCharge: deliveryFee,
+                    total: subtotal + deliveryFee
                 };
 
-                // Show Loading Overlay
-                const loadingOverlay = document.getElementById("bookingLoading");
-                if (loadingOverlay) loadingOverlay.classList.add("show");
+                loadingModal.classList.add("show");
 
                 try {
-                    const res = await window.royalApi.post("/api/book", bookingData);
+                    const res = await window.royalApi.post("/api/book", payload);
                     const result = res.data;
 
                     if (res.ok && result.success) {
-                        // Store confirmed order details
                         sessionStorage.setItem("royalConfirmedOrder", JSON.stringify(result.order));
                         localStorage.removeItem("royalBookingCart");
                         localStorage.removeItem("royalDirectBooking");
                         localStorage.removeItem("royalCart");
 
-                        // Redirect to success page
                         const orderId = encodeURIComponent(result.order_id || result.order?.order_id || "");
                         const waUrl = result.whatsapp_url ? encodeURIComponent(result.whatsapp_url) : "";
                         window.location.href = `booking-success.html?order_id=${orderId}&whatsapp=${waUrl}`;
                     } else {
-                        if (loadingOverlay) loadingOverlay.classList.remove("show");
-                        alert(result.message || "Booking could not be processed. Please check your details and try again.");
+                        loadingModal.classList.remove("show");
+                        alert(result.message || "Unable to complete booking. Please verify your details.");
                     }
                 } catch (error) {
                     console.error("Booking Error:", error);
-                    if (loadingOverlay) loadingOverlay.classList.remove("show");
-                    alert("Unable to connect to the Royal Rose Milk booking server. Please ensure the backend is running.");
+                    loadingModal.classList.remove("show");
+                    alert("Network error connecting to booking server. Please ensure the backend is running.");
                 }
             });
-
-            /*
-             * Rose petals animation
-             */
-            function createPetal() {
-                const petal = document.createElement("span");
-                petal.className = "petal";
-                petal.textContent = Math.random() > .5 ? "🌸" : "🌹";
-                petal.style.left = Math.random() * 100 + "%";
-                petal.style.fontSize = (10 + Math.random() * 14) + "px";
-                petal.style.opacity = .2 + Math.random() * .45;
-                petal.style.animationDuration = (6 + Math.random() * 7) + "s";
-
-                document.getElementById("petals").appendChild(petal);
-                setTimeout(() => { petal.remove(); }, 14000);
-            }
-
-            setInterval(createPetal, 1000);
         });
-
     </script>
-
 </body>
+
 </html>
