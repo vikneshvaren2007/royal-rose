@@ -4,9 +4,20 @@ import sqlite3
 import hashlib
 import secrets
 from contextlib import contextmanager
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
+
+# Indian Standard Time (IST) Timezone Helper (UTC+05:30)
+try:
+    from zoneinfo import ZoneInfo
+    IST = ZoneInfo("Asia/Kolkata")
+except Exception:
+    IST = timezone(timedelta(hours=5, minutes=30))
+
+def get_ist_now():
+    """Returns the current datetime in Indian Standard Time (IST)."""
+    return datetime.now(IST)
 
 # Load environment variables from backend/.env or root .env
 _backend_env = os.path.join(os.path.dirname(__file__), ".env")
@@ -380,7 +391,7 @@ def verify_admin_credentials(username, password):
             token = secrets.token_hex(24)
             ADMIN_SESSIONS[token] = {
                 "username": user["username"],
-                "created_at": datetime.now()
+                "created_at": get_ist_now()
             }
             return True, token
             
@@ -391,7 +402,7 @@ def verify_admin_credentials(username, password):
             token = secrets.token_hex(24)
             ADMIN_SESSIONS[token] = {
                 "username": clean_user,
-                "created_at": datetime.now()
+                "created_at": get_ist_now()
             }
             return True, token
 
@@ -441,7 +452,7 @@ def change_admin_password(username, old_password, new_password):
 
 def generate_order_id():
     """Generates a sequential, professional unique order ID: RR-YYYYMMDD-NNN"""
-    today_str = datetime.now().strftime("%Y%m%d")
+    today_str = get_ist_now().strftime("%Y%m%d")
     prefix = f"RR-{today_str}-"
 
     with get_db() as conn:
@@ -527,10 +538,12 @@ def save_booking(customer_data, products_data, delivery_preference="Standard Del
         else:
             payment_status = "CASH_ON_DELIVERY"
 
-        # 1. Insert Customer
+        # 1. Insert Customer with IST timestamp
+        booking_date = get_ist_now().strftime("%Y-%m-%d %H:%M:%S")
+
         cursor.execute("""
-            INSERT INTO customers (name, email, phone, address, city, state, pincode)
-            VALUES (?, ?, ?, ?, ?, ?, ?);
+            INSERT INTO customers (name, email, phone, address, city, state, pincode, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?);
         """, (
             customer_data["name"].strip(),
             customer_data["email"].strip().lower(),
@@ -538,21 +551,21 @@ def save_booking(customer_data, products_data, delivery_preference="Standard Del
             customer_data["address"].strip(),
             customer_data["city"].strip(),
             customer_data.get("state", "Tamil Nadu").strip(),
-            customer_data["pincode"].strip()
+            customer_data["pincode"].strip(),
+            booking_date
         ))
         customer_id = cursor.lastrowid
 
         # 2. Generate unique Order ID
         order_id = generate_order_id()
-        booking_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        # 3. Insert Order
+        # 3. Insert Order with explicit IST booking_date and created_at
         cursor.execute("""
             INSERT INTO orders (
                 order_id, customer_id, subtotal, delivery_charge,
                 total_amount, delivery_preference, payment_method, payment_status,
-                order_status, notes, booking_date
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'CONFIRMED', ?, ?);
+                order_status, notes, booking_date, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'CONFIRMED', ?, ?, ?);
         """, (
             order_id,
             customer_id,
@@ -563,6 +576,7 @@ def save_booking(customer_data, products_data, delivery_preference="Standard Del
             pay_clean,
             payment_status,
             notes,
+            booking_date,
             booking_date
         ))
 
@@ -738,7 +752,7 @@ def cancel_order(order_id, verification=None, reason="Customer requested cancell
     if order["order_status"] == "COMPLETED":
         return None, "Completed orders cannot be cancelled."
 
-    cancel_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    cancel_time = get_ist_now().strftime("%Y-%m-%d %H:%M:%S")
 
     with get_db() as conn:
         cursor = conn.cursor()
@@ -771,7 +785,7 @@ def update_order_status(order_id, new_status, cancelled_by=None, reason=None):
     with get_db() as conn:
         cursor = conn.cursor()
         if status_upper == "CANCELLED":
-            cancel_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            cancel_time = get_ist_now().strftime("%Y-%m-%d %H:%M:%S")
             cancel_by_val = cancelled_by or "ADMIN"
             reason_val = reason or "Cancelled by store administrator"
             cursor.execute("""
@@ -869,13 +883,14 @@ def get_customer_orders_by_id(customer_id):
 # =====================================================
 
 def save_contact_message(name, email, phone, message):
-    """Save customer contact inquiry to database."""
+    """Save customer contact inquiry to database with IST timestamp."""
+    created_at = get_ist_now().strftime("%Y-%m-%d %H:%M:%S")
     with get_db() as conn:
         cursor = conn.cursor()
         cursor.execute("""
-            INSERT INTO contact_messages (name, email, phone, message)
-            VALUES (?, ?, ?, ?);
-        """, (name.strip(), email.strip().lower(), phone.strip() if phone else "", message.strip()))
+            INSERT INTO contact_messages (name, email, phone, message, created_at)
+            VALUES (?, ?, ?, ?, ?);
+        """, (name.strip(), email.strip().lower(), phone.strip() if phone else "", message.strip(), created_at))
         conn.commit()
         return cursor.lastrowid
 

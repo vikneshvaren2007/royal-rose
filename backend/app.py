@@ -11,7 +11,7 @@ import smtplib
 import threading
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from functools import wraps
 from urllib.parse import quote
 
@@ -20,6 +20,17 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 
 import database
+
+# Indian Standard Time (IST) Helper
+try:
+    from zoneinfo import ZoneInfo
+    IST = ZoneInfo("Asia/Kolkata")
+except Exception:
+    IST = timezone(timedelta(hours=5, minutes=30))
+
+def get_ist_now():
+    """Returns current datetime in Indian Standard Time (IST)."""
+    return datetime.now(IST)
 
 # Load environment variables explicitly from backend/.env and root .env
 _backend_env = os.path.join(os.path.dirname(__file__), ".env")
@@ -51,9 +62,9 @@ database.init_db()
 # =========================
 def log_event(category, message):
     """Clean structured logger with timestamp for operational visibility."""
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    timestamp = get_ist_now().strftime("%Y-%m-%d %H:%M:%S")
     safe_msg = str(message).replace("₹", "Rs.").encode("ascii", "replace").decode("ascii")
-    print(f"[{timestamp}] [{category}] {safe_msg}")
+    print(f"[{timestamp} IST] [{category}] {safe_msg}")
 
 
 # =========================
@@ -417,8 +428,8 @@ def api_health():
         "status": "ok",
         "service": "ROYAL ROSE MILK API",
         "database": db_status,
-        "timestamp": datetime.now().isoformat(),
-        "version": "2.0.0"
+        "timestamp": get_ist_now().isoformat(),
+        "version": "2.1.0"
     }), 200
 
 
@@ -430,7 +441,7 @@ def home():
             "status": "ok",
             "service": "ROYAL ROSE MILK API",
             "database": "connected",
-            "timestamp": datetime.now().isoformat()
+            "timestamp": get_ist_now().isoformat()
         })
     return send_from_directory(STATIC_DIR, "index.html")
 
