@@ -5,15 +5,26 @@
  */
 
 (function () {
-    // Dynamic Base URL Resolution (supports localhost, 127.0.0.1, and local network Wi-Fi IP on mobile)
+    // Dynamic Base URL Resolution
     const host = window.location.hostname || "127.0.0.1";
-    let baseUrl = `http://${host}:5000`;
+    let baseUrl;
 
     if (window.location.protocol.startsWith("http")) {
-        // If served directly from Flask server on port 5000
-        if (window.location.port === "5000") {
+        // Production: Flask frontend and backend are on the same Render origin
+        if (host.endsWith(".onrender.com")) {
+            baseUrl = window.location.origin;
+        }
+        // Flask local server on port 5000
+        else if (window.location.port === "5000") {
             baseUrl = "";
         }
+        // Live Server or another local frontend server
+        else {
+            baseUrl = `http://${host}:5000`;
+        }
+    } else {
+        // File-system fallback
+        baseUrl = "http://127.0.0.1:5000";
     }
 
     const royalApi = {
