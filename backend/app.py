@@ -1,5 +1,5 @@
 """
-ROYAL ROSE MILK — Comprehensive Flask Backend Application
+ROYAL ROSE MILK — Comprehensive Flask Backend Application (v2.1.0)
 Handles REST APIs, dynamic product management, customer bookings,
 secure order tracking, cancellation flow, dual-email dispatchers,
 admin authentication, dashboard aggregation, and static page serving.

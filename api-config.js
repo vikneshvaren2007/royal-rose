@@ -5,25 +5,26 @@
  */
 
 (function () {
-    // Dynamic Base URL Resolution
+    // Dynamic Base URL Resolution (Render HTTPS production, local Flask, Live Server, file fallback)
     const host = window.location.hostname || "127.0.0.1";
-    let baseUrl;
+    let baseUrl = "";
 
-    if (window.location.protocol.startsWith("http")) {
-        // Production: Flask frontend and backend are on the same Render origin
-        if (host.endsWith(".onrender.com")) {
-            baseUrl = window.location.origin;
-        }
-        // Flask local server on port 5000
-        else if (window.location.port === "5000") {
+    if (window.location.protocol === "https:" && host.endsWith(".onrender.com")) {
+        // Render production
+        baseUrl = window.location.origin;
+    } else if (window.location.protocol === "https:") {
+        // Any other HTTPS production origin
+        baseUrl = window.location.origin;
+    } else if (window.location.protocol === "http:") {
+        if (window.location.port === "5000") {
+            // Flask serving frontend and API on the same local server
             baseUrl = "";
-        }
-        // Live Server or another local frontend server
-        else {
+        } else {
+            // Live Server / local frontend dev server (e.g. 5500)
             baseUrl = `http://${host}:5000`;
         }
     } else {
-        // File-system fallback
+        // file:// fallback
         baseUrl = "http://127.0.0.1:5000";
     }
 
