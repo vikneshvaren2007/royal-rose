@@ -115,48 +115,12 @@ def admin_required(f):
 # =========================
 # EMAIL HELPERS
 # =========================
-_email_dispatch_lock = threading.Lock()
-
-# Force IPv4 socket resolution to prevent Linux container [Errno 101] Network is unreachable errors
-def _create_ipv4_connection(address, timeout=15, source_address=None):
-    host, port = address
-    err = None
-    for res in socket.getaddrinfo(host, port, socket.AF_INET, socket.SOCK_STREAM):
-        af, socktype, proto, canonname, sa = res
-        sock = None
-        try:
-            sock = socket.socket(af, socktype, proto)
-            if timeout is not None:
-                sock.settimeout(timeout)
-            if source_address:
-                sock.bind(source_address)
-            sock.connect(sa)
-            return sock
-        except OSError as _err:
-            err = _err
-            if sock is not None:
-                sock.close()
-    if err is not None:
-        raise err
-    raise OSError(f"Could not resolve IPv4 address for {host}:{port}")
-
-class IPv4_SMTP_SSL(smtplib.SMTP_SSL):
-    def _get_socket(self, host, port, timeout):
-        sock = _create_ipv4_connection((host, port), timeout, self.source_address)
-        if self.context is None:
-            self.context = ssl.create_default_context()
-        return self.context.wrap_socket(sock, server_hostname=host)
-
-class IPv4_SMTP(smtplib.SMTP):
-    def _get_socket(self, host, port, timeout):
-        return _create_ipv4_connection((host, port), timeout, self.source_address)
-
-
 def send_email_worker(to_email, subject, html_content, text_content=""):
     """
-    Worker to deliver SMTP email reliably with RFC 2822 compliance, UTF-8 headers,
-    forced IPv4 resolution, automatic multi-port fallback (SSL 465 -> STARTTLS 587),
-    and clean operational logging.
+    High-reliability email dispatcher optimized for Render cloud & local environments.
+    - Method 1: Port 587 with STARTTLS (Fastest & most compatible on Cloud/Render)
+    - Method 2: Port 465 with SSL
+    - Method 3: IPv4 direct fallback
     """
     username = (MAIL_USERNAME or os.getenv("MAIL_USERNAME") or "vikneshvaren2@gmail.com").strip()
     password = (MAIL_PASSWORD or os.getenv("MAIL_PASSWORD") or "bsviciupdnsfzary").strip().replace(" ", "")
@@ -167,66 +131,86 @@ def send_email_worker(to_email, subject, html_content, text_content=""):
         log_event("EMAIL SKIP", f"Credentials missing or empty recipient for '{subject}' to '{to_clean}'")
         return False, "Missing credentials or recipient email."
 
-    with _email_dispatch_lock:
+    try:
+        msg = MIMEMultipart("alternative")
+        msg["From"] = formataddr(("ROYAL ROSE MILK", sender))
+        msg["To"] = to_clean
+        msg["Reply-To"] = sender
+        msg["Date"] = formatdate(localtime=True)
+        msg["Message-ID"] = make_msgid(domain="royalrosemilk.com")
+        msg["Subject"] = Header(subject, "utf-8")
+        msg["X-Mailer"] = "Royal Rose Milk Dispatcher v2.3"
+
+        if text_content:
+            msg.attach(MIMEText(text_content, "plain", "utf-8"))
+        if html_content:
+            msg.attach(MIMEText(html_content, "html", "utf-8"))
+
+        delivered = False
+        last_err = None
+
+        # Method 1: Port 587 STARTTLS (Default & Cloud Standard)
         try:
-            msg = MIMEMultipart("alternative")
-            msg["From"] = formataddr(("ROYAL ROSE MILK", sender))
-            msg["To"] = to_clean
-            msg["Reply-To"] = sender
-            msg["Date"] = formatdate(localtime=True)
-            msg["Message-ID"] = make_msgid(domain="royalrosemilk.com")
-            msg["Subject"] = Header(subject, "utf-8")
-            msg["X-Mailer"] = "Royal Rose Milk Dispatcher v2.1"
+            context = ssl.create_default_context()
+            with smtplib.SMTP(MAIL_SERVER, 587, timeout=10) as server:
+                server.ehlo()
+                server.starttls(context=context)
+                server.ehlo()
+                server.login(username, password)
+                server.send_message(msg)
+                delivered = True
+                log_event("EMAIL SUCCESS (587)", f"Delivered '{subject}' to {to_clean}")
+                return True, f"Email delivered successfully to {to_clean}"
+        except Exception as e1:
+            last_err = e1
+            log_event("EMAIL NOTICE", f"Port 587 failed ({e1}). Trying Port 465 SSL...")
 
-            if text_content:
-                msg.attach(MIMEText(text_content, "plain", "utf-8"))
-            if html_content:
-                msg.attach(MIMEText(html_content, "html", "utf-8"))
-
-            delivered = False
-            last_err = None
-
-            # Primary: IPv4 SMTP_SSL over port 465
+        # Method 2: Port 465 SSL Fallback
+        if not delivered:
             try:
-                with IPv4_SMTP_SSL(MAIL_SERVER, 465, timeout=15) as server:
+                context = ssl.create_default_context()
+                with smtplib.SMTP_SSL(MAIL_SERVER, 465, timeout=10, context=context) as server:
                     server.login(username, password)
                     server.send_message(msg)
                     delivered = True
-            except Exception as e1:
-                last_err = e1
-                log_event("EMAIL RETRY", f"SSL 465 connection note ({e1}). Retrying with IPv4 STARTTLS 587...")
+                    log_event("EMAIL SUCCESS (465)", f"Delivered '{subject}' to {to_clean}")
+                    return True, f"Email delivered successfully to {to_clean}"
+            except Exception as e2:
+                last_err = e2
+                log_event("EMAIL NOTICE", f"Port 465 failed ({e2}). Trying IPv4 fallback...")
 
-            # Fallback: IPv4 SMTP over port 587 with STARTTLS
-            if not delivered:
-                try:
-                    with IPv4_SMTP(MAIL_SERVER, 587, timeout=15) as server:
+        # Method 3: IPv4 direct fallback
+        if not delivered:
+            try:
+                ipv4_addrs = [r[4][0] for r in socket.getaddrinfo(MAIL_SERVER, 587, socket.AF_INET, socket.SOCK_STREAM)]
+                if ipv4_addrs:
+                    ip = ipv4_addrs[0]
+                    with smtplib.SMTP(ip, 587, timeout=10) as server:
                         server.ehlo()
-                        server.starttls()
+                        server.starttls(context=ssl.create_default_context())
                         server.ehlo()
                         server.login(username, password)
                         server.send_message(msg)
                         delivered = True
-                except Exception as e2:
-                    last_err = e2
+                        log_event("EMAIL SUCCESS (IPv4 587)", f"Delivered '{subject}' to {to_clean}")
+                        return True, f"Email delivered successfully to {to_clean}"
+            except Exception as e3:
+                last_err = e3
 
-            if delivered:
-                log_event("EMAIL SUCCESS", f"Delivered '{subject}' to {to_clean}")
-                return True, f"Email delivered successfully to {to_clean}"
-            else:
-                log_event("EMAIL ERROR", f"Failed to deliver '{subject}' to {to_clean}: {last_err}")
-                return False, str(last_err)
+        log_event("EMAIL ERROR", f"All delivery methods failed for '{subject}' to {to_clean}: {last_err}")
+        return False, str(last_err)
 
-        except Exception as e:
-            log_event("EMAIL ERROR", f"Failed to send email to {to_clean}: {e}")
-            return False, str(e)
+    except Exception as e:
+        log_event("EMAIL ERROR", f"Failed to send email to {to_clean}: {e}")
+        return False, str(e)
 
 
 def send_email_async(to_email, subject, html_content, text_content=""):
-    """Dispatches email sending asynchronously in a dedicated background thread."""
+    """Dispatches email sending asynchronously in a dedicated non-blocking thread."""
     thread = threading.Thread(
         target=send_email_worker,
         args=(to_email, subject, html_content, text_content),
-        daemon=False
+        daemon=True
     )
     thread.start()
 
