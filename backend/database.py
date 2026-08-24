@@ -1057,3 +1057,20 @@ def get_all_subscribers():
         cursor.execute("SELECT id, email, created_at FROM newsletter_subscribers ORDER BY id DESC;")
         return [dict(row) for row in cursor.fetchall()]
 
+
+def reset_all_orders_data():
+    """Wipes all order records, items, events, customer records, and contact messages to start completely fresh."""
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM order_items;")
+        cursor.execute("DELETE FROM orders;")
+        cursor.execute("DELETE FROM customers;")
+        cursor.execute("DELETE FROM order_events;")
+        cursor.execute("DELETE FROM contact_messages;")
+        try:
+            cursor.execute("DELETE FROM sqlite_sequence WHERE name IN ('orders', 'customers', 'order_items', 'contact_messages', 'order_events');")
+        except Exception:
+            pass
+        conn.commit()
+        return True
+

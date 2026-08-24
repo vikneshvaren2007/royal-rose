@@ -1288,6 +1288,35 @@ def admin_update_settings():
     return jsonify({"success": True, "message": "Shop settings updated successfully."}), 200
 
 
+@app.route("/api/admin/change-password", methods=["POST"])
+@admin_required
+def api_admin_change_password():
+    """Changes admin password."""
+    data = request.get_json(force=True, silent=True) or {}
+    username = str(data.get("username", "admin")).strip()
+    old_pw = str(data.get("old_password", "")).strip()
+    new_pw = str(data.get("new_password", "")).strip()
+
+    if not old_pw or not new_pw:
+        return jsonify({"success": False, "message": "Both current and new passwords are required."}), 400
+
+    success, msg = database.change_admin_password(username, old_pw, new_pw)
+    if success:
+        log_event("ADMIN PASSWORD CHANGED", f"Password changed for admin '{username}'.")
+        return jsonify({"success": True, "message": msg}), 200
+    return jsonify({"success": False, "message": msg}), 400
+
+
+@app.route("/api/admin/reset-data", methods=["POST"])
+@admin_required
+def api_admin_reset_data():
+    """Wipes all orders, order items, customers, and test contact messages to start fresh."""
+    database.reset_all_orders_data()
+    log_event("DATABASE RESET", "All test orders and customer records wiped clean by admin.")
+    return jsonify({"success": True, "message": "All test bookings and customer records cleared successfully. Shop is fresh!"}), 200
+
+
+
 # =========================
 # STATIC FILE & PAGE SERVING
 # =========================

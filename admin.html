@@ -1069,7 +1069,7 @@
                                 <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Test live email dispatch to verify that customer confirmation and admin notification emails are delivering smoothly.</p>
                             </div>
                             <span class="health-badge" style="background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.35); color: #38bdf8;">
-                                <span>⚡</span> Gmail SMTP Connected
+                                <span>⚡</span> Live Resend API Connected
                             </span>
                         </div>
 
@@ -1080,6 +1080,40 @@
                             </button>
                         </div>
                         <div id="testEmailResult" style="display: none; margin-top: 16px; padding: 14px; border-radius: 10px; font-size: 13px; line-height: 1.5;"></div>
+                    </div>
+
+                    <!-- Change Password Card -->
+                    <div class="table-card" style="padding: 30px; max-width: 800px; margin-top: 24px;">
+                        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 24px; color: #fff; margin-bottom: 6px;">🔐 Security & Password</h3>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Change the admin authentication password for this panel.</p>
+
+                        <form id="changePasswordForm">
+                            <div class="form-grid">
+                                <div class="form-full">
+                                    <label>Current Password</label>
+                                    <input type="password" id="currentAdminPass" placeholder="Enter current password..." required>
+                                </div>
+                                <div class="form-full">
+                                    <label>New Password</label>
+                                    <input type="password" id="newAdminPass" placeholder="At least 6 characters..." required>
+                                </div>
+                            </div>
+                            <button type="submit" id="btnChangePass" class="btn-primary" style="margin-top: 6px;">Update Password ➔</button>
+                        </form>
+                    </div>
+
+                    <!-- Danger Zone: Reset Orders & Start Fresh Card -->
+                    <div class="table-card" style="padding: 30px; max-width: 800px; margin-top: 24px; border: 1px solid rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.04);">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                            <div>
+                                <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 24px; color: #f87171;">⚠️ Danger Zone — Start Fresh</h3>
+                                <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Delete all test orders, customer records, and contact inquiries to launch fresh for production.</p>
+                            </div>
+                        </div>
+                        <p style="font-size: 12px; color: #ef4444; margin-bottom: 16px;">This action cannot be undone. Product catalog items and shop settings will be preserved.</p>
+                        <button type="button" id="btnResetOrdersData" class="btn-ctrl btn-cancel-action" style="padding: 12px 24px; font-size: 13px; font-weight: bold; border-radius: 8px;">
+                            🗑️ Wipe Test Data & Start Fresh
+                        </button>
                     </div>
                 </section>
 
@@ -2152,6 +2186,62 @@
                     btnSendTestEmail.textContent = originalText;
                 }
             });
+
+            // Change Password Handler
+            const changePasswordForm = document.getElementById("changePasswordForm");
+            if (changePasswordForm) {
+                changePasswordForm.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const oldPass = document.getElementById("currentAdminPass").value.trim();
+                    const newPass = document.getElementById("newAdminPass").value.trim();
+                    if (!oldPass || !newPass) return;
+                    
+                    try {
+                        const res = await window.royalApi.post("/api/admin/change-password", {
+                            username: "admin",
+                            old_password: oldPass,
+                            new_password: newPass
+                        });
+                        if (res.ok && res.data.success) {
+                            alert("✓ Password updated successfully! Please log in with your new password.");
+                            changePasswordForm.reset();
+                            window.royalApi.clearAdminToken();
+                            location.reload();
+                        } else {
+                            alert(res.data.message || "Failed to update password.");
+                        }
+                    } catch (err) {
+                        alert("Network error updating password.");
+                    }
+                });
+            }
+
+            // Wipe Test Data Handler
+            const btnResetOrdersData = document.getElementById("btnResetOrdersData");
+            if (btnResetOrdersData) {
+                btnResetOrdersData.addEventListener("click", async () => {
+                    const confirmed = confirm("⚠️ ARE YOU SURE?\n\nThis will permanently delete all test orders, customer purchase histories, and contact messages.\n\nClick OK to proceed.");
+                    if (!confirmed) return;
+
+                    const doubleCheck = prompt("Type 'RESET' in capital letters to confirm permanent wipe:");
+                    if (doubleCheck !== "RESET") {
+                        alert("Reset cancelled.");
+                        return;
+                    }
+
+                    try {
+                        const res = await window.royalApi.post("/api/admin/reset-data", {});
+                        if (res.ok && res.data.success) {
+                            alert("✓ All test orders and customer data have been cleared! The system is now 100% fresh.");
+                            loadDashboard();
+                        } else {
+                            alert(res.data.message || "Reset failed.");
+                        }
+                    } catch (err) {
+                        alert("Error communicating with server.");
+                    }
+                });
+            }
 
             // Start authentication cycle
             checkAuth();
