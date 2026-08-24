@@ -5,6 +5,7 @@ secure order tracking, cancellation flow, dual-email dispatchers,
 admin authentication, dashboard aggregation, and static page serving.
 """
 
+import json
 import os
 import re
 import smtplib
@@ -12,6 +13,8 @@ import socket
 import ssl
 import threading
 import time
+import urllib.request
+import urllib.error
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.header import Header
