@@ -129,8 +129,8 @@ def send_email_worker(to_email, subject, html_content, text_content=""):
         log_event("EMAIL SKIP", f"Empty recipient for '{subject}'")
         return False, "Missing recipient email."
 
-    resend_key = (os.getenv("RESEND_API_KEY") or "").strip()
-    brevo_key = (os.getenv("BREVO_API_KEY") or "").strip()
+    resend_key = (os.getenv("RESEND_API_KEY") or os.getenv("RESEND_KEY") or os.getenv("RESEND_TOKEN") or "").strip()
+    brevo_key = (os.getenv("BREVO_API_KEY") or os.getenv("BREVO_KEY") or os.getenv("SENDINBLUE_API_KEY") or "").strip()
 
     # 1. Primary Cloud HTTPS Provider: Resend (HTTPS Port 443 - 100% unrestricted on Render)
     if resend_key:
@@ -156,6 +156,9 @@ def send_email_worker(to_email, subject, html_content, text_content=""):
                 if resp.status in (200, 201, 202):
                     log_event("EMAIL SUCCESS (RESEND HTTPS)", f"Delivered '{subject}' to {to_clean}")
                     return True, f"Delivered to {to_clean} via Resend"
+        except urllib.error.HTTPError as he:
+            err_body = he.read().decode("utf-8", "replace")
+            log_event("EMAIL NOTICE", f"Resend API HTTP {he.code}: {err_body}")
         except Exception as e:
             log_event("EMAIL NOTICE", f"Resend API error: {e}")
 
@@ -183,6 +186,9 @@ def send_email_worker(to_email, subject, html_content, text_content=""):
                 if resp.status in (200, 201, 202):
                     log_event("EMAIL SUCCESS (BREVO HTTPS)", f"Delivered '{subject}' to {to_clean}")
                     return True, f"Delivered to {to_clean} via Brevo"
+        except urllib.error.HTTPError as he:
+            err_body = he.read().decode("utf-8", "replace")
+            log_event("EMAIL NOTICE", f"Brevo API HTTP {he.code}: {err_body}")
         except Exception as e:
             log_event("EMAIL NOTICE", f"Brevo API error: {e}")
 
