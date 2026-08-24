@@ -117,92 +117,122 @@ def admin_required(f):
 # =========================
 def send_email_worker(to_email, subject, html_content, text_content=""):
     """
-    High-reliability email dispatcher optimized for Render cloud & local environments.
-    - Method 1: Port 587 with STARTTLS (Fastest & most compatible on Cloud/Render)
-    - Method 2: Port 465 with SSL
-    - Method 3: IPv4 direct fallback
+    Universal Email Dispatcher supporting HTTPS REST APIs (Port 443) and SMTP (Ports 587/465).
+    - HTTPS APIs (Resend, Brevo) completely bypass Render Cloud Free Tier SMTP port blocking.
     """
     username = (MAIL_USERNAME or os.getenv("MAIL_USERNAME") or "vikneshvaren2@gmail.com").strip()
     password = (MAIL_PASSWORD or os.getenv("MAIL_PASSWORD") or "bsviciupdnsfzary").strip().replace(" ", "")
     sender = (MAIL_DEFAULT_SENDER or username).strip()
 
     to_clean = str(to_email or "").strip()
-    if not username or not password or not to_clean:
-        log_event("EMAIL SKIP", f"Credentials missing or empty recipient for '{subject}' to '{to_clean}'")
-        return False, "Missing credentials or recipient email."
+    if not to_clean:
+        log_event("EMAIL SKIP", f"Empty recipient for '{subject}'")
+        return False, "Missing recipient email."
 
-    try:
-        msg = MIMEMultipart("alternative")
-        msg["From"] = formataddr(("ROYAL ROSE MILK", sender))
-        msg["To"] = to_clean
-        msg["Reply-To"] = sender
-        msg["Date"] = formatdate(localtime=True)
-        msg["Message-ID"] = make_msgid(domain="royalrosemilk.com")
-        msg["Subject"] = Header(subject, "utf-8")
-        msg["X-Mailer"] = "Royal Rose Milk Dispatcher v2.3"
+    resend_key = (os.getenv("RESEND_API_KEY") or "").strip()
+    brevo_key = (os.getenv("BREVO_API_KEY") or "").strip()
 
-        if text_content:
-            msg.attach(MIMEText(text_content, "plain", "utf-8"))
-        if html_content:
-            msg.attach(MIMEText(html_content, "html", "utf-8"))
-
-        delivered = False
-        last_err = None
-
-        # Method 1: Port 587 STARTTLS (Default & Cloud Standard)
+    # 1. Primary Cloud HTTPS Provider: Resend (HTTPS Port 443 - 100% unrestricted on Render)
+    if resend_key:
         try:
-            context = ssl.create_default_context()
-            with smtplib.SMTP(MAIL_SERVER, 587, timeout=10) as server:
-                server.ehlo()
-                server.starttls(context=context)
-                server.ehlo()
-                server.login(username, password)
-                server.send_message(msg)
-                delivered = True
-                log_event("EMAIL SUCCESS (587)", f"Delivered '{subject}' to {to_clean}")
-                return True, f"Email delivered successfully to {to_clean}"
-        except Exception as e1:
-            last_err = e1
-            log_event("EMAIL NOTICE", f"Port 587 failed ({e1}). Trying Port 465 SSL...")
+            req_data = json.dumps({
+                "from": f"Royal Rose Milk <{os.getenv('RESEND_FROM', 'onboarding@resend.dev')}>",
+                "to": [to_clean],
+                "subject": subject,
+                "html": html_content,
+                "text": text_content or subject
+            }).encode("utf-8")
+            req = urllib.request.Request(
+                "https://api.resend.com/emails",
+                data=req_data,
+                headers={
+                    "Authorization": f"Bearer {resend_key}",
+                    "Content-Type": "application/json",
+                    "User-Agent": "RoyalRoseMilk/1.0"
+                },
+                method="POST"
+            )
+            with urllib.request.urlopen(req, timeout=8) as resp:
+                if resp.status in (200, 201, 202):
+                    log_event("EMAIL SUCCESS (RESEND HTTPS)", f"Delivered '{subject}' to {to_clean}")
+                    return True, f"Delivered to {to_clean} via Resend"
+        except Exception as e:
+            log_event("EMAIL NOTICE", f"Resend API error: {e}")
 
-        # Method 2: Port 465 SSL Fallback
-        if not delivered:
+    # 2. Secondary Cloud HTTPS Provider: Brevo (HTTPS Port 443)
+    if brevo_key:
+        try:
+            req_data = json.dumps({
+                "sender": {"name": "ROYAL ROSE MILK", "email": sender},
+                "to": [{"email": to_clean}],
+                "subject": subject,
+                "htmlContent": html_content,
+                "textContent": text_content or subject
+            }).encode("utf-8")
+            req = urllib.request.Request(
+                "https://api.brevo.com/v3/smtp/email",
+                data=req_data,
+                headers={
+                    "api-key": brevo_key,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                method="POST"
+            )
+            with urllib.request.urlopen(req, timeout=8) as resp:
+                if resp.status in (200, 201, 202):
+                    log_event("EMAIL SUCCESS (BREVO HTTPS)", f"Delivered '{subject}' to {to_clean}")
+                    return True, f"Delivered to {to_clean} via Brevo"
+        except Exception as e:
+            log_event("EMAIL NOTICE", f"Brevo API error: {e}")
+
+    # 3. SMTP Provider: Gmail / SMTP (Ports 587 & 465)
+    if username and password:
+        try:
+            msg = MIMEMultipart("alternative")
+            msg["From"] = formataddr(("ROYAL ROSE MILK", sender))
+            msg["To"] = to_clean
+            msg["Reply-To"] = sender
+            msg["Date"] = formatdate(localtime=True)
+            msg["Message-ID"] = make_msgid(domain="royalrosemilk.com")
+            msg["Subject"] = Header(subject, "utf-8")
+            msg["X-Mailer"] = "Royal Rose Milk Dispatcher v2.4"
+
+            if text_content:
+                msg.attach(MIMEText(text_content, "plain", "utf-8"))
+            if html_content:
+                msg.attach(MIMEText(html_content, "html", "utf-8"))
+
+            # Port 587 STARTTLS (fast 4-second timeout)
             try:
                 context = ssl.create_default_context()
-                with smtplib.SMTP_SSL(MAIL_SERVER, 465, timeout=10, context=context) as server:
+                with smtplib.SMTP(MAIL_SERVER, 587, timeout=4) as server:
+                    server.ehlo()
+                    server.starttls(context=context)
+                    server.ehlo()
                     server.login(username, password)
                     server.send_message(msg)
-                    delivered = True
-                    log_event("EMAIL SUCCESS (465)", f"Delivered '{subject}' to {to_clean}")
+                    log_event("EMAIL SUCCESS (SMTP 587)", f"Delivered '{subject}' to {to_clean}")
+                    return True, f"Email delivered successfully to {to_clean}"
+            except Exception as e1:
+                log_event("EMAIL NOTICE", f"SMTP 587 notice: {e1}")
+
+            # Port 465 SSL (fast 4-second timeout)
+            try:
+                context = ssl.create_default_context()
+                with smtplib.SMTP_SSL(MAIL_SERVER, 465, timeout=4, context=context) as server:
+                    server.login(username, password)
+                    server.send_message(msg)
+                    log_event("EMAIL SUCCESS (SMTP 465)", f"Delivered '{subject}' to {to_clean}")
                     return True, f"Email delivered successfully to {to_clean}"
             except Exception as e2:
-                last_err = e2
-                log_event("EMAIL NOTICE", f"Port 465 failed ({e2}). Trying IPv4 fallback...")
+                log_event("EMAIL NOTICE", f"SMTP 465 notice: {e2}")
 
-        # Method 3: IPv4 direct fallback
-        if not delivered:
-            try:
-                ipv4_addrs = [r[4][0] for r in socket.getaddrinfo(MAIL_SERVER, 587, socket.AF_INET, socket.SOCK_STREAM)]
-                if ipv4_addrs:
-                    ip = ipv4_addrs[0]
-                    with smtplib.SMTP(ip, 587, timeout=10) as server:
-                        server.ehlo()
-                        server.starttls(context=ssl.create_default_context())
-                        server.ehlo()
-                        server.login(username, password)
-                        server.send_message(msg)
-                        delivered = True
-                        log_event("EMAIL SUCCESS (IPv4 587)", f"Delivered '{subject}' to {to_clean}")
-                        return True, f"Email delivered successfully to {to_clean}"
-            except Exception as e3:
-                last_err = e3
+        except Exception as e:
+            log_event("EMAIL ERROR", f"SMTP build error: {e}")
 
-        log_event("EMAIL ERROR", f"All delivery methods failed for '{subject}' to {to_clean}: {last_err}")
-        return False, str(last_err)
-
-    except Exception as e:
-        log_event("EMAIL ERROR", f"Failed to send email to {to_clean}: {e}")
-        return False, str(e)
+    log_event("EMAIL ERROR", f"Could not deliver '{subject}' to {to_clean}. (Note: Render Free Tier blocks outbound SMTP ports 25/465/587. Add RESEND_API_KEY or BREVO_API_KEY in Render Environment Variables for instant free HTTPS delivery).")
+    return False, "SMTP delivery failed. Render free tier blocks outbound SMTP ports 465/587. Set RESEND_API_KEY for free HTTPS email."
 
 
 def send_email_async(to_email, subject, html_content, text_content=""):
