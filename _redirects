@@ -1,0 +1,2 @@
+/api/*   https://royal-rosegunicorn-app-ap.onrender.com/api/:splat   200!
+/book    https://royal-rosegunicorn-app-ap.onrender.com/book          200!

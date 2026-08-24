@@ -46,7 +46,23 @@ load_dotenv()
 
 STATIC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 app = Flask(__name__, template_folder="templates")
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+
+@app.after_request
+def add_cors_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Admin-Token, X-Requested-With, Accept, Origin"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH, HEAD"
+    return response
+
+@app.route("/<path:path>", methods=["OPTIONS"])
+@app.route("/", methods=["OPTIONS"])
+def handle_options(path=""):
+    response = app.make_default_options_response()
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Admin-Token, X-Requested-With, Accept, Origin"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH, HEAD"
+    return response
 
 # =========================
 # UNIVERSAL CONFIGURATION
@@ -434,6 +450,64 @@ def build_contact_email_html(name, email, phone, message):
     """
 
 
+def build_newsletter_welcome_email_html(email):
+    """Builds welcome email for new Royal Circle newsletter subscriber."""
+    return f"""
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"></head>
+    <body style="margin:0; padding:0; background-color:#0c0409; font-family: 'Helvetica Neue', Arial, sans-serif; color:#f5f0f3;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0c0409; padding: 40px 10px;">
+            <tr>
+                <td align="center">
+                    <table width="600" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #180813, #230b1c); border: 1px solid rgba(255, 82, 154, 0.3); border-radius: 16px; overflow: hidden;">
+                        <tr>
+                            <td style="padding: 35px 30px; text-align: center; background: radial-gradient(circle, #7d0d42 0%, #1a0410 100%);">
+                                <h1 style="margin: 0; color: #ffffff; font-size: 28px; letter-spacing: 4px;">♛ ROYAL ROSE MILK</h1>
+                                <p style="margin: 6px 0 0 0; color: #ffb8d6; font-size: 13px; letter-spacing: 2px;">WELCOME TO THE ROYAL CIRCLE</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 35px 40px;">
+                                <p style="font-size: 16px; color: #ffffff; margin-top: 0;">Greetings & Warmest Welcome,</p>
+                                <p style="font-size: 14px; color: #d0c0c9; line-height: 1.7;">
+                                    Thank you for subscribing with <strong>{email}</strong>. You are now part of our private inner circle.
+                                </p>
+                                <div style="background: #11050d; border: 1px dashed #ff529a; border-radius: 8px; padding: 18px; text-align: center; margin: 25px 0;">
+                                    <span style="font-size: 12px; color: #a8949f; letter-spacing: 1.5px; display: block; margin-bottom: 5px;">MEMBER PRIVILEGES</span>
+                                    <span style="font-size: 15px; color: #ffb8d6; font-weight: bold;">✦ Seasonal Tasting Invitations ✦ Limited-Reserve Announcements ✦ Exclusive Private Blends</span>
+                                </div>
+                                <p style="font-size: 13px; color: #a8949f; line-height: 1.6; text-align: center;">
+                                    Crafted with timeless devotion, authentic Kannauj Damask rose absolute, and velvet whole milk.
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 20px; text-align: center; background: #0e030b; border-top: 1px solid #230b1c; font-size: 11px; color: #8a7380;">
+                                ROYAL ROSE MILK — Timeless Flavor &amp; Royal Refreshment<br>
+                                Tamil Nadu, India • Concierge: +91 9445437069
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+    </html>
+    """
+
+
+def build_newsletter_admin_email_html(email):
+    """Builds notification email for admin when someone joins the newsletter."""
+    return f"""
+    <div style="font-family: Arial, sans-serif; padding: 20px; background: #fafafa; border-radius: 8px; max-width: 500px; border: 1px solid #eee;">
+        <h3 style="color: #8e2346; margin-top: 0;">🎉 New Royal Circle Subscriber</h3>
+        <p>A new patron has subscribed to the Royal Rose Milk newsletter:</p>
+        <p style="font-size: 16px; color: #8e2346;"><strong>Email:</strong> <a href="mailto:{email}">{email}</a></p>
+    </div>
+    """
+
+
 # =========================
 # SYSTEM & HEALTH APIS
 # =========================
@@ -794,6 +868,51 @@ def contact_submit():
     except Exception as e:
         log_event("CONTACT ERROR", f"Contact error: {e}")
         return jsonify({"success": False, "message": "Unable to send message at this moment. Please try again."}), 500
+
+
+# =========================
+# NEWSLETTER SUBSCRIPTION
+# =========================
+@app.route("/api/newsletter", methods=["POST"])
+def newsletter_subscribe():
+    """Handles Royal Circle newsletter email subscriptions."""
+    try:
+        data = request.get_json(force=True, silent=True) or {}
+        email = str(data.get("email", "")).strip()
+
+        email_regex = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+        if not email or not re.match(email_regex, email):
+            return jsonify({"success": False, "message": "Please provide a valid email address."}), 400
+
+        database.save_subscriber(email)
+        log_event("NEWSLETTER SUBSCRIBE", f"New Royal Circle subscriber: {email}")
+
+        # Send welcome email to subscriber
+        welcome_html = build_newsletter_welcome_email_html(email)
+        send_email_async(
+            to_email=email,
+            subject="♛ Welcome to the Royal Circle | ROYAL ROSE MILK",
+            html_content=welcome_html,
+            text_content=f"Welcome to the Royal Circle! Thank you for subscribing with {email}."
+        )
+
+        # Notify admin
+        admin_sub_html = build_newsletter_admin_email_html(email)
+        send_email_async(
+            to_email=ADMIN_EMAIL,
+            subject=f"🎉 New Royal Circle Subscriber: {email}",
+            html_content=admin_sub_html,
+            text_content=f"New subscriber joined: {email}"
+        )
+
+        return jsonify({
+            "success": True,
+            "message": "Thank you for joining the Royal Circle! A confirmation email has been dispatched to your inbox."
+        }), 200
+
+    except Exception as e:
+        log_event("NEWSLETTER ERROR", f"Newsletter error: {e}")
+        return jsonify({"success": False, "message": "Unable to process subscription. Please try again."}), 500
 
 
 # =========================

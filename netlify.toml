@@ -1,0 +1,28 @@
+# ============================================================
+# ROYAL ROSE MILK — Netlify Build & Proxy Configuration
+# ============================================================
+
+[build]
+  publish = "."
+
+# Direct API Proxy to Render Backend
+[[redirects]]
+  from = "/api/*"
+  to = "https://royal-rosegunicorn-app-ap.onrender.com/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/book"
+  to = "https://royal-rosegunicorn-app-ap.onrender.com/book"
+  status = 200
+  force = true
+
+# CORS and Security Headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Headers = "Content-Type, Authorization, X-Admin-Token, X-Requested-With, Accept"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS, HEAD"
+    X-Content-Type-Options = "nosniff"

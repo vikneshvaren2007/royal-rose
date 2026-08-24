@@ -1,162 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ROYAL Rose Milk Cart — Review your luxury selection and proceed to booking.">
+    <title>ROYAL — Your Cart & Royal Selection</title>
 
-    <title>ROYAL — Your Cart</title>
-
-    <link rel="stylesheet" href="cart.css">
-
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="cart.css">
 </head>
 
 <body>
 
-    <div class="background-glow glow1"></div>
-    <div class="background-glow glow2"></div>
+    <!-- Ambient Glows -->
+    <div class="cart-bg-glow glow-top-left" aria-hidden="true"></div>
+    <div class="cart-bg-glow glow-bottom-right" aria-hidden="true"></div>
 
-    <div id="petals"></div>
-
-
-    <!-- HEADER -->
-
+    <!-- Header -->
     <header class="cart-header">
-
-        <a href="index.html" class="logo">
-            <span>ROYAL</span>
-            <small>ROSE MILK</small>
+        <a href="index.html" class="cart-brand">
+            <span class="cart-brand-crown">♛</span>
+            <div class="cart-brand-text">
+                <span class="cart-brand-name">ROYAL</span>
+                <span class="cart-brand-sub">Rose Flavored Milk</span>
+            </div>
         </a>
 
-        <div style="display: flex; gap: 20px; align-items: center;">
-            <a href="track.html" class="continue-shopping" style="font-size: 13px;">
-                🔍 Track Order
-            </a>
-            <a href="shop.html" class="continue-shopping">
-                ← Continue Shopping
-            </a>
+        <div class="cart-nav-actions">
+            <a href="track.html" class="cart-nav-link">Track Order</a>
+            <a href="shop.html" class="cart-nav-link" style="color: var(--color-gold-light);">← Return to Shop</a>
         </div>
-
     </header>
 
-
-    <!-- PAGE -->
-
-    <main>
-
-        <section class="cart-title">
-
-            <p>✦ YOUR ROYAL SELECTION ✦</p>
-
-            <h1>
-                Your <span>Cart</span>
-            </h1>
-
-            <div class="line"></div>
-
+    <main class="cart-main-container">
+        <!-- Title Banner -->
+        <section class="cart-title-section">
+            <span class="cart-badge">✦ Your Selection ✦</span>
+            <h1 class="cart-page-title">The Royal <span>Cart</span></h1>
         </section>
 
-
-        <section class="cart-layout">
-
-            <!-- PRODUCTS -->
-
-            <div class="cart-products">
-
-                <div class="cart-top">
-
-                    <h2>Your Products</h2>
-
-                    <span id="itemCount">
-                        0 items
-                    </span>
-
+        <!-- Layout Grid -->
+        <div class="cart-layout-grid">
+            <!-- Left: Product List -->
+            <section class="cart-items-card">
+                <div class="cart-items-header">
+                    <h2>Reserved Varieties</h2>
+                    <span class="cart-item-count-tag" id="itemCount">0 items</span>
                 </div>
 
-                <div id="cartItems"></div>
+                <div id="cartItems">
+                    <!-- Items rendered dynamically by cart.js -->
+                </div>
 
-
-                <!-- EMPTY CART -->
-
-                <div id="emptyCart" class="empty-cart">
-
-                    <div class="empty-icon">
-                        🛒
-                    </div>
-
-                    <h2>Your cart is waiting</h2>
-
-                    <p>
-                        Add your favourite Royal Rose Milk
-                        and make your selection.
-                    </p>
-
-                    <a href="shop.html">
-                        Explore Rose Milk
+                <!-- Empty State -->
+                <div id="emptyCart" class="cart-empty-box">
+                    <div class="cart-empty-icon">🛒</div>
+                    <h2 class="cart-empty-title">Your Royal Cart is Empty</h2>
+                    <p class="cart-empty-desc">Discover our artisanal rose milk blends and craft your bespoke refreshment selection.</p>
+                    <a href="shop.html" class="btn-proceed-booking" style="max-width: 240px; margin: 0 auto; text-decoration: none;">
+                        <span>Explore Collection</span>
                     </a>
-
                 </div>
+            </section>
 
-            </div>
+            <!-- Right: Order Summary -->
+            <aside class="cart-summary-card">
+                <h2 class="summary-title">Order Summary</h2>
 
-
-            <!-- SUMMARY -->
-
-            <aside class="summary">
-
-                <div class="summary-glow"></div>
-
-                <h2>Order Summary</h2>
-
-                <div class="summary-line">
+                <div class="summary-row">
                     <span>Subtotal</span>
                     <strong id="subtotal">₹0</strong>
                 </div>
 
-                <div class="summary-line">
-                    <span>Delivery</span>
-                    <strong id="delivery">₹50</strong>
+                <div class="summary-row">
+                    <span>Chilled Delivery</span>
+                    <strong id="delivery">FREE</strong>
                 </div>
 
-                <div class="summary-line discount">
-                    <span>Royal Offer</span>
-                    <strong>FREE</strong>
+                <div class="summary-row discount">
+                    <span>Royal Privilege</span>
+                    <strong>Complimentary Insulated Packaging</strong>
                 </div>
 
                 <div class="summary-divider"></div>
 
-                <div class="total">
-                    <span>Total</span>
+                <div class="summary-total-row">
+                    <span>Total Amount</span>
                     <strong id="grandTotal">₹0</strong>
                 </div>
 
-                <button id="checkoutBtn" class="checkout-btn">
-
+                <button id="checkoutBtn" class="btn-proceed-booking" type="button">
                     <span>Proceed to Booking</span>
-
-                    <b>→</b>
-
+                    <span>→</span>
                 </button>
 
-                <div class="secure">
-
-                    🔒
-                    Secure Royal Booking
-
+                <div class="secure-badge">
+                    <span>🔒</span>
+                    <span>Encrypted & Verified Royal Booking</span>
                 </div>
-
             </aside>
-
-        </section>
-
+        </div>
     </main>
 
-
-    <script src="api-config.js?v=2"></script>
+    <!-- Scripts -->
+    <script src="api-config.js?v=3"></script>
     <script src="cart.js"></script>
-
 </body>
+
 </html>

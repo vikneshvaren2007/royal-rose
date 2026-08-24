@@ -1,102 +1,73 @@
 /**
- * ROYAL ROSE MILK — Centralized API Configuration & Client
+ * ROYAL ROSE MILK — Centralized Universal API Configuration & Client
  *
- * Frontend:
+ * Netlify Frontend:
  *   https://royalrosmilk.netlify.app
  *
- * Production Flask Backend:
+ * Production Render Flask Backend:
  *   https://royal-rosegunicorn-app-ap.onrender.com
  *
- * Supports:
- *   - Netlify production
- *   - Render production
- *   - Local Flask (port 5000)
- *   - VS Code Live Server (port 5500)
- *   - file:// fallback
+ * Fully supports:
+ *   - Netlify production hosting (royalrosmilk.netlify.app & preview URLs)
+ *   - Direct Render production serving
+ *   - Local development (Flask port 5000, Live Server port 5500)
+ *   - file:// protocol fallback
  */
 
 (function () {
     "use strict";
 
-    const host = window.location.hostname || "127.0.0.1";
-    const protocol = window.location.protocol;
-    const port = window.location.port;
-
-    // ============================================================
-    // PRODUCTION FLASK BACKEND
-    // ============================================================
-    const PRODUCTION_API_URL =
-        "https://royal-rosegunicorn-app-ap.onrender.com";
+    const PRODUCTION_API_URL = "https://royal-rosegunicorn-app-ap.onrender.com";
 
     let baseUrl = "";
 
-    // ============================================================
-    // NETLIFY FRONTEND
-    // ============================================================
-    if (host === "royalrosmilk.netlify.app") {
-        baseUrl = PRODUCTION_API_URL;
-    }
+    const host = window.location.hostname || "";
+    const protocol = window.location.protocol || "";
+    const port = window.location.port || "";
 
-    // ============================================================
-    // RENDER FRONTEND
-    // ============================================================
-    else if (
-        protocol === "https:" &&
-        host.endsWith(".onrender.com")
-    ) {
+    // 1. Direct Render Backend (same origin)
+    if (protocol === "https:" && host.endsWith(".onrender.com")) {
         baseUrl = window.location.origin;
     }
-
-    // ============================================================
-    // LOCAL DEVELOPMENT
-    // ============================================================
-    else if (protocol === "http:") {
-
-        // Flask serving the frontend
-        if (port === "5000") {
+    // 2. Local Development (localhost / 127.0.0.1 / local network IP)
+    else if (
+        host === "localhost" ||
+        host === "127.0.0.1" ||
+        host === "0.0.0.0" ||
+        host.startsWith("192.168.") ||
+        host.startsWith("10.")
+    ) {
+        if (protocol === "http:" && (port === "5000" || port === "")) {
             baseUrl = "";
-        }
-
-        // VS Code Live Server / another local frontend server
-        else {
+        } else {
             baseUrl = `http://${host}:5000`;
         }
     }
-
-    // ============================================================
-    // FILE:// FALLBACK
-    // ============================================================
+    // 3. Production Frontend (Netlify, Custom Domain, or Remote Client)
     else {
-        baseUrl = "http://127.0.0.1:5000";
+        baseUrl = PRODUCTION_API_URL;
     }
 
-    // Remove trailing slash if accidentally present
+    // Sanitize trailing slash
     baseUrl = baseUrl.replace(/\/+$/, "");
 
     console.log("========================================");
-    console.log("ROYAL ROSE MILK API CONFIGURATION");
-    console.log("Frontend:", window.location.origin);
-    console.log("API Backend:", baseUrl || window.location.origin);
+    console.log("♛ ROYAL ROSE MILK API CLIENT (v3.0)");
+    console.log("Frontend Host :", window.location.origin || "file://");
+    console.log("Backend Target:", baseUrl || window.location.origin);
     console.log("========================================");
 
     // ============================================================
     // CENTRAL API CLIENT
     // ============================================================
-
     const royalApi = {
-
         baseUrl: baseUrl,
+        productionUrl: PRODUCTION_API_URL,
 
-        // --------------------------------------------------------
-        // Get API Base URL
-        // --------------------------------------------------------
         getBaseUrl() {
             return this.baseUrl;
         },
 
-        // --------------------------------------------------------
-        // Admin Token
-        // --------------------------------------------------------
         getAdminToken() {
             return localStorage.getItem("royalAdminToken") || "";
         },
@@ -111,29 +82,21 @@
             localStorage.removeItem("royalAdminToken");
         },
 
-        // --------------------------------------------------------
-        // Main Request Function
-        // --------------------------------------------------------
         async request(endpoint, options = {}) {
-
             const url = endpoint.startsWith("http")
                 ? endpoint
                 : `${this.baseUrl}${endpoint}`;
 
             const headers = {
                 "Content-Type": "application/json",
+                "Accept": "application/json",
                 ...(options.headers || {})
             };
 
-            // Add admin authentication token when available
             const token = this.getAdminToken();
-
-            if (
-                token &&
-                !headers["Authorization"] &&
-                !headers["X-Admin-Token"]
-            ) {
+            if (token && !headers["Authorization"] && !headers["X-Admin-Token"]) {
                 headers["Authorization"] = `Bearer ${token}`;
+                headers["X-Admin-Token"] = token;
             }
 
             const fetchOptions = {
@@ -141,19 +104,11 @@
                 headers: headers
             };
 
-            console.log(
-                `[RoyalApi] ${fetchOptions.method || "GET"} ${url}`
-            );
-
             try {
-
                 const response = await fetch(url, fetchOptions);
-
-                const contentType =
-                    response.headers.get("content-type") || "";
+                const contentType = response.headers.get("content-type") || "";
 
                 let data = {};
-
                 if (contentType.includes("application/json")) {
                     data = await response.json().catch(() => ({}));
                 } else {
@@ -164,53 +119,30 @@
                     };
                 }
 
-                console.log(
-                    `[RoyalApi] Response ${response.status}:`,
-                    data
-                );
-
                 return {
                     ok: response.ok,
                     status: response.status,
                     data: data
                 };
-
             } catch (err) {
-
-                console.error(
-                    `[RoyalApi Error] ${endpoint}:`,
-                    err
-                );
-
+                console.error(`[RoyalApi Error] ${endpoint}:`, err);
                 return {
                     ok: false,
                     status: 0,
                     data: {
                         success: false,
-                        message:
-                            "Unable to connect to the Royal Rose Milk backend. Please try again."
+                        message: "Unable to connect to Royal Rose Milk backend. Please ensure service is online."
                     },
                     error: err
                 };
             }
         },
 
-        // --------------------------------------------------------
-        // GET
-        // --------------------------------------------------------
         async get(endpoint, options = {}) {
-
-            return this.request(endpoint, {
-                ...options,
-                method: "GET"
-            });
+            return this.request(endpoint, { ...options, method: "GET" });
         },
 
-        // --------------------------------------------------------
-        // POST
-        // --------------------------------------------------------
         async post(endpoint, body = {}, options = {}) {
-
             return this.request(endpoint, {
                 ...options,
                 method: "POST",
@@ -218,11 +150,7 @@
             });
         },
 
-        // --------------------------------------------------------
-        // PUT
-        // --------------------------------------------------------
         async put(endpoint, body = {}, options = {}) {
-
             return this.request(endpoint, {
                 ...options,
                 method: "PUT",
@@ -230,36 +158,15 @@
             });
         },
 
-        // --------------------------------------------------------
-        // DELETE
-        // --------------------------------------------------------
         async delete(endpoint, options = {}) {
-
-            return this.request(endpoint, {
-                ...options,
-                method: "DELETE"
-            });
+            return this.request(endpoint, { ...options, method: "DELETE" });
         },
 
-        // --------------------------------------------------------
-        // Backend Health Check
-        // --------------------------------------------------------
         async checkHealth() {
-
             const res = await this.get("/api/health");
-
-            return (
-                res.ok &&
-                res.data &&
-                res.data.status === "ok"
-            );
+            return res.ok && res.data && res.data.status === "ok";
         }
     };
 
-    // ============================================================
-    // MAKE API CLIENT AVAILABLE TO ALL FRONTEND FILES
-    // ============================================================
-
     window.royalApi = royalApi;
-
 })();

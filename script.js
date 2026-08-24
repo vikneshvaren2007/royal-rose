@@ -311,16 +311,38 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("storage", syncCartCount);
 
     /* ==========================================================================
-       7. NEWSLETTER FORM
+       7. NEWSLETTER FORM (Royal Circle)
        ========================================================================== */
     const newsletterForm = document.getElementById("newsletterForm");
     if (newsletterForm) {
-        newsletterForm.addEventListener("submit", (e) => {
+        newsletterForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             const emailInput = document.getElementById("newsletterEmail");
-            if (emailInput && emailInput.value.trim()) {
-                alert("Thank you for joining the ROYAL Circle. You will receive our exclusive releases & seasonal stories.");
-                emailInput.value = "";
+            const submitBtn = newsletterForm.querySelector('button[type="submit"]');
+            const emailVal = emailInput ? emailInput.value.trim() : "";
+
+            if (!emailVal) return;
+
+            if (submitBtn) submitBtn.disabled = true;
+
+            try {
+                if (window.royalApi) {
+                    const res = await window.royalApi.post("/api/newsletter", { email: emailVal });
+                    if (res.ok && res.data && res.data.success) {
+                        alert(res.data.message || "Thank you for joining the ROYAL Circle! A welcome email has been sent to your inbox.");
+                    } else {
+                        alert((res.data && res.data.message) || "Thank you for joining the ROYAL Circle!");
+                    }
+                } else {
+                    alert("Thank you for joining the ROYAL Circle. You will receive our exclusive releases & seasonal stories.");
+                }
+                if (emailInput) emailInput.value = "";
+            } catch (err) {
+                console.error("Newsletter submission error:", err);
+                alert("Thank you for joining the ROYAL Circle.");
+                if (emailInput) emailInput.value = "";
+            } finally {
+                if (submitBtn) submitBtn.disabled = false;
             }
         });
     }

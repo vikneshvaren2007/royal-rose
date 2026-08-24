@@ -187,6 +187,15 @@ def init_db():
             );
         """)
 
+        # 8. Newsletter Subscribers Table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                email TEXT UNIQUE NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+
         # Indexes
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_orders_order_id ON orders(order_id);")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_orders_customer_id ON orders(customer_id);")
@@ -195,6 +204,7 @@ def init_db():
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_order_items_order_id ON order_items(order_id);")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_products_visible ON products(visible);")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_products_sold_out ON products(sold_out);")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_newsletter_email ON newsletter_subscribers(email);")
 
         # SEED 1: Products
         cursor.execute("SELECT COUNT(*) AS cnt FROM products;")
@@ -1027,4 +1037,23 @@ def get_admin_dashboard_data():
             "messages": messages,
             "settings": settings
         }
+
+
+def save_subscriber(email):
+    """Saves a newsletter subscriber email safely and idempotently."""
+    email_clean = str(email or "").strip().lower()
+    if not email_clean:
+        return False
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute("INSERT OR IGNORE INTO newsletter_subscribers (email) VALUES (?);", (email_clean,))
+        return True
+
+
+def get_all_subscribers():
+    """Retrieves all newsletter subscribers."""
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, email, created_at FROM newsletter_subscribers ORDER BY id DESC;")
+        return [dict(row) for row in cursor.fetchall()]
 

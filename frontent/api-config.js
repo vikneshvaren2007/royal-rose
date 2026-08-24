@@ -1,35 +1,68 @@
 /**
- * ROYAL ROSE MILK — Centralized API Configuration & Client
- * Connects frontend to the Flask backend on port 5000 automatically,
- * whether served via Flask, Live Server (5500), or file system.
+ * ROYAL ROSE MILK — Centralized Universal API Configuration & Client
+ *
+ * Netlify Frontend:
+ *   https://royalrosmilk.netlify.app
+ *
+ * Production Render Flask Backend:
+ *   https://royal-rosegunicorn-app-ap.onrender.com
+ *
+ * Fully supports:
+ *   - Netlify production hosting (royalrosmilk.netlify.app & preview URLs)
+ *   - Direct Render production serving
+ *   - Local development (Flask port 5000, Live Server port 5500)
+ *   - file:// protocol fallback
  */
 
 (function () {
-    // Dynamic Base URL Resolution (Render HTTPS production, local Flask, Live Server, file fallback)
-    const host = window.location.hostname || "127.0.0.1";
+    "use strict";
+
+    const PRODUCTION_API_URL = "https://royal-rosegunicorn-app-ap.onrender.com";
+
     let baseUrl = "";
 
-    if (window.location.protocol === "https:" && host.endsWith(".onrender.com")) {
-        // Render production
+    const host = window.location.hostname || "";
+    const protocol = window.location.protocol || "";
+    const port = window.location.port || "";
+
+    // 1. Direct Render Backend (same origin)
+    if (protocol === "https:" && host.endsWith(".onrender.com")) {
         baseUrl = window.location.origin;
-    } else if (window.location.protocol === "https:") {
-        // Any other HTTPS production origin
-        baseUrl = window.location.origin;
-    } else if (window.location.protocol === "http:") {
-        if (window.location.port === "5000") {
-            // Flask serving frontend and API on the same local server
+    }
+    // 2. Local Development (localhost / 127.0.0.1 / local network IP)
+    else if (
+        host === "localhost" ||
+        host === "127.0.0.1" ||
+        host === "0.0.0.0" ||
+        host.startsWith("192.168.") ||
+        host.startsWith("10.")
+    ) {
+        if (protocol === "http:" && (port === "5000" || port === "")) {
             baseUrl = "";
         } else {
-            // Live Server / local frontend dev server (e.g. 5500)
             baseUrl = `http://${host}:5000`;
         }
-    } else {
-        // file:// fallback
-        baseUrl = "http://127.0.0.1:5000";
+    }
+    // 3. Production Frontend (Netlify, Custom Domain, or Remote Client)
+    else {
+        baseUrl = PRODUCTION_API_URL;
     }
 
+    // Sanitize trailing slash
+    baseUrl = baseUrl.replace(/\/+$/, "");
+
+    console.log("========================================");
+    console.log("♛ ROYAL ROSE MILK API CLIENT (v3.0)");
+    console.log("Frontend Host :", window.location.origin || "file://");
+    console.log("Backend Target:", baseUrl || window.location.origin);
+    console.log("========================================");
+
+    // ============================================================
+    // CENTRAL API CLIENT
+    // ============================================================
     const royalApi = {
         baseUrl: baseUrl,
+        productionUrl: PRODUCTION_API_URL,
 
         getBaseUrl() {
             return this.baseUrl;
@@ -40,7 +73,9 @@
         },
 
         setAdminToken(token) {
-            localStorage.setItem("royalAdminToken", token);
+            if (token) {
+                localStorage.setItem("royalAdminToken", token);
+            }
         },
 
         clearAdminToken() {
@@ -48,15 +83,20 @@
         },
 
         async request(endpoint, options = {}) {
-            const url = endpoint.startsWith("http") ? endpoint : `${this.baseUrl}${endpoint}`;
+            const url = endpoint.startsWith("http")
+                ? endpoint
+                : `${this.baseUrl}${endpoint}`;
+
             const headers = {
                 "Content-Type": "application/json",
+                "Accept": "application/json",
                 ...(options.headers || {})
             };
 
             const token = this.getAdminToken();
             if (token && !headers["Authorization"] && !headers["X-Admin-Token"]) {
                 headers["Authorization"] = `Bearer ${token}`;
+                headers["X-Admin-Token"] = token;
             }
 
             const fetchOptions = {
@@ -66,7 +106,19 @@
 
             try {
                 const response = await fetch(url, fetchOptions);
-                const data = await response.json().catch(() => ({}));
+                const contentType = response.headers.get("content-type") || "";
+
+                let data = {};
+                if (contentType.includes("application/json")) {
+                    data = await response.json().catch(() => ({}));
+                } else {
+                    const text = await response.text().catch(() => "");
+                    data = {
+                        success: response.ok,
+                        message: text
+                    };
+                }
+
                 return {
                     ok: response.ok,
                     status: response.status,
@@ -79,8 +131,9 @@
                     status: 0,
                     data: {
                         success: false,
-                        message: "Backend server is currently offline. Please start it by running 'python app.py' in terminal or double-clicking 'start_server.bat'."
-                    }
+                        message: "Unable to connect to Royal Rose Milk backend. Please ensure service is online."
+                    },
+                    error: err
                 };
             }
         },
@@ -111,7 +164,7 @@
 
         async checkHealth() {
             const res = await this.get("/api/health");
-            return res.ok && res.data.status === "ok";
+            return res.ok && res.data && res.data.status === "ok";
         }
     };
 

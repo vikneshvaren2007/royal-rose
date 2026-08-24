@@ -294,13 +294,19 @@ print("[PASS] TEST 15: Route Protection Guard OK (All /api/admin/* endpoints str
 client.delete(f"/api/admin/products/{new_prod_id}", headers=admin_headers)
 print("[PASS] TEST 16: Product Deletion OK (Catalogue restored)")
 
-# 17. Admin Logout
+# 17. Newsletter Subscription Flow
+res_newsletter = client.post("/api/newsletter", json={"email": "circle@royalrosemilk.com"})
+assert res_newsletter.status_code == 200 and res_newsletter.json["success"]
+print("[PASS] TEST 17: Newsletter Subscription OK (Welcome email dispatched & subscriber stored)")
+
+# 18. Admin Logout
 res_logout = client.post("/api/admin/logout", headers=admin_headers)
 assert res_logout.status_code == 200
 res_verify_after = client.get("/api/admin/verify-token", headers=admin_headers)
 assert res_verify_after.status_code == 401
-print("[PASS] TEST 17: Admin Logout OK (Session token invalidated)")
+print("[PASS] TEST 18: Admin Logout OK (Session token invalidated)")
 
 print("\n==========================================================")
-print("SUCCESS: ALL 17 TEST SUITES PASSED FLAWLESSLY!")
+print("SUCCESS: ALL 18 TEST SUITES PASSED FLAWLESSLY!")
 print("==========================================================")
+

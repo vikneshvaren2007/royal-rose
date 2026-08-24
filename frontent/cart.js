@@ -1,393 +1,171 @@
+/**
+ * ROYAL ROSE MILK — LUXURY CART CONTROLLER
+ * Handles item quantity adjustments, subtotal & delivery calculation,
+ * local storage persistence, and transition to booking checkout.
+ */
+
 document.addEventListener("DOMContentLoaded", () => {
+    let cart = JSON.parse(localStorage.getItem("royalCart")) || [];
 
-    let cart =
-        JSON.parse(
-            localStorage.getItem("royalCart")
-        ) || [];
-
-
-    const cartItems =
-        document.getElementById("cartItems");
-
-    const emptyCart =
-        document.getElementById("emptyCart");
-
-    const itemCount =
-        document.getElementById("itemCount");
-
-    const subtotal =
-        document.getElementById("subtotal");
-
-    const delivery =
-        document.getElementById("delivery");
-
-    const grandTotal =
-        document.getElementById("grandTotal");
-
-    const checkoutBtn =
-        document.getElementById("checkoutBtn");
-
-
-    /* =========================
-       PRODUCT EMOJIS
-    ========================= */
+    const cartItemsContainer = document.getElementById("cartItems");
+    const emptyCartBox = document.getElementById("emptyCart");
+    const itemCountText = document.getElementById("itemCount");
+    const subtotalText = document.getElementById("subtotal");
+    const deliveryText = document.getElementById("delivery");
+    const grandTotalText = document.getElementById("grandTotal");
+    const checkoutBtn = document.getElementById("checkoutBtn");
 
     const productIcons = {
-
+        // Classic Collection
+        "Royal Rose Classic": "🌹",
         "Classic Rose Milk": "🌹",
-
+        "Royal Rose Signature": "👑🌹",
+        "Royal Rose Milk": "👑🌹",
+        "Strawberry Rose Bliss": "🍓🌹",
         "Strawberry Rose": "🍓🌹",
+        "Rose Cardamom Royale": "✨🌹",
+        "Cardamom Rose Milk": "✨🌹",
 
-        "Royal Rose Milk": "✨🌹",
-
+        // Speciality Blends
+        "Royal Kashmiri Saffron Elixir": "🏵️🌹",
+        "Royal Pistachio Velvet": "🥜🌹",
+        "Pistachio Rose Milk": "🥜🌹",
+        "Rose Badam Almond Cream": "🌰🌹",
+        "Almond Rose Milk": "🌰🌹",
+        "Tender Coconut Rose": "🥥🌹",
         "Rose Coconut Milk": "🥥🌹",
-
+        "Dark Cocoa Rose Noir": "🍫🌹",
         "Rose Chocolate": "🍫🌹",
-
+        "Alphonso Mango Rose": "🥭🌹",
         "Mango Rose Milk": "🥭🌹"
-
     };
 
-
-    /* =========================
-       SAVE CART
-    ========================= */
-
     function saveCart() {
-
-        localStorage.setItem(
-            "royalCart",
-            JSON.stringify(cart)
-        );
+        localStorage.setItem("royalCart", JSON.stringify(cart));
     }
 
-
-    /* =========================
-       RENDER CART
-    ========================= */
-
     function renderCart() {
-
-        cartItems.innerHTML = "";
+        if (!cartItemsContainer) return;
+        cartItemsContainer.innerHTML = "";
 
         if (cart.length === 0) {
-
-            emptyCart.classList.add("show");
-
-            itemCount.textContent =
-                "0 items";
-
-            subtotal.textContent =
-                "₹0";
-
-            delivery.textContent =
-                "₹0";
-
-            grandTotal.textContent =
-                "₹0";
-
+            if (emptyCartBox) emptyCartBox.classList.add("show");
+            if (itemCountText) itemCountText.textContent = "0 items";
+            if (subtotalText) subtotalText.textContent = "₹0";
+            if (deliveryText) deliveryText.textContent = "₹0";
+            if (grandTotalText) grandTotalText.textContent = "₹0";
             return;
         }
 
-
-        emptyCart.classList.remove("show");
-
+        if (emptyCartBox) emptyCartBox.classList.remove("show");
 
         let totalItems = 0;
-
         let totalPrice = 0;
 
-
         cart.forEach((item, index) => {
+            const qty = item.quantity || 1;
+            totalItems += qty;
+            const itemSubtotal = item.price * qty;
+            totalPrice += itemSubtotal;
 
-            totalItems += item.quantity;
+            const row = document.createElement("div");
+            row.className = "cart-item-row";
 
-            totalPrice +=
-                item.price *
-                item.quantity;
-
-
-            const itemElement =
-                document.createElement("div");
-
-            itemElement.className =
-                "cart-item";
-
-
-            itemElement.innerHTML = `
-
-                <div class="item-image">
+            row.innerHTML = `
+                <div class="cart-item-icon-box">
                     ${productIcons[item.name] || "🌹"}
                 </div>
 
-                <div class="item-details">
-
-                    <h3>
-                        ${item.name}
-                    </h3>
-
-                    <p>
-                        Premium Royal Rose Milk
-                    </p>
-
-                    <div class="item-price">
-                        ₹${item.price}
+                <div class="cart-item-info">
+                    <h3>${item.name}</h3>
+                    <p class="cart-item-subtitle">Artisanal Rose Flavored Milk • 250ml</p>
+                    <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                        <span class="cart-item-unit-price">₹${item.price} each</span>
+                        <div class="quantity-control">
+                            <button class="qty-btn btn-minus" data-index="${index}" aria-label="Decrease quantity">−</button>
+                            <span class="qty-value">${qty}</span>
+                            <button class="qty-btn btn-plus" data-index="${index}" aria-label="Increase quantity">+</button>
+                        </div>
                     </div>
-
-                    <div class="quantity-box">
-
-                        <button
-                            class="minus"
-                            data-index="${index}">
-                            −
-                        </button>
-
-                        <span>
-                            ${item.quantity}
-                        </span>
-
-                        <button
-                            class="plus"
-                            data-index="${index}">
-                            +
-                        </button>
-
-                    </div>
-
                 </div>
 
-
-                <div class="item-right">
-
-                    <div class="item-total">
-                        ₹${item.price * item.quantity}
-                    </div>
-
-                    <button
-                        class="remove-btn"
-                        data-index="${index}">
-                        Remove
-                    </button>
-
+                <div class="cart-item-actions">
+                    <div class="cart-item-total-price">₹${itemSubtotal}</div>
+                    <button class="btn-remove-item" data-index="${index}">Remove</button>
                 </div>
-
             `;
 
-
-            cartItems.appendChild(itemElement);
-
+            cartItemsContainer.appendChild(row);
         });
 
+        if (itemCountText) {
+            itemCountText.textContent = `${totalItems} item${totalItems !== 1 ? "s" : ""}`;
+        }
 
-        itemCount.textContent =
-            `${totalItems} item${totalItems !== 1 ? "s" : ""}`;
+        if (subtotalText) {
+            subtotalText.textContent = `₹${totalPrice}`;
+        }
 
+        const deliveryCharge = totalPrice > 0 ? 0 : 0; // Royal complimentary promotion
+        if (deliveryText) {
+            deliveryText.textContent = "FREE";
+        }
 
-        subtotal.textContent =
-            `₹${totalPrice}`;
+        if (grandTotalText) {
+            grandTotalText.textContent = `₹${totalPrice + deliveryCharge}`;
+        }
 
-
-        const deliveryCharge =
-            totalPrice > 0 ? 50 : 0;
-
-
-        delivery.textContent =
-            `₹${deliveryCharge}`;
-
-
-        grandTotal.textContent =
-            `₹${totalPrice + deliveryCharge}`;
-
-
-        attachButtons();
+        attachEventListeners();
     }
 
-
-    /* =========================
-       BUTTONS
-    ========================= */
-
-    function attachButtons() {
-
-
-        document
-            .querySelectorAll(".plus")
-            .forEach(button => {
-
-                button.addEventListener(
-                    "click",
-                    () => {
-
-                        const index =
-                            Number(
-                                button.dataset.index
-                            );
-
-                        cart[index].quantity++;
-
-                        saveCart();
-
-                        renderCart();
-
-                    }
-                );
-
+    function attachEventListeners() {
+        // Increase Qty
+        document.querySelectorAll(".btn-plus").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const idx = Number(btn.dataset.index);
+                cart[idx].quantity = (cart[idx].quantity || 1) + 1;
+                saveCart();
+                renderCart();
             });
+        });
 
-
-        document
-            .querySelectorAll(".minus")
-            .forEach(button => {
-
-                button.addEventListener(
-                    "click",
-                    () => {
-
-                        const index =
-                            Number(
-                                button.dataset.index
-                            );
-
-                        if (
-                            cart[index].quantity > 1
-                        ) {
-
-                            cart[index].quantity--;
-
-                        } else {
-
-                            cart.splice(index, 1);
-
-                        }
-
-                        saveCart();
-
-                        renderCart();
-
-                    }
-                );
-
+        // Decrease Qty
+        document.querySelectorAll(".btn-minus").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const idx = Number(btn.dataset.index);
+                if ((cart[idx].quantity || 1) > 1) {
+                    cart[idx].quantity--;
+                } else {
+                    cart.splice(idx, 1);
+                }
+                saveCart();
+                renderCart();
             });
+        });
 
-
-        document
-            .querySelectorAll(".remove-btn")
-            .forEach(button => {
-
-                button.addEventListener(
-                    "click",
-                    () => {
-
-                        const index =
-                            Number(
-                                button.dataset.index
-                            );
-
-                        const item =
-                            cart[index];
-
-                        cart.splice(index, 1);
-
-                        saveCart();
-
-                        renderCart();
-
-                    }
-                );
-
+        // Remove Item
+        document.querySelectorAll(".btn-remove-item").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const idx = Number(btn.dataset.index);
+                cart.splice(idx, 1);
+                saveCart();
+                renderCart();
             });
-
+        });
     }
 
-
-    /* =========================
-       CHECKOUT
-    ========================= */
-
-    checkoutBtn.addEventListener(
-        "click",
-        () => {
-
+    // Checkout button handler
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener("click", () => {
             if (cart.length === 0) {
-
-                alert(
-                    "Your Royal Cart is empty 🌹"
-                );
-
+                alert("Your Royal Cart is currently empty. Please explore our collection to add delicious rose milk.");
                 return;
             }
 
-
-            localStorage.setItem(
-                "royalBookingCart",
-                JSON.stringify(cart)
-            );
-
-
-            window.location.href =
-                "booking.html";
-
-        }
-    );
-
-
-    /* =========================
-       PETALS
-    ========================= */
-
-    function createPetal() {
-
-        const petal =
-            document.createElement("span");
-
-        petal.className = "petal";
-
-        petal.textContent =
-            Math.random() > .5
-                ? "🌸"
-                : "🌹";
-
-
-        petal.style.left =
-            Math.random() * 100 + "%";
-
-
-        petal.style.fontSize =
-            (10 + Math.random() * 14)
-            + "px";
-
-
-        petal.style.opacity =
-            .2 + Math.random() * .5;
-
-
-        petal.style.animationDuration =
-            (6 + Math.random() * 6)
-            + "s";
-
-
-        document.body.appendChild(
-            petal
-        );
-
-
-        setTimeout(() => {
-
-            petal.remove();
-
-        }, 14000);
-
+            localStorage.setItem("royalBookingCart", JSON.stringify(cart));
+            window.location.href = "booking.html";
+        });
     }
 
-
-    setInterval(
-        createPetal,
-        1000
-    );
-
-
-    /* INITIAL */
-
     renderCart();
-
 });
