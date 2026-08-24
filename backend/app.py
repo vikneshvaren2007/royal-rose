@@ -76,6 +76,8 @@ MAIL_PASSWORD = (os.getenv("MAIL_PASSWORD") or os.getenv("EMAIL_PASS") or "bsvic
 MAIL_DEFAULT_SENDER = (os.getenv("MAIL_DEFAULT_SENDER") or MAIL_USERNAME or "vikneshvaren2@gmail.com").strip()
 ADMIN_EMAIL = (os.getenv("ADMIN_EMAIL") or os.getenv("ADMIN_MAIL") or "vikneshvaren2@gmail.com").strip()
 WHATSAPP_NUMBER = (os.getenv("WHATSAPP_NUMBER") or "919445437069").strip()
+RESEND_API_KEY = (os.getenv("RESEND_API_KEY") or os.getenv("RESEND_KEY") or "").strip()
+RESEND_FROM = (os.getenv("RESEND_FROM") or "Royal Rose Milk <onboarding@resend.dev>").strip()
 
 # Initialize database schema & initial seeds
 database.init_db()
@@ -129,14 +131,15 @@ def send_email_worker(to_email, subject, html_content, text_content=""):
         log_event("EMAIL SKIP", f"Empty recipient for '{subject}'")
         return False, "Missing recipient email."
 
-    resend_key = (os.getenv("RESEND_API_KEY") or os.getenv("RESEND_KEY") or os.getenv("RESEND_TOKEN") or "").strip()
+    resend_key = (RESEND_API_KEY or os.getenv("RESEND_API_KEY") or os.getenv("RESEND_KEY") or os.getenv("RESEND_TOKEN") or "").strip()
     brevo_key = (os.getenv("BREVO_API_KEY") or os.getenv("BREVO_KEY") or os.getenv("SENDINBLUE_API_KEY") or "").strip()
 
     # 1. Primary Cloud HTTPS Provider: Resend (HTTPS Port 443 - 100% unrestricted on Render)
     if resend_key:
         try:
+            from_sender = (RESEND_FROM or os.getenv("RESEND_FROM") or "Royal Rose Milk <onboarding@resend.dev>").strip()
             req_data = json.dumps({
-                "from": f"Royal Rose Milk <{os.getenv('RESEND_FROM', 'onboarding@resend.dev')}>",
+                "from": from_sender,
                 "to": [to_clean],
                 "subject": subject,
                 "html": html_content,
