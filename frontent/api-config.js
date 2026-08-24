@@ -106,9 +106,15 @@
                     data = await response.json().catch(() => ({}));
                 } else {
                     const text = await response.text().catch(() => "");
+                    let cleanMsg = text;
+                    if (text.includes("<!doctype html>") || text.includes("<html") || text.includes("<title>")) {
+                        cleanMsg = response.status === 500 
+                            ? "Internal server error. Please try again." 
+                            : `Request failed with status ${response.status}.`;
+                    }
                     data = {
                         success: response.ok,
-                        message: text
+                        message: cleanMsg
                     };
                 }
 

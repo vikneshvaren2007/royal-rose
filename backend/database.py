@@ -1059,16 +1059,16 @@ def get_all_subscribers():
 
 
 def reset_all_orders_data():
-    """Wipes all order records, items, events, customer records, and contact messages to start completely fresh."""
+    """Wipes all order records, items, customer records, and contact messages to start completely fresh."""
     with get_db() as conn:
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM order_items;")
-        cursor.execute("DELETE FROM orders;")
-        cursor.execute("DELETE FROM customers;")
-        cursor.execute("DELETE FROM order_events;")
-        cursor.execute("DELETE FROM contact_messages;")
+        for table in ["order_items", "orders", "customers", "contact_messages", "newsletter_subscribers"]:
+            try:
+                cursor.execute(f"DELETE FROM {table};")
+            except Exception:
+                pass
         try:
-            cursor.execute("DELETE FROM sqlite_sequence WHERE name IN ('orders', 'customers', 'order_items', 'contact_messages', 'order_events');")
+            cursor.execute("DELETE FROM sqlite_sequence WHERE name IN ('orders', 'customers', 'order_items', 'contact_messages', 'newsletter_subscribers');")
         except Exception:
             pass
         conn.commit()
