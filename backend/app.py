@@ -8,6 +8,8 @@ admin authentication, dashboard aggregation, and static page serving.
 import os
 import re
 import smtplib
+import socket
+import ssl
 import threading
 import time
 from email.mime.multipart import MIMEMultipart
@@ -115,10 +117,46 @@ def admin_required(f):
 # =========================
 _email_dispatch_lock = threading.Lock()
 
+# Force IPv4 socket resolution to prevent Linux container [Errno 101] Network is unreachable errors
+def _create_ipv4_connection(address, timeout=15, source_address=None):
+    host, port = address
+    err = None
+    for res in socket.getaddrinfo(host, port, socket.AF_INET, socket.SOCK_STREAM):
+        af, socktype, proto, canonname, sa = res
+        sock = None
+        try:
+            sock = socket.socket(af, socktype, proto)
+            if timeout is not None:
+                sock.settimeout(timeout)
+            if source_address:
+                sock.bind(source_address)
+            sock.connect(sa)
+            return sock
+        except OSError as _err:
+            err = _err
+            if sock is not None:
+                sock.close()
+    if err is not None:
+        raise err
+    raise OSError(f"Could not resolve IPv4 address for {host}:{port}")
+
+class IPv4_SMTP_SSL(smtplib.SMTP_SSL):
+    def _get_socket(self, host, port, timeout):
+        sock = _create_ipv4_connection((host, port), timeout, self.source_address)
+        if self.context is None:
+            self.context = ssl.create_default_context()
+        return self.context.wrap_socket(sock, server_hostname=host)
+
+class IPv4_SMTP(smtplib.SMTP):
+    def _get_socket(self, host, port, timeout):
+        return _create_ipv4_connection((host, port), timeout, self.source_address)
+
+
 def send_email_worker(to_email, subject, html_content, text_content=""):
     """
     Worker to deliver SMTP email reliably with RFC 2822 compliance, UTF-8 headers,
-    automatic multi-port fallback (SSL 465 -> STARTTLS 587), and clean logging.
+    forced IPv4 resolution, automatic multi-port fallback (SSL 465 -> STARTTLS 587),
+    and clean operational logging.
     """
     username = (MAIL_USERNAME or os.getenv("MAIL_USERNAME") or "vikneshvaren2@gmail.com").strip()
     password = (MAIL_PASSWORD or os.getenv("MAIL_PASSWORD") or "bsviciupdnsfzary").strip().replace(" ", "")
@@ -148,20 +186,20 @@ def send_email_worker(to_email, subject, html_content, text_content=""):
             delivered = False
             last_err = None
 
-            # Primary: SMTP_SSL over port 465
+            # Primary: IPv4 SMTP_SSL over port 465
             try:
-                with smtplib.SMTP_SSL(MAIL_SERVER, 465, timeout=15) as server:
+                with IPv4_SMTP_SSL(MAIL_SERVER, 465, timeout=15) as server:
                     server.login(username, password)
                     server.send_message(msg)
                     delivered = True
             except Exception as e1:
                 last_err = e1
-                log_event("EMAIL RETRY", f"SSL 465 connection note ({e1}). Retrying with STARTTLS 587...")
+                log_event("EMAIL RETRY", f"SSL 465 connection note ({e1}). Retrying with IPv4 STARTTLS 587...")
 
-            # Fallback: SMTP over port 587 with STARTTLS
+            # Fallback: IPv4 SMTP over port 587 with STARTTLS
             if not delivered:
                 try:
-                    with smtplib.SMTP(MAIL_SERVER, 587, timeout=15) as server:
+                    with IPv4_SMTP(MAIL_SERVER, 587, timeout=15) as server:
                         server.ehlo()
                         server.starttls()
                         server.ehlo()
