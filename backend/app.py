@@ -9,8 +9,11 @@ import os
 import re
 import smtplib
 import threading
+import time
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.header import Header
+from email.utils import formataddr, formatdate, make_msgid
 from datetime import datetime, timezone, timedelta
 from functools import wraps
 from urllib.parse import quote
@@ -34,8 +37,11 @@ def get_ist_now():
 
 # Load environment variables explicitly from backend/.env and root .env
 _backend_env = os.path.join(os.path.dirname(__file__), ".env")
+_root_env = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".env"))
 if os.path.exists(_backend_env):
     load_dotenv(dotenv_path=_backend_env)
+if os.path.exists(_root_env):
+    load_dotenv(dotenv_path=_root_env)
 load_dotenv()
 
 STATIC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -91,64 +97,83 @@ def admin_required(f):
 # =========================
 # EMAIL HELPERS
 # =========================
+_email_dispatch_lock = threading.Lock()
+
 def send_email_worker(to_email, subject, html_content, text_content=""):
-    """Worker executed in background thread to deliver SMTP email without blocking responses."""
+    """
+    Worker to deliver SMTP email reliably with RFC 2822 compliance, UTF-8 headers,
+    automatic multi-port fallback (SSL 465 -> STARTTLS 587), and clean logging.
+    """
     username = (MAIL_USERNAME or os.getenv("MAIL_USERNAME") or "vikneshvaren2@gmail.com").strip()
     password = (MAIL_PASSWORD or os.getenv("MAIL_PASSWORD") or "bsviciupdnsfzary").strip().replace(" ", "")
     sender = (MAIL_DEFAULT_SENDER or username).strip()
 
-    if not username or not password or not to_email:
-        log_event("EMAIL SKIP", f"Credentials missing or empty recipient for '{subject}' to {to_email}")
-        return
+    to_clean = str(to_email or "").strip()
+    if not username or not password or not to_clean:
+        log_event("EMAIL SKIP", f"Credentials missing or empty recipient for '{subject}' to '{to_clean}'")
+        return False, "Missing credentials or recipient email."
 
-    try:
-        msg = MIMEMultipart("alternative")
-        msg["From"] = f"ROYAL ROSE MILK <{sender}>"
-        msg["To"] = to_email
-        msg["Subject"] = subject
-
-        if text_content:
-            msg.attach(MIMEText(text_content, "plain", "utf-8"))
-        if html_content:
-            msg.attach(MIMEText(html_content, "html", "utf-8"))
-
-        delivered = False
-        last_err = None
-
-        # Primary: SMTP_SSL over port 465
+    with _email_dispatch_lock:
         try:
-            with smtplib.SMTP_SSL(MAIL_SERVER, 465, timeout=12) as server:
-                server.login(username, password)
-                server.send_message(msg)
-                delivered = True
-        except Exception as e1:
-            last_err = e1
-            log_event("EMAIL RETRY", f"SSL 465 connection note ({e1}). Retrying with STARTTLS 587...")
+            msg = MIMEMultipart("alternative")
+            msg["From"] = formataddr(("ROYAL ROSE MILK", sender))
+            msg["To"] = to_clean
+            msg["Reply-To"] = sender
+            msg["Date"] = formatdate(localtime=True)
+            msg["Message-ID"] = make_msgid(domain="royalrosemilk.com")
+            msg["Subject"] = Header(subject, "utf-8")
+            msg["X-Mailer"] = "Royal Rose Milk Dispatcher v2.1"
 
-        # Fallback: SMTP over port 587 with STARTTLS
-        if not delivered:
+            if text_content:
+                msg.attach(MIMEText(text_content, "plain", "utf-8"))
+            if html_content:
+                msg.attach(MIMEText(html_content, "html", "utf-8"))
+
+            delivered = False
+            last_err = None
+
+            # Primary: SMTP_SSL over port 465
             try:
-                with smtplib.SMTP(MAIL_SERVER, 587, timeout=12) as server:
-                    server.starttls()
+                with smtplib.SMTP_SSL(MAIL_SERVER, 465, timeout=15) as server:
                     server.login(username, password)
                     server.send_message(msg)
                     delivered = True
-            except Exception as e2:
-                last_err = e2
+            except Exception as e1:
+                last_err = e1
+                log_event("EMAIL RETRY", f"SSL 465 connection note ({e1}). Retrying with STARTTLS 587...")
 
-        if delivered:
-            log_event("EMAIL SUCCESS", f"Delivered '{subject}' to {to_email}")
-        else:
-            log_event("EMAIL ERROR", f"Failed to deliver '{subject}' to {to_email}: {last_err}")
+            # Fallback: SMTP over port 587 with STARTTLS
+            if not delivered:
+                try:
+                    with smtplib.SMTP(MAIL_SERVER, 587, timeout=15) as server:
+                        server.ehlo()
+                        server.starttls()
+                        server.ehlo()
+                        server.login(username, password)
+                        server.send_message(msg)
+                        delivered = True
+                except Exception as e2:
+                    last_err = e2
 
-    except Exception as e:
-        log_event("EMAIL ERROR", f"Failed to send email to {to_email}: {e}")
+            if delivered:
+                log_event("EMAIL SUCCESS", f"Delivered '{subject}' to {to_clean}")
+                return True, f"Email delivered successfully to {to_clean}"
+            else:
+                log_event("EMAIL ERROR", f"Failed to deliver '{subject}' to {to_clean}: {last_err}")
+                return False, str(last_err)
+
+        except Exception as e:
+            log_event("EMAIL ERROR", f"Failed to send email to {to_clean}: {e}")
+            return False, str(e)
 
 
 def send_email_async(to_email, subject, html_content, text_content=""):
-    """Dispatches email sending asynchronously in a background thread."""
-    thread = threading.Thread(target=send_email_worker, args=(to_email, subject, html_content, text_content))
-    thread.daemon = True
+    """Dispatches email sending asynchronously in a dedicated background thread."""
+    thread = threading.Thread(
+        target=send_email_worker,
+        args=(to_email, subject, html_content, text_content),
+        daemon=False
+    )
     thread.start()
 
 
@@ -428,9 +453,72 @@ def api_health():
         "status": "ok",
         "service": "ROYAL ROSE MILK API",
         "database": db_status,
+        "email_service": "configured" if (MAIL_USERNAME and MAIL_PASSWORD) else "unconfigured",
+        "smtp_server": MAIL_SERVER,
         "timestamp": get_ist_now().isoformat(),
         "version": "2.1.0"
     }), 200
+
+
+@app.route("/api/test-email", methods=["GET", "POST"])
+def api_test_email():
+    """Diagnostic endpoint to test live email delivery to any recipient or default admin."""
+    try:
+        if request.method == "POST":
+            data = request.get_json(force=True, silent=True) or {}
+            target_email = data.get("email") or data.get("to") or ADMIN_EMAIL
+        else:
+            target_email = request.args.get("email") or request.args.get("to") or ADMIN_EMAIL
+
+        target_email = str(target_email).strip()
+        test_time = get_ist_now().strftime("%Y-%m-%d %H:%M:%S")
+
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <body style="font-family: Arial, sans-serif; background: #0c0409; color: #f5f0f3; padding: 30px;">
+            <div style="max-width: 500px; margin: 0 auto; background: #230b1c; border: 1px solid #ff529a; border-radius: 12px; padding: 25px; text-align: center;">
+                <h1 style="color: #ffffff; margin: 0; font-size: 24px;">♛ ROYAL ROSE MILK</h1>
+                <p style="color: #ffb8d6; font-size: 14px; margin-top: 5px;">LIVE EMAIL SYSTEM TEST</p>
+                <div style="background: #11050d; padding: 15px; border-radius: 8px; margin: 20px 0; border: 1px dashed #4ade80;">
+                    <span style="color: #4ade80; font-weight: bold; font-size: 16px;">✓ SMTP DISPATCH OPERATIONAL</span>
+                    <p style="color: #d0c0c9; font-size: 13px; margin: 8px 0 0 0;">This email confirms that your Royal Rose Milk email notification system is working perfectly!</p>
+                </div>
+                <table width="100%" style="font-size: 13px; text-align: left; color: #a8949f;">
+                    <tr><td><strong>Recipient:</strong></td><td style="color: #fff;">{target_email}</td></tr>
+                    <tr><td><strong>SMTP Server:</strong></td><td style="color: #fff;">{MAIL_SERVER}:{MAIL_PORT}</td></tr>
+                    <tr><td><strong>Timestamp:</strong></td><td style="color: #fff;">{test_time} IST</td></tr>
+                </table>
+            </div>
+        </body>
+        </html>
+        """
+
+        success, result_msg = send_email_worker(
+            to_email=target_email,
+            subject="♛ Royal Rose Milk — System Test Email ✓",
+            html_content=html_content,
+            text_content=f"Royal Rose Milk email system test to {target_email} at {test_time} IST."
+        )
+
+        return jsonify({
+            "success": success,
+            "message": result_msg,
+            "recipient": target_email,
+            "smtp_server": MAIL_SERVER,
+            "timestamp": test_time
+        }), 200 if success else 500
+
+    except Exception as e:
+        log_event("EMAIL TEST ERROR", f"Test email exception: {e}")
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+@app.route("/api/admin/test-email", methods=["POST"])
+@admin_required
+def api_admin_test_email():
+    """Admin-authenticated test email dispatcher."""
+    return api_test_email()
 
 
 @app.route("/")

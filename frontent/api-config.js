@@ -79,7 +79,7 @@
                     status: 0,
                     data: {
                         success: false,
-                        message: "Backend is currently unreachable. Please ensure the Royal Rose Milk backend is running."
+                        message: "Backend server is currently offline. Please start it by running 'python app.py' in terminal or double-clicking 'start_server.bat'."
                     }
                 };
             }

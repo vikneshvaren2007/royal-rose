@@ -1060,6 +1060,27 @@
                             </button>
                         </form>
                     </div>
+
+                    <!-- Email System Diagnostics Card -->
+                    <div class="table-card" style="padding: 30px; max-width: 800px; margin-top: 24px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                            <div>
+                                <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 24px; color: #fff;">✉️ Email System Diagnostics</h3>
+                                <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Test live email dispatch to verify that customer confirmation and admin notification emails are delivering smoothly.</p>
+                            </div>
+                            <span class="health-badge" style="background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.35); color: #38bdf8;">
+                                <span>⚡</span> Gmail SMTP Connected
+                            </span>
+                        </div>
+
+                        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                            <input type="email" id="testEmailInput" placeholder="Enter recipient email address..." style="flex: 1; min-width: 260px; background: rgba(8, 2, 7, 0.85); border: 1px solid var(--border); border-radius: 8px; padding: 11px 14px; color: #fff; font-size: 13px;">
+                            <button type="button" id="btnSendTestEmail" class="btn-primary" style="padding: 11px 22px; font-size: 13px;">
+                                Send Test Email ➔
+                            </button>
+                        </div>
+                        <div id="testEmailResult" style="display: none; margin-top: 16px; padding: 14px; border-radius: 10px; font-size: 13px; line-height: 1.5;"></div>
+                    </div>
                 </section>
 
             </main>
@@ -2080,6 +2101,55 @@
                     }
                 } catch (err) {
                     alert("Error saving settings.");
+                }
+            });
+
+            // Test Email Dispatcher
+            const btnSendTestEmail = document.getElementById("btnSendTestEmail");
+            const testEmailInput = document.getElementById("testEmailInput");
+            const testEmailResult = document.getElementById("testEmailResult");
+
+            btnSendTestEmail.addEventListener("click", async () => {
+                const targetEmail = testEmailInput.value.trim() || document.getElementById("setEmail").value.trim();
+                if (!targetEmail) {
+                    alert("Please enter a destination email address.");
+                    testEmailInput.focus();
+                    return;
+                }
+
+                btnSendTestEmail.disabled = true;
+                const originalText = btnSendTestEmail.textContent;
+                btnSendTestEmail.textContent = "Sending Test... ⏳";
+                testEmailResult.style.display = "block";
+                testEmailResult.style.background = "rgba(56, 189, 248, 0.1)";
+                testEmailResult.style.border = "1px solid rgba(56, 189, 248, 0.3)";
+                testEmailResult.style.color = "#38bdf8";
+                testEmailResult.innerHTML = `Connecting to SMTP server and dispatching test message to <strong>${targetEmail}</strong>...`;
+
+                try {
+                    const res = await window.royalApi.post("/api/admin/test-email", { email: targetEmail });
+                    const data = res.data;
+
+                    if (res.ok && data.success) {
+                        testEmailResult.style.background = "rgba(34, 197, 94, 0.15)";
+                        testEmailResult.style.border = "1px solid rgba(34, 197, 94, 0.4)";
+                        testEmailResult.style.color = "#4ade80";
+                        testEmailResult.innerHTML = `<strong>✓ Success!</strong> ${data.message}<br><small style="color: #cbd5e1;">Test email delivered to <strong>${data.recipient}</strong> at ${data.timestamp} via ${data.smtp_server}. Check your Inbox / Spam folder.</small>`;
+                        showToast("Test email delivered successfully!");
+                    } else {
+                        testEmailResult.style.background = "rgba(239, 68, 68, 0.15)";
+                        testEmailResult.style.border = "1px solid rgba(239, 68, 68, 0.4)";
+                        testEmailResult.style.color = "#f87171";
+                        testEmailResult.innerHTML = `<strong>✗ Dispatch Failed:</strong> ${data.message || 'SMTP Connection Error'}`;
+                    }
+                } catch (err) {
+                    testEmailResult.style.background = "rgba(239, 68, 68, 0.15)";
+                    testEmailResult.style.border = "1px solid rgba(239, 68, 68, 0.4)";
+                    testEmailResult.style.color = "#f87171";
+                    testEmailResult.innerHTML = `<strong>✗ Connection Error:</strong> Unable to connect to server backend.`;
+                } finally {
+                    btnSendTestEmail.disabled = false;
+                    btnSendTestEmail.textContent = originalText;
                 }
             });
 
